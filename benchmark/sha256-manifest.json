@@ -1,0 +1,15 @@
+{
+  "files": {
+    "METHOD.md": "48373cbd309be9cfbaf9597f1a1cdcb660af50e1f6916c68cd66f632894372da",
+    "fixtures.py": "d3a4d0d77e5444c8566a3091a555a9c4460e18a48031bc632d2babf3a7ca2f57",
+    "method-manifest.json": "0d2ae63787f7ae692991ad655c136e67e5285fd48e068e00817bb7c423f6532e",
+    "metrics/summary.json": "ca19d33ad023014daff68905f3d770e49f3bd40020491de8d90d7b8ad872b98e",
+    "metrics/trial-metrics.json": "07a060d265fc65dc8d42d9acc06f51af0d4fb48cde322d8c418c9901d44a5789",
+    "pyproject.toml": "d05c379288ab9b4a7c263fb634e6b9b74c5fee8311740c3abb9cd2a0a4fcbfe9",
+    "run-manifest.json": "c0ac0ac3a7b1338b97039670800fb49cad45e240c4dc1e03beb7cb02eda19aa8",
+    "run_benchmark.py": "4ceb4db9ca1967f5bb40c5170253c4112156ff7adedcd6d92165d5a1a3f6c88d",
+    "uv.lock": "c9577034979151b56d423bfe9d3570c3e58931a768be3b5141385384ce6573d7"
+  },
+  "hash_algorithm": "SHA-256",
+  "schema_version": 1
+}

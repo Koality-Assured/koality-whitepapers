@@ -1,5 +1,7 @@
 # Reproducibility manifest
 
+Paths in this guide are relative to this `supporting/` directory unless stated otherwise. File paths inside the benchmark manifests are relative to the `benchmark/` package directory.
+
 ## Evidence run
 
 - Run timestamp recorded in benchmark/run-manifest.json: 2026-10-09T22:36:57Z.
@@ -45,7 +47,7 @@ SHA-256 of benchmark/sha256-manifest.json: 955725238e32dcd2fa8bb50b651ff7fc046f6
 
 ## Rerun
 
-From the benchmark directory, use CPython 3.13.16 and uv 0.12.23:
+From `papers/AI-Engineering/context-efficiency-methods/supporting/benchmark/` (relative to the repository root), use CPython 3.13.16 and uv 0.12.23:
 
     uv sync --locked --python 3.13.16
     uv run --locked python run_benchmark.py --output-dir output

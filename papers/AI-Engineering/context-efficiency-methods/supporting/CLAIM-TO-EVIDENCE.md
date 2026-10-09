@@ -1,6 +1,6 @@
 # Claim-to-evidence ledger
 
-This ledger covers claims in PAPER.md. Relative paths point to files in this release candidate. Primary-source facts describe the cited version or documentation at access time; they do not validate the benchmark results.
+This ledger covers claims in [PAPER.md](../PAPER.md). Evidence paths are relative to this `supporting/` directory. Primary-source facts describe the cited version or documentation at access time; they do not validate the benchmark results.
 
 | ID | Claim | Evidence class | Source and date | Method or fixture | Caveat |
 | --- | --- | --- | --- | --- | --- |
@@ -29,4 +29,4 @@ This ledger covers claims in PAPER.md. Relative paths point to files in this rel
 
 ## Evidence status
 
-The reported local compression metrics and exact-marker counts have measured artifacts in the public candidate. Broader quality, generalization, provider, and cross-host claims remain unresolved and are excluded from the paper's conclusions.
+The reported local compression metrics and exact-marker counts have measured artifacts in the published package. Broader quality, generalization, provider, and cross-host claims remain unresolved and are excluded from the paper's conclusions.

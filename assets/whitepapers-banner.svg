@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 260" role="img" aria-labelledby="title desc">
+  <title id="title">Koality-Assured white-paper series</title>
+  <desc id="desc">A quiet editorial banner with a layered paper folio, source lines, and a highlighted evidence marker.</desc>
+  <defs>
+    <linearGradient id="field" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#173f46"/>
+      <stop offset="1" stop-color="#285c5b"/>
+    </linearGradient>
+    <pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse">
+      <path d="M36 0H0v36" fill="none" stroke="#c7ddd1" stroke-opacity=".10" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="260" rx="22" fill="url(#field)"/>
+  <rect width="1200" height="260" rx="22" fill="url(#grid)"/>
+  <path d="M0 216c180-54 300 49 490-4s326-52 496 2 163 22 214 4v42H0Z" fill="#102f36" fill-opacity=".32"/>
+  <circle cx="1060" cy="56" r="112" fill="#e6aa4b" fill-opacity=".13"/>
+  <g transform="translate(810 34) rotate(5 150 100)">
+    <rect x="43" y="25" width="242" height="174" rx="8" fill="#b8d1c5"/>
+    <rect x="23" y="11" width="242" height="174" rx="8" fill="#fffdf8" stroke="#dbe8df" stroke-width="2"/>
+    <path d="M53 50h176M53 68h148M53 86h164M53 104h121" stroke="#6c9287" stroke-width="5" stroke-linecap="round"/>
+    <path d="M53 132h78" stroke="#173f46" stroke-opacity=".35" stroke-width="5" stroke-linecap="round"/>
+    <rect x="174" y="119" width="55" height="42" rx="7" fill="#f2d59d"/>
+    <path d="m188 140 8 8 18-20" fill="none" stroke="#173f46" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M53 151h91" stroke="#6c9287" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <path d="M57 56h5v76h-5z" fill="#e6aa4b"/>
+  <text x="86" y="73" fill="#dbe8df" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="700" letter-spacing="3">KOALITY-ASSURED  /  RESEARCH SERIES</text>
+  <text x="86" y="124" fill="#fffdf8" font-family="Georgia, 'Times New Roman', serif" font-size="34" font-weight="700">Clear questions.</text>
+  <text x="86" y="166" fill="#fffdf8" font-family="Georgia, 'Times New Roman', serif" font-size="34" font-weight="700">Traceable evidence.</text>
+  <text x="86" y="207" fill="#c7ddd1" font-family="Arial, Helvetica, sans-serif" font-size="15" letter-spacing="1.2">TECHNICAL WHITE PAPERS  ·  ORGANIZED BY DOMAIN</text>
+</svg>

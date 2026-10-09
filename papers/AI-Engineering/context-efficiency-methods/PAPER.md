@@ -1,9 +1,5 @@
 # Tool-output compression in agent harnesses: a bounded synthetic evaluation
 
-## Draft status
-
-The owner approved the exact 18-file inventory in ARTIFACT-BOUNDARIES.md, and the package-wide independent review returned GO. The benchmark ran once, and no independent replay is claimed.
-
 ## Abstract
 
 Context-management methods change what an agent model receives, but their outcomes need separate measures. This paper evaluates one local method: Headroom compression of synthetic tool outputs.
@@ -64,7 +60,7 @@ The evidence run was performed once on Windows x86_64. Headroom reported selecti
 | Grep-hit output | 5 | 97.1585% (96.5402–97.6728%) | 97.1377% | 10/10 |
 | All trial rows | 15 | 86.5300% (64.7873–97.9049%) | — | 25/25 |
 
-All trial rows had status ok; all 15 had nonzero Headroom token counts. The category and overall values can be recomputed from the public [summary](benchmark/metrics/summary.json) and [trial metrics](benchmark/metrics/trial-metrics.json). The exact fixture generator and runner are in [benchmark](benchmark/).
+All trial rows had status ok; all 15 had nonzero Headroom token counts. The category and overall values can be recomputed from the public [summary](supporting/benchmark/metrics/summary.json) and [trial metrics](supporting/benchmark/metrics/trial-metrics.json). The exact fixture generator and runner are in the [benchmark package](supporting/benchmark/).
 
 The marker result means only that each configured substring remained present in the serialized output. It does not show that other facts or structure survived. A high reduction on deliberately repetitive synthetic inputs is not evidence of comparable savings on real tool outputs.
 
@@ -78,7 +74,7 @@ The Windows detector selection is recorded to make the execution context clear. 
 
 ## 6. Provider caching is a separate measurement
 
-Provider caching and local compression answer different questions. OpenAI's current documentation describes reuse of matching rendered prefixes and usage fields for cached tokens and writes, while noting that a session alone does not guarantee a hit. Anthropic documents cache-read and cache-creation usage fields. Google's Gemini API documents context caching and cached-token usage reporting. These product facts are summarized with access dates and limits in [SOURCES.md](SOURCES.md).
+Provider caching and local compression answer different questions. OpenAI's current documentation describes reuse of matching rendered prefixes and usage fields for cached tokens and writes, while noting that a session alone does not guarantee a hit. Anthropic documents cache-read and cache-creation usage fields. Google's Gemini API documents context caching and cached-token usage reporting. These product facts are summarized with access dates and limits in the [source access log](supporting/SOURCES.md).
 
 No provider request was made in this benchmark. It therefore provides no evidence about provider cache hits, latency, input billing, or cost savings. Those outcomes require provider-specific measurements.
 
@@ -95,14 +91,14 @@ No provider request was made in this benchmark. It therefore provides no evidenc
 
 ## 8. Reproducibility and evidence
 
-The [reproducibility manifest](REPRODUCIBILITY.md) records the pinned versions, public command, evidence-run date, and hashes. The benchmark's [run manifest](benchmark/run-manifest.json) binds the run to the package files and hashes each of the 15 case inputs and outputs. The [SHA-256 manifest](benchmark/sha256-manifest.json) covers the method, fixture generator, runner, environment files, run manifest, and sanitized metrics. That SHA-256 manifest does not hash itself.
+The [reproducibility guide](supporting/REPRODUCIBILITY.md) records the pinned versions, public command, evidence-run date, and hashes. The benchmark's [run manifest](supporting/benchmark/run-manifest.json) binds the run to the package files and hashes each of the 15 case inputs and outputs. The [SHA-256 manifest](supporting/benchmark/sha256-manifest.json) covers the method, fixture generator, runner, environment files, run manifest, and sanitized metrics. That SHA-256 manifest does not hash itself.
 
-Run the benchmark from the benchmark directory with:
+From `supporting/benchmark/` (relative to this paper's directory), run:
 
     uv sync --locked --python 3.13.16
     uv run --locked python run_benchmark.py --output-dir output
 
-This writes local run artifacts, including full synthetic fixture inputs and compressed outputs. Those generated inputs are synthetic and match the published fixture code. The [claim-to-evidence ledger](CLAIM-TO-EVIDENCE.md) classifies measurements, primary-source facts, inferences, in-repo findings, and unresolved questions.
+This writes local run artifacts, including full synthetic fixture inputs and compressed outputs. Those generated inputs are synthetic and match the published fixture code. The [claim-to-evidence ledger](supporting/CLAIM-TO-EVIDENCE.md) classifies measurements, primary-source facts, in-repo findings, inferences, and unresolved questions.
 
 ## 9. Conclusion
 

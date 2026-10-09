@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-labelledby="title desc">
+  <title id="title">Koality-Assured white-paper mark</title>
+  <desc id="desc">Layered pages with a highlighted reference tab.</desc>
+  <rect width="96" height="96" rx="24" fill="#f4efe5"/>
+  <path d="M25 22h38l12 12v39a5 5 0 0 1-5 5H25a5 5 0 0 1-5-5V27a5 5 0 0 1 5-5Z" fill="#d7e6df"/>
+  <path d="M31 16h31l14 14v39a5 5 0 0 1-5 5H31a5 5 0 0 1-5-5V21a5 5 0 0 1 5-5Z" fill="#fffdf8" stroke="#173f46" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M62 16v11a3 3 0 0 0 3 3h11" fill="#e6aa4b" stroke="#173f46" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M36 40h27M36 49h27M36 58h17" fill="none" stroke="#527b79" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="65" cy="64" r="10" fill="#e6aa4b" stroke="#173f46" stroke-width="3"/>
+  <path d="m72.5 71.5 7 7" fill="none" stroke="#173f46" stroke-width="4" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,103 @@
+{
+  "artifact_hash_scope": "Hashes bind the package source, configuration, and per-trial metrics. This run-manifest file is hashed by sha256-manifest.json.",
+  "artifact_sha256": {
+    "METHOD.md": "48373cbd309be9cfbaf9597f1a1cdcb660af50e1f6916c68cd66f632894372da",
+    "fixtures.py": "d3a4d0d77e5444c8566a3091a555a9c4460e18a48031bc632d2babf3a7ca2f57",
+    "method-manifest.json": "0d2ae63787f7ae692991ad655c136e67e5285fd48e068e00817bb7c423f6532e",
+    "metrics/summary.json": "ca19d33ad023014daff68905f3d770e49f3bd40020491de8d90d7b8ad872b98e",
+    "metrics/trial-metrics.json": "07a060d265fc65dc8d42d9acc06f51af0d4fb48cde322d8c418c9901d44a5789",
+    "pyproject.toml": "d05c379288ab9b4a7c263fb634e6b9b74c5fee8311740c3abb9cd2a0a4fcbfe9",
+    "run_benchmark.py": "4ceb4db9ca1967f5bb40c5170253c4112156ff7adedcd6d92165d5a1a3f6c88d",
+    "uv.lock": "c9577034979151b56d423bfe9d3570c3e58931a768be3b5141385384ce6573d7"
+  },
+  "evidence_run_utc": "2026-10-09T22:36:57+00:00",
+  "headroom_runtime_detector": "pure-Python backend (observed runtime diagnostic; no host path or identifier recorded)",
+  "lockfile_hash_scope": "SHA-256 hashes cover downloadable dependency artifacts; the 108 entries include the local virtual project record, which has no package artifact hash.",
+  "lockfile_record_count": 108,
+  "reproducibility_scope": "Public package source, configuration, and per-trial inputs/outputs are bound by the artifact hashes below; no external repository revision is required.",
+  "schema_version": 1,
+  "tool_runtime_versions": {
+    "headroom-ai": "0.40.0",
+    "python": "3.13.16",
+    "tiktoken": "0.14.0",
+    "trafilatura": "2.3.1",
+    "uv": "0.12.23"
+  },
+  "trial_input_output_sha256": [
+    {
+      "fixture_id": "json-tool-v00",
+      "input_messages_sha256": "afbcaa9b8848315b2f4cd8778cf434b76d8c659d629b67efc08dda4931b1d409",
+      "output_messages_sha256": "260490fd556608c8d1d75f64e8d861fd14c49e37948ad55cb3c7636aae5c47fd"
+    },
+    {
+      "fixture_id": "json-tool-v01",
+      "input_messages_sha256": "0c8812486815dca11c5581adafb91cadca5e848b25f5dce0816ea9af69e22cef",
+      "output_messages_sha256": "13a44b5c6b1bedcf01ee5b87a137e31d83687e4db4ca048e2e9ae23a1d7d7189"
+    },
+    {
+      "fixture_id": "json-tool-v02",
+      "input_messages_sha256": "c5bd369beeeef990adc9c05d46c53380e84c3f58c9fcf7d81ec5d586f1609247",
+      "output_messages_sha256": "ec9b97ff91a741d93fa1b6c1e0a96edda1589057c489a70382fbbfb92de86fc9"
+    },
+    {
+      "fixture_id": "json-tool-v03",
+      "input_messages_sha256": "b04ac68047b7646b3d70d60f15ee96d5d3f5cd48ef1b8cd9cae4a74396e92855",
+      "output_messages_sha256": "e2cd4fdbe0ce5fb73e31554d4b1264577dc9852fc76456cde32fb7356ab694ef"
+    },
+    {
+      "fixture_id": "json-tool-v04",
+      "input_messages_sha256": "847acf3e9e00b9419e9abfd2c84aaafe23d467407cb5e33bdbad0edfa3f9d89b",
+      "output_messages_sha256": "d71664be82171cebd9f08a6f360278d1f6b642b1c2f6938241f9ba57679951f9"
+    },
+    {
+      "fixture_id": "build-log-v00",
+      "input_messages_sha256": "e365694ec088d429d8dfa05bef229f06521909fe28a53f43021b378dbdcc759d",
+      "output_messages_sha256": "01ab760bba9b12db664772f31520253da6927b362d1c13b72f028bc1c44318e8"
+    },
+    {
+      "fixture_id": "build-log-v01",
+      "input_messages_sha256": "fd820d90d3173a9f0294ce78d52516ae225ac194d1d4aad7e5eb2f06cebded0f",
+      "output_messages_sha256": "2a8f70087239f4bc7ba2a95a575e469b19132fca4dc27ffb1f6cf3122dec4ebc"
+    },
+    {
+      "fixture_id": "build-log-v02",
+      "input_messages_sha256": "d3d44d6165a57526e1831b0f42a295215d76e34f7533e0992ff23dd43e2bbc88",
+      "output_messages_sha256": "b715207d95d5d97449ce94c12d48d8dc87ac35c95f88f0ae5f52e2e44caf99d2"
+    },
+    {
+      "fixture_id": "build-log-v03",
+      "input_messages_sha256": "2e95b1b30ae415d71573f00f990ef9785ff25e089e92e8caea3a2fa2f04e14a6",
+      "output_messages_sha256": "752b711fba50347ee14f2032eddeedb8869c927854f364048e80ea6fe5ee80d5"
+    },
+    {
+      "fixture_id": "build-log-v04",
+      "input_messages_sha256": "6799f1b68f2d190a2efd5e1c4e95340920a2032cbc843d3cd89f7c36d9a9f76f",
+      "output_messages_sha256": "22968e63bfebe4af34e7db009ab7432c069ce62d6205a917fe5fec1cae82f72c"
+    },
+    {
+      "fixture_id": "grep-hit-v00",
+      "input_messages_sha256": "f1a83f455acdbd2e10bf2a8010564aecce3c6e9afd944cf518a843d54b9279b7",
+      "output_messages_sha256": "2c27225ffb1b2c1b8a5f1b2eb77786d31adf6cfeea7854182b021b106eb323e3"
+    },
+    {
+      "fixture_id": "grep-hit-v01",
+      "input_messages_sha256": "effcb54f382e71858be08ce54d900ce0e0634f0e54d296f0f938be3ed606a265",
+      "output_messages_sha256": "9071d7f4c2c53bacf2511b9b2510279d552d4fc669039db6b69aa99bca90d6e0"
+    },
+    {
+      "fixture_id": "grep-hit-v02",
+      "input_messages_sha256": "7fc7fd7d4c7ea2a9a8109ae312563f9abee20357098a9feebf50a98f0a5dcdb7",
+      "output_messages_sha256": "5e723a712c9cbffe95d362d7579eaf2b84e165ccdc39fc17f68b2e0b1147768c"
+    },
+    {
+      "fixture_id": "grep-hit-v03",
+      "input_messages_sha256": "b65efb2fc4639fc48766f18af4597e29560526e7db8b10cc025fb95110d4ea0e",
+      "output_messages_sha256": "c3f824f68fe90557cf4eab3fa445facccb4639cedb9762794d243c36dad7ebbc"
+    },
+    {
+      "fixture_id": "grep-hit-v04",
+      "input_messages_sha256": "074c0dc5342c3ee107d335e14d8730e69a05ebaddb5530e71a42dc0d7155d32e",
+      "output_messages_sha256": "f8cebf5b60dd8fa633b7e8932dceba535b658a970ebb235f5fb6af0b2aaff9b8"
+    }
+  ]
+}

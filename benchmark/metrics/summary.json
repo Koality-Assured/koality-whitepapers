@@ -1,0 +1,66 @@
+{
+  "benchmark": "synthetic_headroom_tool_output_compression",
+  "categories": {
+    "build_log_output": {
+      "gold_marker_survival_pct": 100.0,
+      "gold_markers_found": 5,
+      "gold_markers_total": 5,
+      "max_headroom_tokens_saved_pct": 97.9049,
+      "mean_headroom_tokens_saved": 22237.0,
+      "mean_headroom_tokens_saved_pct": 97.5222,
+      "mean_tiktoken_serialized_savings_pct": 97.4879,
+      "metric_status_counts": {
+        "ok": 5
+      },
+      "min_headroom_tokens_saved_pct": 97.074,
+      "trials": 5,
+      "trials_with_all_markers_surviving": 5
+    },
+    "grep_hit_output": {
+      "gold_marker_survival_pct": 100.0,
+      "gold_markers_found": 10,
+      "gold_markers_total": 10,
+      "max_headroom_tokens_saved_pct": 97.6728,
+      "mean_headroom_tokens_saved": 10557.6,
+      "mean_headroom_tokens_saved_pct": 97.1585,
+      "mean_tiktoken_serialized_savings_pct": 97.1377,
+      "metric_status_counts": {
+        "ok": 5
+      },
+      "min_headroom_tokens_saved_pct": 96.5402,
+      "trials": 5,
+      "trials_with_all_markers_surviving": 5
+    },
+    "json_tool_output": {
+      "gold_marker_survival_pct": 100.0,
+      "gold_markers_found": 10,
+      "gold_markers_total": 10,
+      "max_headroom_tokens_saved_pct": 65.0045,
+      "mean_headroom_tokens_saved": 8708.0,
+      "mean_headroom_tokens_saved_pct": 64.9091,
+      "mean_tiktoken_serialized_savings_pct": 65.243,
+      "metric_status_counts": {
+        "ok": 5
+      },
+      "min_headroom_tokens_saved_pct": 64.7873,
+      "trials": 5,
+      "trials_with_all_markers_surviving": 5
+    }
+  },
+  "oracle_scope": "Exact substring presence of the predetermined synthetic marker strings in the JSON-serialized message list before and after compression. It does not assess meaning, semantic correctness, other facts, task success, security, or provider behavior.",
+  "overall": {
+    "gold_marker_survival_pct": 100.0,
+    "gold_markers_found": 25,
+    "gold_markers_total": 25,
+    "max_headroom_tokens_saved_pct": 97.9049,
+    "mean_headroom_tokens_saved_pct": 86.53,
+    "metric_status_counts": {
+      "ok": 15
+    },
+    "min_headroom_tokens_saved_pct": 64.7873,
+    "trials_with_all_markers_surviving": 15
+  },
+  "schema_version": 1,
+  "trials": 15,
+  "variants_per_category": 5
+}

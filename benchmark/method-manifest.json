@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "artifact": "public-candidate synthetic Headroom benchmark",
+  "access_date": "2026-10-09",
+  "evidence_run_utc": "2026-10-09T22:36:57Z",
+  "scope": {
+    "categories": ["json_tool_output", "build_log_output", "grep_hit_output"],
+    "variants_per_category": 5,
+    "total_trials": 15,
+    "fixture_source": "fixtures.py; deterministic arithmetic and string templates; no random generator",
+    "fixture_design_limit": "Inputs deliberately contain repeated synthetic padding and structure to exercise compression; these fixtures may overstate savings on less-repetitive inputs.",
+    "input_boundary": "obviously synthetic tool-output text only; no prompt text, secrets, personal data, private paths, or production data"
+  },
+  "environment": {
+    "python": "CPython 3.13.16",
+    "uv": "0.12.23",
+    "headroom_ai": "0.40.0",
+    "tiktoken": "0.14.0",
+    "trafilatura": "2.3.1 (pinned by the reused environment lock; not imported)",
+    "platform_for_evidence_run": "Windows x86_64",
+    "lockfile_sha256": "c9577034979151b56d423bfe9d3570c3e58931a768be3b5141385384ce6573d7",
+    "lockfile_hash_scope": "108 entries including the virtual local project entry; downloadable dependency artifacts have hashes, while the virtual local project entry does not have an artifact hash."
+  },
+  "headroom_configuration": {
+    "api": "headroom.compress",
+    "model_label_for_local_token_counting": "gpt-4o",
+    "protect_recent": 0,
+    "compress_user_messages": false,
+    "kompress_model": "disabled",
+    "provider_api_calls": 0
+  },
+  "token_metrics": {
+    "headroom": "Headroom result tokens_before, tokens_after, tokens_saved, and compression_ratio; v0.40.0 defines ratio as tokens_saved divided by tokens_before",
+    "independent_count": "tiktoken 0.14.0 get_encoding('o200k_base') over compact JSON serialization of the complete message list",
+    "billing_limit": "Neither count includes provider-side message framing or establishes billed tokens or provider savings"
+  },
+  "gold_marker_oracle": {
+    "method": "count exact predetermined synthetic marker substrings in serialized messages before and after compression",
+    "observed": "25 of 25 markers found after compression across all 15 trials",
+    "aggregate_rule": "The overall percentage is the unweighted arithmetic mean of the 15 per-trial Headroom ratios.",
+    "establishes": "only exact string presence for these known synthetic markers",
+    "does_not_establish": [
+      "semantic correctness",
+      "retention of unmarked facts or structure",
+      "task success",
+      "security",
+      "performance on non-synthetic inputs",
+      "provider behavior or billing"
+    ]
+  },
+  "observed_runtime_symptom": {
+    "classification": "host/runtime selection, not a confirmed software defect",
+    "detail": "Headroom reported pure-Python content detection because native Magika/ONNX detection is unsafe by default on Windows.",
+    "run_completed": true,
+    "timeout": false,
+    "confirmed_defect": false,
+    "cross_platform_caveat": "A host that selects a different detector backend may produce different metrics."
+  },
+  "primary_sources": [
+    {
+      "url": "https://github.com/headroomlabs-ai/headroom/releases/tag/v0.40.0",
+      "access_date": "2026-10-09",
+      "version": "Headroom v0.40.0",
+      "establishes": "the tagged project release and its release notes",
+      "does_not_establish": "independent validation of compression quality, semantic retention, or provider savings"
+    },
+    {
+      "url": "https://github.com/headroomlabs-ai/headroom/blob/v0.40.0/headroom/compress.py",
+      "access_date": "2026-10-09",
+      "version": "Headroom v0.40.0 source",
+      "establishes": "the public compress() API, configuration fields, result metrics, and documented compression-ratio definition",
+      "does_not_establish": "that this benchmark's input facts are semantically retained beyond the explicitly measured marker oracle"
+    },
+    {
+      "url": "https://github.com/headroomlabs-ai/headroom/blob/v0.40.0/docs/content/docs/how-compression-works.mdx",
+      "access_date": "2026-10-09",
+      "version": "Headroom v0.40.0 documentation",
+      "establishes": "the vendor's description of its compression pipeline",
+      "does_not_establish": "an independent audit of implementation behavior or output quality"
+    },
+    {
+      "url": "https://pypi.org/project/tiktoken/0.14.0/",
+      "access_date": "2026-10-09",
+      "version": "tiktoken 0.14.0",
+      "establishes": "published package release metadata and artifact hashes",
+      "does_not_establish": "equivalence to any provider's billed-token accounting"
+    },
+    {
+      "url": "https://github.com/openai/tiktoken/blob/0.14.0/tiktoken/model.py",
+      "access_date": "2026-10-09",
+      "version": "tiktoken 0.14.0 source",
+      "establishes": "the gpt-4o to o200k_base model-tokenizer mapping in that tagged source",
+      "does_not_establish": "Headroom's internal token count is identical to a provider's request accounting"
+    },
+    {
+      "url": "https://github.com/openai/tiktoken/blob/0.14.0/README.md",
+      "access_date": "2026-10-09",
+      "version": "tiktoken 0.14.0 documentation",
+      "establishes": "the package's explicit get_encoding() usage pattern",
+      "does_not_establish": "billing semantics or provider-side message framing"
+    }
+  ],
+  "reproduction": {
+    "command": "uv sync --locked --python 3.13.16 && uv run --locked python run_benchmark.py --output-dir output",
+    "outputs": [
+      "output/trial-details.jsonl (full synthetic inputs and compressed outputs)",
+      "output/trial-metrics.json (per-trial metrics)",
+      "output/summary.json (aggregate metrics)",
+      "output/environment.json (runtime versions and source hashes)"
+    ]
+  },
+  "observed_metrics": {
+    "mean_headroom_token_reduction_pct": 86.53,
+    "range_pct": [64.7873, 97.9049],
+    "all_gold_markers_found": "25/25",
+    "trials_with_nonzero_headroom_token_counts": "15/15"
+  }
+}

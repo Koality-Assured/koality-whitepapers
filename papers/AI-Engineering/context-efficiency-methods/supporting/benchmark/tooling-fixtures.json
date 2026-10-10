@@ -1,0 +1,41 @@
+{
+  "fixture_set": "context-efficiency-public-synthetic-v1",
+  "qmd": {
+    "documents": {
+      "saffron-cultivation.md": "# Saffron cultivation\n\nThe fictional Terra-17 garden guide says saffron corms are planted 12 centimeters deep in well-drained loam. The inventory marker is CORM-17.\n",
+      "water-motor.md": "# Water motor\n\nThe fictional Nacre-4 water motor starts with a blue lever and has a 42-liter tank. The inventory marker is MOTOR-42.\n",
+      "battery-sensor.md": "# Battery sensor\n\nThe fictional Lumen-8 sensor accepts a 3.7-volt cell and reports charge every 90 seconds. The inventory marker is CELL-37.\n",
+      "dryland-crops.md": "# Dryland crop notes\n\nThe fictional dryland plot grows barley and lentils. Its general advice is to use shallow rows and avoid waterlogged soil. The inventory marker is CROP-05.\n",
+      "comet-calendar.md": "# Comet calendar\n\nThe fictional Oriole comet is visible in late autumn and has a 19-year cycle. The calendar marker is ORBIT-19.\n"
+    },
+    "queries": [
+      {"id": "QMD-01", "query": "saffron corm", "expected_file": "saffron-cultivation.md", "gold_marker": "CORM-17"},
+      {"id": "QMD-02", "query": "water motor tank", "expected_file": "water-motor.md", "gold_marker": "MOTOR-42"},
+      {"id": "QMD-03", "query": "sensor cell", "expected_file": "battery-sensor.md", "gold_marker": "CELL-37"},
+      {"id": "QMD-04", "query": "comet orbital cycle", "expected_file": "comet-calendar.md", "gold_marker": "ORBIT-19"}
+    ]
+  },
+  "ast_grep": {
+    "file_name": "synthetic_policy.py",
+    "target_function": "policy_for_request",
+    "gold_markers": ["POLICY-SYN-4", "max_context_bytes", "allow_local_extract"],
+    "source": "\"\"\"Fictional policy fixture for structural extraction.\"\"\"\n\nDEFAULT_REGION = \"North Sample\"\n\n\ndef legacy_retry(request):\n    \"\"\"An unrelated function with repeated synthetic notes.\"\"\"\n    notes = [\"retry note\"] * 30\n    return {\"retry_limit\": 2, \"notes\": notes, \"region\": DEFAULT_REGION}\n\n\ndef policy_for_request(request):\n    \"\"\"Return the fictional POLICY-SYN-4 extraction settings.\"\"\"\n    return {\n        \"policy_id\": \"POLICY-SYN-4\",\n        \"max_context_bytes\": 4096,\n        \"allow_local_extract\": True,\n        \"region\": request.get(\"region\", DEFAULT_REGION),\n    }\n\n\ndef unused_metrics(sample):\n    \"\"\"Another unrelated function, not part of the requested scope.\"\"\"\n    values = [\"metric row\"] * 30\n    return {\"count\": len(values), \"sample\": sample}\n"
+  },
+  "webfetch": {
+    "articles": [
+      {"id": "WEB-01", "title": "Fictional weather station", "marker": "STATION-ALDER-01", "fact": "The Alder station records wind at 14 knots and posts a reading at 08:15.", "gold_markers": ["14 knots", "08:15"]},
+      {"id": "WEB-02", "title": "Fictional seed ledger", "marker": "SEED-BIRCH-02", "fact": "The Birch trial uses 18 seeds per tray and labels the batch B-18.", "gold_markers": ["18 seeds per tray", "B-18"]},
+      {"id": "WEB-03", "title": "Fictional kiln notes", "marker": "KILN-CEDAR-03", "fact": "The Cedar kiln holds 730 degrees Celsius for a 22-minute cycle.", "gold_markers": ["730 degrees Celsius", "22-minute cycle"]},
+      {"id": "WEB-04", "title": "Fictional ferry schedule", "marker": "FERRY-DUNE-04", "fact": "The Dune ferry departs at 06:40 and carries 36 passengers.", "gold_markers": ["06:40", "36 passengers"]},
+      {"id": "WEB-05", "title": "Fictional orchard map", "marker": "ORCHARD-ELM-05", "fact": "The Elm orchard has 24 rows and marks the north gate with code E-24.", "gold_markers": ["24 rows", "E-24"]}
+    ],
+    "boilerplate_repetitions": 12
+  },
+  "prompt_prefix": {
+    "static_prefix": "# Fictional support assistant\nRole: Answer from the supplied fictional reference material.\nPolicy: Preserve numeric details and say when a fact is absent.\nOutput: Give one concise answer with the supporting marker.\n\n",
+    "requests": [
+      "Alpha task code: TASK-A\nQuestion: What wind speed does the Alder station record?\n",
+      "Beta task code: TASK-B\nQuestion: How many rows are in the Elm orchard?\n"
+    ]
+  }
+}

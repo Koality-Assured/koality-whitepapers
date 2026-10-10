@@ -1,0 +1,14 @@
+{
+  "manifest": "tooling-suite-sha256-manifest.json",
+  "schema_version": 2,
+  "hash_algorithm": "SHA-256",
+  "hash_normalization": "CRLF and CR line endings normalized to LF before hashing",
+  "files": {
+    "tooling-fixtures.json": "ddc021d1680621e4f2ff7bafb85f975b2557342313b9d93036d14054841c0ce6",
+    "run_synthetic_tooling.py": "1533d0f5b7231a2b0cbf2ea81e946e972797bd3d5f887d45f2162817be994b64",
+    "TOOLING-SUITE-METHOD.md": "fe7651d0e24c321a7e9550564fba52a4de408e3e1cfee539c185ff2f5a3609e6",
+    "metrics/tooling-suite-results.json": "50208188b9728913cb06ac8f5542652e5989ce16f4fb77109257a9753642a06f",
+    "verify_sha256_manifest.py": "3c4ab8f99cd1ef9bc7663da0934d7eeb9a3684d0432adcb43986109e07bc252f"
+  },
+  "note": "The manifest does not hash itself. Paths are relative to the benchmark directory."
+}

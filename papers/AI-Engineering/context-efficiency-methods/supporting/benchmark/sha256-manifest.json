@@ -1,15 +1,17 @@
 {
   "files": {
-    "METHOD.md": "48373cbd309be9cfbaf9597f1a1cdcb660af50e1f6916c68cd66f632894372da",
+    "METHOD.md": "e58f7258214368c7ec243798488c937a7d20b484522720caaa5cafba970b137b",
     "fixtures.py": "d3a4d0d77e5444c8566a3091a555a9c4460e18a48031bc632d2babf3a7ca2f57",
-    "method-manifest.json": "0d2ae63787f7ae692991ad655c136e67e5285fd48e068e00817bb7c423f6532e",
-    "metrics/summary.json": "ca19d33ad023014daff68905f3d770e49f3bd40020491de8d90d7b8ad872b98e",
-    "metrics/trial-metrics.json": "07a060d265fc65dc8d42d9acc06f51af0d4fb48cde322d8c418c9901d44a5789",
+    "method-manifest.json": "e65240d14872efadf68aee7589a4077b97b27a32cf71fa48dcd5ba263cb053ca",
+    "metrics/summary.json": "a401f1d51ca9bdcc6ff267793d525d2b853371494e4baffb8be5c04103c89c66",
+    "metrics/trial-metrics.json": "a97f37c5c70797b61edd849d6e11b59af375a4656af764b5b814942c450cc790",
     "pyproject.toml": "d05c379288ab9b4a7c263fb634e6b9b74c5fee8311740c3abb9cd2a0a4fcbfe9",
-    "run-manifest.json": "c0ac0ac3a7b1338b97039670800fb49cad45e240c4dc1e03beb7cb02eda19aa8",
+    "run-manifest.json": "8bd7541b34b3cfd2e77e0d710a26c65387c0a68133387afe7ec83b94a09d239c",
     "run_benchmark.py": "4ceb4db9ca1967f5bb40c5170253c4112156ff7adedcd6d92165d5a1a3f6c88d",
-    "uv.lock": "c9577034979151b56d423bfe9d3570c3e58931a768be3b5141385384ce6573d7"
+    "uv.lock": "c9577034979151b56d423bfe9d3570c3e58931a768be3b5141385384ce6573d7",
+    "verify_sha256_manifest.py": "3c4ab8f99cd1ef9bc7663da0934d7eeb9a3684d0432adcb43986109e07bc252f"
   },
   "hash_algorithm": "SHA-256",
-  "schema_version": 1
+  "schema_version": 1,
+  "hash_normalization": "CRLF and CR line endings normalized to LF before hashing"
 }

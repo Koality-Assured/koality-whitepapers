@@ -1,24 +1,17 @@
-<h1 align="center">Koality-Assured Whitepapers</h1>
-
-<p align="center">
-  <img src="assets/whitepapers-mark.svg" width="72" height="72" alt="Original Koality-Assured white-paper mark: a layered document with a highlighted reference tab." />
-</p>
-
-<p align="center">A domain-organized series of technical white papers, with documented sources, methods, and evidence limits.</p>
-
-<p align="center">
-  <sub><strong>DOMAIN-ORGANIZED</strong> &nbsp;·&nbsp; <strong>SOURCES</strong> &nbsp;·&nbsp; <strong>METHODS &amp; LIMITS</strong></sub>
-</p>
-
-<p align="center">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" /></a>
-  <a href="#"><img src="https://img.shields.io/badge/domain-whitepapers-blueviolet.svg" alt="Domain: Whitepapers" /></a>
-  <a href="https://conventionalcommits.org"><img src="https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg" alt="Conventional Commits" /></a>
-</p>
-
-<p align="center">
-  <img src="assets/whitepapers-banner.svg" width="100%" alt="Abstract publication cover illustration with layered paper, reference lines, and an evidence marker." />
-</p>
+<div align="center">
+  <img src="assets/koality-whitepapers-logo.svg" width="72" height="72" alt="Original Koality-Assured white-paper mark: a layered document with a highlighted reference tab." />
+  <h1>Koality-Assured Whitepapers</h1>
+  <p>A domain-organized series of technical white papers, with documented sources, methods, and evidence limits.</p>
+  <p>
+    <sub><strong>DOMAIN-ORGANIZED</strong> &nbsp;·&nbsp; <strong>SOURCES</strong> &nbsp;·&nbsp; <strong>METHODS &amp; LIMITS</strong></sub>
+  </p>
+  <p>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" /></a>
+    <a href="#"><img src="https://img.shields.io/badge/domain-whitepapers-blueviolet.svg" alt="Domain: Whitepapers" /></a>
+    <a href="https://conventionalcommits.org"><img src="https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg" alt="Conventional Commits" /></a>
+  </p>
+  <img src="assets/koality-whitepapers-banner.svg" width="100%" alt="Abstract publication cover illustration with layered paper, reference lines, and an evidence marker." />
+</div>
 
 ## Catalog
 

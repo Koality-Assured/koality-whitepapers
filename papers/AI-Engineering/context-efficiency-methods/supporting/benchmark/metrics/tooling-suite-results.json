@@ -1,0 +1,235 @@
+{
+  "suite": "context-efficiency-public-synthetic-v1",
+  "run_timestamp_local": "2026-10-09T20:37:58-05:00",
+  "access_date_local": "2026-10-09",
+  "environment": {
+    "python": "3.11.9",
+    "qmd": "qmd 2.8.3 (facd35e)",
+    "ast_grep": "ast-grep 0.45.3",
+    "trafilatura": "2.3.0"
+  },
+  "fixture_source_sha256": "ddc021d1680621e4f2ff7bafb85f975b2557342313b9d93036d14054841c0ce6",
+  "fixture_source_sha256_normalization": "CRLF and CR line endings normalized to LF before hashing",
+  "commands": {
+    "qmd_setup": "qmd init; qmd collection add fixtures --name synthetic; qmd update",
+    "qmd_search": "qmd search <query> --no-rerank --format json -c synthetic -n 5",
+    "ast_grep_outline": "ast-grep outline --json=compact <synthetic_policy.py>",
+    "ast_grep_extract": "ast-grep run --json=compact --pattern 'def policy_for_request($$$): $$$' --selector function_definition --lang python <synthetic_policy.py>",
+    "webfetch": "urllib.request.urlopen(local_loopback_url) followed by trafilatura.extract(..., output_format='txt', favor_precision=False); fixture server binds to 127.0.0.1 only",
+    "prefix_audit": "UTF-8 longest-common-prefix comparison over two complete synthetic prompts; no provider request"
+  },
+  "qmd": {
+    "method": "BM25 lexical search; exact expected-document top-1 and marker-in-snippet checks; top document source bytes versus all five synthetic source documents",
+    "queries": [
+      {
+        "fixture_id": "QMD-01",
+        "query": "saffron corm",
+        "expected_file": "saffron-cultivation.md",
+        "top_file": "saffron-cultivation.md",
+        "top_1_match": true,
+        "gold_marker_in_selected_source_document": true,
+        "gold_marker_in_top_hit_snippet": true,
+        "selected_document_bytes": 165,
+        "full_fixture_corpus_bytes": 746,
+        "selected_content_reduction_percent": 77.882
+      },
+      {
+        "fixture_id": "QMD-02",
+        "query": "water motor tank",
+        "expected_file": "water-motor.md",
+        "top_file": "water-motor.md",
+        "top_1_match": true,
+        "gold_marker_in_selected_source_document": true,
+        "gold_marker_in_top_hit_snippet": true,
+        "selected_document_bytes": 133,
+        "full_fixture_corpus_bytes": 746,
+        "selected_content_reduction_percent": 82.1716
+      },
+      {
+        "fixture_id": "QMD-03",
+        "query": "sensor cell",
+        "expected_file": "battery-sensor.md",
+        "top_file": "battery-sensor.md",
+        "top_1_match": true,
+        "gold_marker_in_selected_source_document": true,
+        "gold_marker_in_top_hit_snippet": true,
+        "selected_document_bytes": 141,
+        "full_fixture_corpus_bytes": 746,
+        "selected_content_reduction_percent": 81.0992
+      },
+      {
+        "fixture_id": "QMD-04",
+        "query": "comet orbital cycle",
+        "expected_file": "comet-calendar.md",
+        "top_file": "comet-calendar.md",
+        "top_1_match": true,
+        "gold_marker_in_selected_source_document": true,
+        "gold_marker_in_top_hit_snippet": true,
+        "selected_document_bytes": 129,
+        "full_fixture_corpus_bytes": 746,
+        "selected_content_reduction_percent": 82.7078
+      }
+    ],
+    "top_1_correct": "4/4",
+    "mean_selected_source_reduction_percent": 80.9652,
+    "fixture_sha256": [
+      {
+        "fixture_id": "QMD-DOC-saffron-cultivation.md",
+        "sha256": "ba9b59d5d564a32043ca96d76fb6ed5cbdb3487caa35f082d007c63269a3cead"
+      },
+      {
+        "fixture_id": "QMD-DOC-water-motor.md",
+        "sha256": "8c668d975e2bff0d4c908c53650945cd8b110deacd6c6494212d1fe9d8b52a83"
+      },
+      {
+        "fixture_id": "QMD-DOC-battery-sensor.md",
+        "sha256": "c45ed8ba69942e676c0e3cf58100e80140056a1582d94adc20111bbe233d167b"
+      },
+      {
+        "fixture_id": "QMD-DOC-dryland-crops.md",
+        "sha256": "9135a7cba87e19b5ecdd31699431fbc6440f889a5c690e18ae03d7dec5b86cbd"
+      },
+      {
+        "fixture_id": "QMD-DOC-comet-calendar.md",
+        "sha256": "528bed9664b1c2f59b00105f1e8fd4f44a45352684a9f9d27a83368b018fd4a9"
+      }
+    ],
+    "caveat": "Small lexical fixtures only; no vector retrieval, reranking, answer-quality evaluation, or generalization claim."
+  },
+  "ast_grep": {
+    "method": "Outline-first discovery, then one function_definition pattern extraction; JSON match text normalized to LF before byte counting; exact target markers checked in selected source",
+    "result": {
+      "fixture_id": "AST-SYN-01",
+      "target_function": "policy_for_request",
+      "outline_found_target": true,
+      "match_count": 1,
+      "source_bytes": 758,
+      "selected_bytes": 282,
+      "byte_reduction_percent": 62.7968,
+      "gold_markers_retained": "3/3",
+      "all_gold_markers_retained": true,
+      "input_sha256": "cfe0b18a57a8a617d15624d130ab660b031d31dd181ce73a9732b1516cc48310",
+      "output_sha256": "c791123d505f34a8bd702919ed126d494d0763ca0b4669e66ac6ed8e851d8d00"
+    },
+    "fixture_sha256": [
+      {
+        "fixture_id": "AST-SYN-01",
+        "sha256": "cfe0b18a57a8a617d15624d130ab660b031d31dd181ce73a9732b1516cc48310"
+      }
+    ],
+    "caveat": "One synthetic Python file and one target function; marker retention is not semantic correctness or runtime behavior."
+  },
+  "webfetch": {
+    "method": "Stdlib HTTP fetch from a temporary 127.0.0.1-only server, then Trafilatura default main-text extraction; UTF-8 byte reduction against served synthetic HTML; exact marker and fact substring checks",
+    "articles": [
+      {
+        "fixture_id": "WEB-01",
+        "local_fetch_status": 200,
+        "raw_html_bytes": 1378,
+        "extracted_text_bytes": 205,
+        "byte_reduction_percent": 85.1234,
+        "gold_markers_retained": "3/3",
+        "all_gold_markers_retained": true,
+        "input_sha256": "5b84548c589631e4a2b03f8849c416af1e4d10847b783159853944513cac706b",
+        "output_sha256": "b6f88095ff88f6ee79d55c4c33e64b4770cfcdad9ecc83af634600a0f4cd8864"
+      },
+      {
+        "fixture_id": "WEB-02",
+        "local_fetch_status": 200,
+        "raw_html_bytes": 1364,
+        "extracted_text_bytes": 191,
+        "byte_reduction_percent": 85.9971,
+        "gold_markers_retained": "3/3",
+        "all_gold_markers_retained": true,
+        "input_sha256": "6442016c2378aec71f999ec7d85a2c122c899058719ce8e160eaa7e1d166a8b0",
+        "output_sha256": "2ae52dd693ece1dbe1a365a5435c1bed6d684eb2aaed24aa4103b5a023e2fe32"
+      },
+      {
+        "fixture_id": "WEB-03",
+        "local_fetch_status": 200,
+        "raw_html_bytes": 1361,
+        "extracted_text_bytes": 188,
+        "byte_reduction_percent": 86.1866,
+        "gold_markers_retained": "3/3",
+        "all_gold_markers_retained": true,
+        "input_sha256": "29f29f42d08c131892965f5961cf1b93d08f01c0376057250b478b415548dde5",
+        "output_sha256": "4711465d254f73b886e817e001661c438f67312e5cc25a56b6d3eb7381a1cb30"
+      },
+      {
+        "fixture_id": "WEB-04",
+        "local_fetch_status": 200,
+        "raw_html_bytes": 1360,
+        "extracted_text_bytes": 187,
+        "byte_reduction_percent": 86.25,
+        "gold_markers_retained": "3/3",
+        "all_gold_markers_retained": true,
+        "input_sha256": "3407029fc0b05bef2a42a16c6d2046cdb37e4429b0631b21fc2e9e08f6b7eb53",
+        "output_sha256": "ab2d526cea056091c5f60166d5d4b7cb22baae916aaf71d1d2f6b43acf02c93e"
+      },
+      {
+        "fixture_id": "WEB-05",
+        "local_fetch_status": 200,
+        "raw_html_bytes": 1368,
+        "extracted_text_bytes": 195,
+        "byte_reduction_percent": 85.7456,
+        "gold_markers_retained": "3/3",
+        "all_gold_markers_retained": true,
+        "input_sha256": "739dc80d40bf2747d24532ff91d34364ab9761d27d81eb1e2b93b9fa6bb23710",
+        "output_sha256": "93c3f16e23781f76954b149c3130d19459a6dd6700861b93636b22f3d02b50e0"
+      }
+    ],
+    "local_fetch_requests_served": 5,
+    "mean_byte_reduction_percent": 85.8605,
+    "gold_markers_retained": "15/15",
+    "fixture_sha256": [
+      {
+        "fixture_id": "WEB-01",
+        "sha256": "5b84548c589631e4a2b03f8849c416af1e4d10847b783159853944513cac706b"
+      },
+      {
+        "fixture_id": "WEB-02",
+        "sha256": "6442016c2378aec71f999ec7d85a2c122c899058719ce8e160eaa7e1d166a8b0"
+      },
+      {
+        "fixture_id": "WEB-03",
+        "sha256": "29f29f42d08c131892965f5961cf1b93d08f01c0376057250b478b415548dde5"
+      },
+      {
+        "fixture_id": "WEB-04",
+        "sha256": "3407029fc0b05bef2a42a16c6d2046cdb37e4429b0631b21fc2e9e08f6b7eb53"
+      },
+      {
+        "fixture_id": "WEB-05",
+        "sha256": "739dc80d40bf2747d24532ff91d34364ab9761d27d81eb1e2b93b9fa6bb23710"
+      }
+    ],
+    "caveat": "Five deterministic fictional pages; extraction/marker checks do not establish factuality, prompt-injection resistance, or behavior on arbitrary websites."
+  },
+  "prompt_prefix": {
+    "method": "Static longest-common-prefix check on two rendered synthetic prompt strings",
+    "result": {
+      "fixture_id": "PREFIX-SYN-PAIR-01",
+      "request_count": 2,
+      "declared_static_prefix_bytes": 216,
+      "longest_common_prefix_bytes": 216,
+      "static_prefix_matches_before_first_variable_byte": true,
+      "provider_cache_hit_measured": false,
+      "input_sha256": [
+        "c150ab615934523eee069e192e6f887d27fc00e0937c3f929c1e5fb550d9842d",
+        "578cf70976fed1ebcb407d8c7ff54c4bed17e7c71af27e7e5b9d8f2115ac260e"
+      ]
+    },
+    "fixture_sha256": [
+      {
+        "fixture_id": "PREFIX-SYN-01",
+        "sha256": "c150ab615934523eee069e192e6f887d27fc00e0937c3f929c1e5fb550d9842d"
+      },
+      {
+        "fixture_id": "PREFIX-SYN-02",
+        "sha256": "578cf70976fed1ebcb407d8c7ff54c4bed17e7c71af27e7e5b9d8f2115ac260e"
+      }
+    ],
+    "caveat": "Prefix equality is only a local static property; no provider request, cache hit, eligible model, billing, or latency was measured."
+  },
+  "independence_note": "Each tooling fixture is a separate synthetic task. The reductions are not additive and do not estimate end-to-end savings."
+}

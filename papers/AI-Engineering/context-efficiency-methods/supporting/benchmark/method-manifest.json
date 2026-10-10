@@ -4,7 +4,11 @@
   "access_date": "2026-10-09",
   "evidence_run_utc": "2026-10-09T22:36:57Z",
   "scope": {
-    "categories": ["json_tool_output", "build_log_output", "grep_hit_output"],
+    "categories": [
+      "json_tool_output",
+      "build_log_output",
+      "grep_hit_output"
+    ],
     "variants_per_category": 5,
     "total_trials": 15,
     "fixture_source": "fixtures.py; deterministic arithmetic and string templates; no random generator",
@@ -50,7 +54,7 @@
   },
   "observed_runtime_symptom": {
     "classification": "host/runtime selection, not a confirmed software defect",
-    "detail": "Headroom reported pure-Python content detection because native Magika/ONNX detection is unsafe by default on Windows.",
+    "detail": "The run manifest records Headroom selecting its pure-Python content-detection backend; the reason for that selection was not independently established.",
     "run_completed": true,
     "timeout": false,
     "confirmed_defect": false,
@@ -111,7 +115,10 @@
   },
   "observed_metrics": {
     "mean_headroom_token_reduction_pct": 86.53,
-    "range_pct": [64.7873, 97.9049],
+    "range_pct": [
+      64.7873,
+      97.9049
+    ],
     "all_gold_markers_found": "25/25",
     "trials_with_nonzero_headroom_token_counts": "15/15"
   }

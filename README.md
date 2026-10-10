@@ -11,6 +11,12 @@
 </p>
 
 <p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" /></a>
+  <a href="#"><img src="https://img.shields.io/badge/domain-whitepapers-blueviolet.svg" alt="Domain: Whitepapers" /></a>
+  <a href="https://conventionalcommits.org"><img src="https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg" alt="Conventional Commits" /></a>
+</p>
+
+<p align="center">
   <img src="assets/whitepapers-banner.svg" width="100%" alt="Abstract publication cover illustration with layered paper, reference lines, and an evidence marker." />
 </p>
 

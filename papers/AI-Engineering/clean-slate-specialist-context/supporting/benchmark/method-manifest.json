@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "artifact": "synthetic clean-slate specialist context benchmark",
+  "access_date": "2026-10-12",
+  "evidence_run_utc": "2026-10-12T13:13:25Z",
+  "scope": {
+    "archetypes": [
+      "code_repair",
+      "rbac_audit",
+      "schema_extraction"
+    ],
+    "variants_per_archetype": 5,
+    "conditions": [
+      "clean_slate",
+      "fork_10k",
+      "fork_30k",
+      "fork_60k",
+      "fork_90k"
+    ],
+    "total_trials": 75,
+    "fixture_source": "fixtures.py; deterministic code and conversation templates; no live provider requests",
+    "fixture_design_limit": "Synthetic distractors and parent histories model multi-turn engineering transcripts; real developer logs exhibit broader variance.",
+    "input_boundary": "synthetic code, contracts, and logs only; no secrets, personal data, private paths, or production data"
+  },
+  "environment": {
+    "python": "CPython 3.13.16",
+    "uv": "0.12.23",
+    "tiktoken": "0.14.0",
+    "platform_for_evidence_run": "Windows x86_64"
+  },
+  "token_metrics": {
+    "encoding": "o200k_base",
+    "tokenizer_library": "tiktoken 0.14.0",
+    "serialization": "compact JSON serialization of message list per turn",
+    "billing_limit": "Local token counts do not include provider API message framing or establish billed billing tokens."
+  },
+  "gold_marker_oracle": {
+    "method": "Exact marker substring and AST/schema validation across 3 turns",
+    "observed_clean_slate": "15 of 15 trials passed (100.0%)",
+    "observed_fork_60k": "8 of 15 trials passed (53.33%)",
+    "observed_distractor_collision_clean_slate": "0 of 15 trials (0.0%)",
+    "observed_distractor_collision_fork_60k": "7 of 15 trials (46.67%)",
+    "establishes": "clean-slate state eliminates distractor collisions and achieves 99.722% token reduction versus fork-60k on synthetic tasks",
+    "does_not_establish": [
+      "real developer conversation performance",
+      "live provider billing parity",
+      "untested model checkpoints"
+    ]
+  }
+}

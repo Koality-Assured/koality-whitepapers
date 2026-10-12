@@ -1,0 +1,23 @@
+{
+  "artifact_hash_scope": "Normalized-text SHA-256 digests bind package source, configuration, and per-trial metrics. This run-manifest file is hashed by sha256-manifest.json.",
+  "artifact_sha256": {
+    "METHOD.md": "5530a076125263837f3fb15877ffb162308bebd8369508321bd3b3f0c032da1c",
+    "fixtures.py": "5291906d2927b257d7cd67b47cb5b0640d5cb742788e41886b5381ba8c80a59c",
+    "method-manifest.json": "32c0206e96ab276bedeb597b125795ceb44868f02a88d5b7af61322d251128d7",
+    "metrics/summary.json": "ccddbd346cd10ef7b26fdde9cf462badd2ad6922031419a079eb485a911282d0",
+    "metrics/trial-metrics.json": "a4e39c40ed7d4eaaa94d3e1e1e9d06dbca75859c1162872bd1867fada2f5c72f",
+    "pyproject.toml": "1943a879a1ba5c95814f5e4f43ec849bf3fb7d249949d8bd82cd07173268440b",
+    "run_benchmark.py": "b1c1d9efddfec1df61949fa9a6af27be5327012393cf073bb5c1bfaa8c21a633",
+    "uv.lock": "29b2fd1a7a4d1ded12169d9bdbb311e15d940e3902409be676cf5d72d6b28b26",
+    "verify_sha256_manifest.py": "3c4ab8f99cd1ef9bc7663da0934d7eeb9a3684d0432adcb43986109e07bc252f"
+  },
+  "artifact_sha256_normalization": "CRLF and CR line endings normalized to LF before hashing",
+  "evidence_run_utc": "2026-10-12T13:13:25+00:00",
+  "reproducibility_scope": "Public package source, configuration, and per-trial inputs/outputs are bound by the artifact hashes below; no external repository revision is required.",
+  "schema_version": 1,
+  "tool_runtime_versions": {
+    "python": "3.13.16",
+    "tiktoken": "0.14.0",
+    "uv": "0.12.23"
+  }
+}

@@ -28,6 +28,17 @@ A synthetic study of Headroom tool-output compression on deliberately repetitive
 - [Benchmark method](papers/AI-Engineering/context-efficiency-methods/supporting/benchmark/METHOD.md)
 - [Full benchmark package](papers/AI-Engineering/context-efficiency-methods/supporting/benchmark/)
 
+#### Clean-Slate Specialist Context
+
+A deterministic synthetic evaluation of subagent context isolation and the multi-agent context tax. It measures local token reductions (99.72% vs. 60k inherited baseline) and distractor collision rates across 15 software tasks; it does not represent live provider billing or unmeasured model checkpoints.
+
+- [Read the paper](papers/AI-Engineering/clean-slate-specialist-context/PAPER.md)
+- [Claim-to-evidence ledger](papers/AI-Engineering/clean-slate-specialist-context/supporting/CLAIM-TO-EVIDENCE.md)
+- [Primary-source access log](papers/AI-Engineering/clean-slate-specialist-context/supporting/SOURCES.md)
+- [Reproducibility guide](papers/AI-Engineering/clean-slate-specialist-context/supporting/REPRODUCIBILITY.md)
+- [Benchmark method](papers/AI-Engineering/clean-slate-specialist-context/supporting/benchmark/METHOD.md)
+- [Full benchmark package](papers/AI-Engineering/clean-slate-specialist-context/supporting/benchmark/)
+
 ## Paper format
 
 Each catalog entry points to a standalone paper at `PAPER.md`. Evidence ledgers, source logs, and reproduction files live in its `supporting/` directory.

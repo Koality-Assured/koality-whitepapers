@@ -1,0 +1,29 @@
+// Markdownlint configuration for koality-whitepapers.
+// Matches organization conventions:
+// - Pragmatic rules for technical papers and supporting documents
+// - Disables line length, inline HTML (used for badge/banner alignment), and heading blank line cosmetics
+{
+  "config": {
+    "default": true,
+    "MD009": false,
+    "MD010": false,
+    "MD012": false,
+    "MD013": false,
+    "MD022": false,
+    "MD026": false,
+    "MD031": false,
+    "MD032": false,
+    "MD033": false,
+    "MD036": false,
+    "MD041": false,
+    "MD025": {
+      "front_matter_title": ""
+    }
+  },
+  "noInlineConfig": true,
+  "ignores": [
+    "scratch/**",
+    "node_modules/**",
+    ".git/**"
+  ]
+}

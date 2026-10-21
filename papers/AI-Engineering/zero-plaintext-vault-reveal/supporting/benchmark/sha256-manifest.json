@@ -1,0 +1,10 @@
+{
+  "fixtures.py": "7aa501259a04471a25b27876cf3727a8bd78a703990ffce856340fe827e1659a",
+  "metrics/summary.json": "ccb2928c3b199aacd61831b1538e84f728ba7b4cfe771d67a1d8c6b1aa65d870",
+  "metrics/trial-metrics.json": "3753bcfbefbfb36f57d0c5022fb8661d369b1eb7d14a00a4c4192ecaa2c52554",
+  "pyproject.toml": "55db016540299f4399ce9a86525e5c34bf94cc590515037a6b7f5e6fcff143a7",
+  "run-manifest.json": "d377706bdf6b0ad9fd4631dc21a40b704eb90e1b118041209180da9f79cbd55c",
+  "run_benchmark.py": "3638bab3b301c5d6a600ff15e56a5efee1d2255bb770ef154858da871d4b1aae",
+  "sha256-manifest.json": "7a29b6a92d902cc6ffb2c6f91553b7da7b1b19fa3a340b9264c296c8ad5e839c",
+  "verify_sha256_manifest.py": "c00e9de6646afc6786a6969045906ad4330e4871ad55b0dbea5124c7d3f4fbb0"
+}

@@ -51,3 +51,23 @@ In `koality-whitepapers`, benchmark evaluations and integrity manifests are inte
 | Trafilatura mean byte reduction | 85.86% | `tooling-suite-results.json` | `webfetch.mean_byte_reduction_percent` | 85.8605 | Verified |
 | Trafilatura marker retention | 15/15 | `tooling-suite-results.json` | `webfetch.gold_markers_retained` | "15/15" | Verified |
 | Static prompt shared prefix | 216 bytes | `tooling-suite-results.json` | `prompt_prefix.result.declared_static_prefix_bytes` | 216 | Verified |
+
+---
+
+## 3. Encrypted Reveal Envelopes and Local Secret Use
+
+- **Paper:** [`papers/AI-Engineering/zero-plaintext-vault-reveal/PAPER.md`](papers/AI-Engineering/zero-plaintext-vault-reveal/PAPER.md)
+- **Primary source:** [`papers/AI-Engineering/zero-plaintext-vault-reveal/supporting/benchmark/metrics/summary.json`](papers/AI-Engineering/zero-plaintext-vault-reveal/supporting/benchmark/metrics/summary.json)
+- **Trial log:** [`papers/AI-Engineering/zero-plaintext-vault-reveal/supporting/benchmark/metrics/trial-metrics.json`](papers/AI-Engineering/zero-plaintext-vault-reveal/supporting/benchmark/metrics/trial-metrics.json)
+
+| Headline Metric / Claim | Paper Value | Source JSON Field | Source Value | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| Synthetic fixtures evaluated | 5 | `total_fixtures_evaluated` | 5 | Verified |
+| Constructed response, tool-result, replacement, and prompt-history checks | 5/5 each | `boundary_pass_rates` | 5/5 each | Verified; modeled checks only |
+| Literal sentinel appearances in authored histories | 8 naive / 0 sandbox-shaped | `sentinel_leakage_counts.*literal_sentinel_appearances` | 8 / 0 | Verified |
+| Raw credential appearances in authored histories | 10 naive / 0 sandbox-shaped | `sentinel_leakage_counts.*raw_credential_appearances` | 10 / 0 | Verified |
+| Mean cumulative input tokens | 326.6 naive / 193.8 sandbox-shaped | `token_consumption_comparison.mean_*_cumulative_input_tokens` | 326.6 / 193.8 | Verified |
+| Token reduction | 35.26% unweighted mean by fixture; 40.66% between displayed means | `token_consumption_comparison.*reduction_percentage` | 35.26% / 40.66% | Verified; distinct aggregations |
+| Python string-replacement input | 50 KiB synthetic UTF-8 | `cryptographic_microbenchmarks[python_string_replacement_50kib_log].details` | exactly 50 KiB | Verified; not MCP scrubber timing |
+
+The Python runner uses a prewarmed tokenizer cache and rejects cache-miss downloads. These values describe constructed Python data; they are not runtime containment results.

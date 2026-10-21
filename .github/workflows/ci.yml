@@ -43,5 +43,8 @@ jobs:
           python papers/AI-Engineering/context-efficiency-methods/supporting/benchmark/verify_sha256_manifest.py
           python papers/AI-Engineering/context-efficiency-methods/supporting/benchmark/verify_sha256_manifest.py --manifest tooling-suite-sha256-manifest.json
 
+      - name: Verify Paper #3 benchmark sha256 manifest
+        run: python papers/AI-Engineering/zero-plaintext-vault-reveal/supporting/benchmark/verify_sha256_manifest.py
+
       - name: Verify evidence traceability matrix
         run: python scripts/verify_traceability.py

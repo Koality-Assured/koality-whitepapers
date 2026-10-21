@@ -137,6 +137,89 @@ def check_context_efficiency_metrics() -> list[str]:
     return errors
 
 
+def check_zero_plaintext_vault_reveal_metrics() -> list[str]:
+    """Verify Paper #3 headline values against its generated simulation summary."""
+    errors: list[str] = []
+    base_dir = REPO_ROOT / "papers/AI-Engineering/zero-plaintext-vault-reveal"
+    summary_path = base_dir / "supporting/benchmark/metrics/summary.json"
+    run_manifest_path = base_dir / "supporting/benchmark/run-manifest.json"
+    paper_path = base_dir / "PAPER.md"
+
+    if not summary_path.is_file():
+        return [f"Missing metric summary file: {summary_path}"]
+    if not paper_path.is_file():
+        return [f"Missing paper file: {paper_path}"]
+    if not run_manifest_path.is_file():
+        return [f"Missing benchmark run manifest: {run_manifest_path}"]
+
+    try:
+        data = json.loads(summary_path.read_text(encoding="utf-8"))
+        run_manifest = json.loads(run_manifest_path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        return [f"Could not parse {summary_path}: {exc}"]
+
+    try:
+        fixture_count = data["total_fixtures_evaluated"]
+        status = run_manifest["status"]
+        all_boundaries_passed = run_manifest["all_simulated_boundaries_passed"]
+        boundary_rates = data["boundary_pass_rates"]
+        leakage = data["sentinel_leakage_counts"]
+        tokens = data["token_consumption_comparison"]
+        string_timing = next(
+            item for item in data["cryptographic_microbenchmarks"]
+            if item["operation"] == "python_string_replacement_50kib_log"
+        )
+    except (KeyError, StopIteration, TypeError) as exc:
+        return [f"{summary_path}: Missing or invalid expected metric: {exc}"]
+
+    expected_boundaries = {
+        "constructed_api_shaped_response",
+        "simulated_mcp_tool_result",
+        "python_variant_replacement",
+        "constructed_prompt_history",
+    }
+    if fixture_count != 5 or status != "PASS" or all_boundaries_passed is not True:
+        errors.append("Unexpected fixture count or simulated boundary status")
+    if set(boundary_rates) != expected_boundaries or any(
+        rate != "5/5 (100.0%)" for rate in boundary_rates.values()
+    ):
+        errors.append(f"Unexpected constructed boundary rates: {boundary_rates}")
+    expected_leakage = {
+        "naive_plaintext_literal_sentinel_appearances": 8,
+        "sandbox_literal_sentinel_appearances": 0,
+        "naive_plaintext_raw_credential_appearances": 10,
+        "sandbox_raw_credential_appearances": 0,
+    }
+    if leakage != expected_leakage:
+        errors.append(f"Unexpected constructed transcript counts: {leakage}")
+    if (
+        tokens.get("mean_naive_cumulative_input_tokens") != 326.6
+        or tokens.get("mean_sandbox_cumulative_input_tokens") != 193.8
+        or tokens.get("unweighted_mean_per_fixture_reduction_percentage") != "35.26%"
+        or tokens.get("reduction_between_displayed_means_percentage") != "40.66%"
+    ):
+        errors.append(f"Unexpected constructed token metrics: {tokens}")
+    if "exactly 50 KiB" not in string_timing.get("details", ""):
+        errors.append("The Python string replacement timing is not labeled as exactly 50 KiB")
+
+    paper_text = paper_path.read_text(encoding="utf-8")
+    runner_path = base_dir / "supporting/benchmark/run_benchmark.py"
+    if not runner_path.is_file():
+        errors.append(f"Missing benchmark runner: {runner_path}")
+    else:
+        runner_text = runner_path.read_text(encoding="utf-8")
+        if "tiktoken_load.read_file = _reject_tokenizer_cache_miss" not in runner_text:
+            errors.append("Benchmark runner does not reject tokenizer cache-miss downloads")
+
+    for cited in ["eight literal sentinel appearances", "ten raw credential appearances", "326.6", "193.8", "35.26%", "40.66%", "50 KiB"]:
+        if cited not in paper_text:
+            errors.append(f"PAPER.md does not cite expected bounded result: {cited}")
+    if "does not call `llm-vault`" not in paper_text:
+        errors.append("PAPER.md does not state the simulation scope limitation")
+
+    return errors
+
+
 def main() -> int:
     total_errors: list[str] = []
 
@@ -153,6 +236,13 @@ def main() -> int:
         total_errors.extend(errs2)
     else:
         print("  OK: context-efficiency-methods metrics fully verified.")
+
+    print("Checking zero-plaintext-vault-reveal metrics traceability...")
+    errs3 = check_zero_plaintext_vault_reveal_metrics()
+    if errs3:
+        total_errors.extend(errs3)
+    else:
+        print("  OK: zero-plaintext-vault-reveal metrics fully verified.")
 
     if total_errors:
         print(f"\nTraceability verification failed with {len(total_errors)} errors:", file=sys.stderr)

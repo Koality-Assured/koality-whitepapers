@@ -1,0 +1,13 @@
+{
+  "benchmark": "Zero-Plaintext Agent Context Canary Benchmark",
+  "timestamp_utc": "2026-10-21T14:44:59Z",
+  "files_generated": [
+    "metrics/trial-metrics.json",
+    "metrics/summary.json"
+  ],
+  "fixtures_count": 5,
+  "status": "PASS",
+  "all_simulated_boundaries_passed": true,
+  "zero_provider_api_calls": true,
+  "network_access": "none during benchmark execution; tokenizer cache misses are rejected"
+}

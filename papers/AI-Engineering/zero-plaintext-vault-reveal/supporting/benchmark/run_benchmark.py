@@ -55,6 +55,12 @@ def count_tokens_messages(messages: list[dict[str, str]]) -> int:
     return len(ENCODER.encode(serialized))
 
 
+def write_json(path: Path, value: Any) -> None:
+    """Write stable LF JSON so generated artifact hashes match across OSes."""
+    with open(path, "w", encoding="utf-8", newline="\n") as output_file:
+        json.dump(value, output_file, indent=2)
+
+
 def count_raw_credential_appearances(messages: list[dict[str, Any]], raw_credential: str) -> int:
     """Count raw credential values in nested tool-result JSON strings."""
     def count_in_value(value: Any) -> int:
@@ -354,12 +360,10 @@ def main() -> None:
 
     # Write trial metrics and summary
     trial_metrics_path = METRICS_DIR / "trial-metrics.json"
-    with open(trial_metrics_path, "w", encoding="utf-8") as f:
-        json.dump([asdict(r) for r in boundary_results], f, indent=2)
+    write_json(trial_metrics_path, [asdict(r) for r in boundary_results])
 
     summary_path = METRICS_DIR / "summary.json"
-    with open(summary_path, "w", encoding="utf-8") as f:
-        json.dump(summary, f, indent=2)
+    write_json(summary_path, summary)
 
     # Write run manifest
     run_manifest = {
@@ -375,8 +379,7 @@ def main() -> None:
         "zero_provider_api_calls": True,
         "network_access": "none during benchmark execution; tokenizer cache misses are rejected",
     }
-    with open(HERE / "run-manifest.json", "w", encoding="utf-8") as f:
-        json.dump(run_manifest, f, indent=2)
+    write_json(HERE / "run-manifest.json", run_manifest)
 
     # Generate sha256 manifest
     sha_manifest: dict[str, str] = {}
@@ -386,8 +389,7 @@ def main() -> None:
             data = file_path.read_bytes()
             sha_manifest[rel_name] = hashlib.sha256(data).hexdigest()
 
-    with open(HERE / "sha256-manifest.json", "w", encoding="utf-8") as f:
-        json.dump(sha_manifest, f, indent=2)
+    write_json(HERE / "sha256-manifest.json", sha_manifest)
 
     print(f"Benchmark status: {'PASS' if all_boundaries_passed else 'FAIL'}")
     print(f"Simulated boundary rates: {boundary_pass_rates}")

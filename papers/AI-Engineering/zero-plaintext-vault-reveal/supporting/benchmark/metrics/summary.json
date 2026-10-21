@@ -1,6 +1,6 @@
 {
   "benchmark_id": "zero-plaintext-vault-reveal-canary-suite",
-  "date_utc": "2026-10-21T14:44:59Z",
+  "date_utc": "2026-10-21T14:48:36Z",
   "total_fixtures_evaluated": 5,
   "scope": "Offline Python simulation using a prewarmed tokenizer cache; no product runtime or network access is used.",
   "boundary_pass_rates": {
@@ -25,29 +25,29 @@
     {
       "operation": "pbkdf2_hmac_sha256_600k",
       "iterations": 5,
-      "mean_duration_ms": 151.45,
-      "throughput_ops_per_sec": 6.6,
+      "mean_duration_ms": 153.01,
+      "throughput_ops_per_sec": 6.54,
       "details": "Python hashlib analog of PBKDF2-HMAC-SHA256; not client WebCrypto timing"
     },
     {
       "operation": "scrypt_server_hash_n16384",
       "iterations": 100,
-      "mean_duration_ms": 31.669,
-      "throughput_ops_per_sec": 31.58,
+      "mean_duration_ms": 31.91,
+      "throughput_ops_per_sec": 31.34,
       "details": "Python hashlib analog of scrypt; not Node.js scryptSync timing"
     },
     {
       "operation": "hmac_sha256_server_hash",
       "iterations": 10000,
       "mean_duration_ms": 0.0014,
-      "throughput_ops_per_sec": 734964.46,
+      "throughput_ops_per_sec": 713363.44,
       "details": "Python hmac analog; not Node.js createHmac timing"
     },
     {
       "operation": "python_string_replacement_50kib_log",
       "iterations": 500,
-      "mean_duration_ms": 0.162,
-      "throughput_ops_per_sec": 6188.61,
+      "mean_duration_ms": 0.158,
+      "throughput_ops_per_sec": 6336.65,
       "details": "Python str.replace over exactly 50 KiB synthetic UTF-8; not MCP scrubber timing"
     }
   ],

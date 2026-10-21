@@ -1,6 +1,6 @@
 {
   "benchmark": "Zero-Plaintext Agent Context Canary Benchmark",
-  "timestamp_utc": "2026-10-21T14:44:59Z",
+  "timestamp_utc": "2026-10-21T14:48:36Z",
   "files_generated": [
     "metrics/trial-metrics.json",
     "metrics/summary.json"

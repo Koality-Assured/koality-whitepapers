@@ -1,0 +1,3 @@
+CLEAN = 0
+FINDING = 1
+ERROR = 2

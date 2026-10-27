@@ -1,0 +1,706 @@
+version: "2"
+
+# ── Allowlist ─────────────────────────────────────────────────────────────────
+# A rule's matched text is suppressed (no finding) when it equals a `literals`
+# entry or is matched by a `patterns` regex. This targets KNOWN-SAFE values —
+# documentation examples, vendor canonical placeholders, and standard
+# payment-network test fixtures — so real secrets/PII are still reported while
+# the common false positives are dropped. Suppression matches the rule's matched
+# value, never the whole line. See rules/SOURCE.md "Value allowlist".
+allowlist:
+  literals:
+    # AWS canonical example access keys (docs.aws.amazon.com)
+    - "AKIAIOSFODNN7EXAMPLE"
+    - "ASIAIOSFODNN7EXAMPLE"
+    - "AKIAI44QH8DHBEXAMPLE"
+    # Standard payment-network TEST card numbers (Stripe/Adyen/PayPal/Braintree
+    # sandbox docs) — contiguous form, which is how the credit-card rule matches.
+    - "4111111111111111"   # Visa test
+    - "4012888888881881"   # Visa test
+    - "4000000000000002"   # Visa test
+    - "4242424242424242"   # Visa test (Stripe)
+    - "5555555555554444"   # Mastercard test
+    - "5105105105105100"   # Mastercard test
+    - "2223003122003222"   # Mastercard 2-series test
+    - "378282246310005"    # Amex test
+    - "371449635398431"    # Amex test
+    - "6011111111111117"   # Discover test
+    - "6011000990139424"   # Discover test
+    - "30569309025904"     # Diners Club test
+    - "38520000023237"     # Diners Club test
+    - "3530111333300000"   # JCB test
+    - "3566002020360505"   # JCB test
+  patterns:
+    # scp-style git remotes (git@github.com:org/repo) look like email addresses
+    - '(?i)^git@[A-Za-z0-9.-]+$'
+    # RFC 2606 / RFC 6761 reserved documentation and test domains
+    - '(?i)@[A-Za-z0-9.-]*example\.(?:com|org|net)$'
+    - '(?i)@[A-Za-z0-9.-]+\.(?:test|invalid|example|localhost)$'
+    # Any AWS-style key value ending in EXAMPLE (AWS documentation convention)
+    - '^(?:AKIA|ABIA|ACCA|ASIA)[0-9A-Z]+EXAMPLE$'
+    # Stripe documentation sample secret keys
+    - '^sk_(?:live|test)_4eC39HqLyjWDarjtT1zdp7dc$'
+
+rules:
+  - id: ssn-us
+    description: US Social Security Number
+    pattern: '(?i)\b(?:\d{3}[-\s]\d{2}[-\s]\d{4}|(?:ssn|social[\s_-]?security)[^\d]{0,20}?\b(\d{9}))\b'
+    confidence: high
+    severity: critical
+    category: pii
+    cwe: ["CWE-359"]
+    summary: US Social Security Number detected
+    remediation: "Remove SSN from source files. Store in a secrets manager or encrypted database. Never include in static assets."
+
+  - id: credit-card
+    description: Credit Card Number
+    pattern: '\b(?:(?:3[47]\d{2})[-\s]?\d{6}[-\s]?\d{5}|(?:3(?:0[0-5]|[689]\d)\d)[-\s]?\d{6}[-\s]?\d{4}|[2-6]\d{3}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{1,4}|[2-6]\d{12,18})\b'
+    confidence: high
+    severity: critical
+    category: financial
+    cwe: ["CWE-359", "CWE-312"]
+    summary: Credit card number detected
+    remediation: "Remove credit card numbers from source files. Use tokenization (e.g. Stripe token) and never store PANs in plain text."
+
+  - id: aws-access-key-id
+    description: AWS Access Key ID
+    pattern: '\b(?:AKIA|ABIA|ACCA|ASIA)[0-9A-Z]{16}\b'
+    confidence: high
+    severity: critical
+    category: credentials
+    cwe: ["CWE-798"]
+    summary: AWS Access Key ID detected
+    remediation: "Rotate the credential immediately in the AWS IAM console. Store secrets in AWS Secrets Manager or environment variables. Never hardcode credentials."
+
+  - id: github-token
+    description: GitHub Personal Access Token
+    pattern: '\b(?:ghp|gho|ghu|ghs|ghr)_[A-Za-z0-9]{36,}\b'
+    confidence: high
+    severity: critical
+    category: credentials
+    cwe: ["CWE-798"]
+    summary: GitHub personal access token detected
+    remediation: "Revoke the token immediately at github.com/settings/tokens. Use GitHub Actions secrets or AWS Secrets Manager for token storage."
+
+  - id: slack-token
+    description: Slack API Token
+    pattern: '\b(?:xox[baprs]-[0-9]{12}-[0-9]{12}-[0-9A-Za-z]{24,})\b'
+    confidence: high
+    severity: critical
+    category: credentials
+    cwe: ["CWE-798"]
+    summary: Slack API token detected
+    remediation: "Revoke the token in your Slack app settings. Store tokens in AWS Secrets Manager or environment variables."
+
+  - id: bearer-token
+    description: Bearer / API key assignment in source code
+    pattern: '(?i)(?:bearer|api.?key|apikey|auth.?token|access.?token)\s*[=:]\s*["'']([A-Za-z0-9\-_.]{20,})["'']'
+    confidence: medium
+    severity: high
+    category: credentials
+    cwe: ["CWE-798"]
+    summary: Hardcoded bearer token or API key detected
+    remediation: "Move credentials to environment variables or a secrets manager. Never hardcode tokens in source files."
+
+  - id: us-phone
+    description: US Phone Number
+    pattern: '\b(?:\+1[-.\s]?)?\(?\d{3}\)?[-.\s]\d{3}[-.\s]\d{4}\b'
+    confidence: medium
+    severity: medium
+    category: pii
+    cwe: ["CWE-359"]
+    summary: US phone number detected
+    remediation: "Avoid including real phone numbers in source code or static assets. Use placeholder values in examples and test data."
+
+  - id: email-public-service
+    description: Email address at a known public consumer email provider
+    pattern: '\b[A-Za-z0-9._%+\-]+@(?:gmail\.com|yahoo\.(?:com|co\.(?:uk|jp|in|au|nz)|fr|de|es|it)|hotmail\.(?:com|co\.uk|fr|de|es|it)|outlook\.com|live\.(?:com|co\.uk|fr|de)|icloud\.com|me\.com|mac\.com|aol\.com|protonmail\.(?:com|ch)|proton\.me|tutanota\.com|tutamail\.com|yandex\.(?:com|ru)|qq\.com|163\.com|126\.com|web\.de|gmx\.(?:com|net|de)|ukr\.net|wp\.pl|zoho\.com|fastmail\.(?:com|fm)|hey\.com|pm\.me)\b'
+    confidence: high
+    severity: medium
+    category: pii
+    cwe: ["CWE-359"]
+    summary: Email address at a public consumer provider detected
+    remediation: "Remove personal email addresses from source code and config. Internal corporate addresses are excluded from this rule. Use placeholder domains (e.g. example.com) in test data."
+    note: "This rule only targets public consumer webmail providers; the general email rule covers every other address."
+  - id: email
+    description: Email address
+    pattern: '\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b'
+    confidence: high
+    severity: low
+    category: pii
+    cwe: ["CWE-359"]
+    summary: General email address detected
+    remediation: "Remove personal email addresses from source code. Use placeholder domains (e.g. example.com) in test data."
+
+
+  - id: pem-private-key
+    description: PEM Private Key Block
+    pattern: '-----BEGIN (?:RSA |EC |DSA |OPENSSH )?PRIVATE KEY-----'
+    confidence: high
+    severity: critical
+    category: credentials
+    cwe: ["CWE-321", "CWE-798"]
+    summary: PEM private key block detected
+    remediation: "Remove the private key from source immediately. Rotate the key pair. Store private keys in a secrets manager or hardware security module."
+
+  # ── Gaming platform identifiers ──────────────────────────────────────────────
+  # All gaming account identifiers are personal data under GDPR Art. 4(1) /
+  # Recital 30 (online identifiers). COPPA classifies them as "persistent
+  # identifiers" when used to recognise returning users. Source: EDPB Guidelines
+  # 1/2024; ICO Children's Code Standard 8 (data minimisation).
+
+  - id: steam-id-64
+    description: Steam Account ID (SteamID64)
+    pattern: '\b7656119\d{10}\b'
+    confidence: high
+    severity: medium
+    category: gaming-platform-id
+    cwe: ["CWE-359"]
+    summary: Steam SteamID64 account identifier detected
+    remediation: "Remove hardcoded SteamID64 values from source code and config. Steam IDs are personal data under GDPR Art. 4(1) / Recital 30. Store player identifiers in a database, not in committed code."
+
+  - id: steam-id-legacy
+    description: Steam Legacy Account ID (STEAM_X:Y:Z format)
+    pattern: '\bSTEAM_[01]:[01]:[0-9]{1,10}\b'
+    confidence: high
+    severity: medium
+    category: gaming-platform-id
+    cwe: ["CWE-359"]
+    summary: Steam legacy account ID (STEAM_X:Y:Z) detected
+    remediation: "Remove hardcoded Steam IDs from source code. Steam IDs are personal data under GDPR Art. 4(1)."
+
+  - id: steam-id3
+    description: Steam Account ID3 format ([U:1:XXXXXXXX])
+    pattern: '\[U:1:[0-9]{1,10}\]'
+    confidence: high
+    severity: medium
+    category: gaming-platform-id
+    cwe: ["CWE-359"]
+    summary: Steam ID3 format account identifier detected
+    remediation: "Remove hardcoded Steam IDs from source code."
+
+  - id: nintendo-switch-friend-code
+    description: Nintendo Switch Friend Code (SW-XXXX-XXXX-XXXX)
+    pattern: '\bSW-[0-9]{4}-[0-9]{4}-[0-9]{4}\b'
+    confidence: high
+    severity: medium
+    category: gaming-platform-id
+    cwe: ["CWE-359"]
+    summary: Nintendo Switch Friend Code detected
+    remediation: "Remove Nintendo Switch Friend Codes from source and config files. Friend Codes uniquely identify a Nintendo Switch console owner and are personal data under GDPR Art. 4(1)."
+
+  - id: psn-npwr-trophy-id
+    description: PlayStation Network Trophy Communication ID (NPWR)
+    pattern: '\bNPWR[0-9]{5}_[0-9]{2}\b'
+    confidence: high
+    severity: low
+    category: gaming-platform-id
+    cwe: ["CWE-359"]
+    summary: PSN NPWR trophy communication identifier detected
+    remediation: "Avoid hardcoding PSN NPWR identifiers in source code. These platform identifiers are personal data when linked to a PSN account."
+
+  - id: xbox-xuid-url
+    description: Xbox User ID (XUID) in REST API / URL notation — xuid(XXXXXXXXXXXXXXXX)
+    pattern: '\bxuid\([0-9]{15,16}\)'
+    confidence: high
+    severity: medium
+    category: gaming-platform-id
+    cwe: ["CWE-359"]
+    summary: Xbox XUID detected in API URL notation
+    remediation: "Remove hardcoded XUIDs from source code and config. XUIDs are personal data under GDPR Art. 4(1) / Recital 30. Store player identifiers in a database or secrets manager."
+
+  - id: xbox-xuid-context
+    description: Xbox User ID (XUID) in variable assignment context
+    pattern: '(?i)(?:xuid|xbox_?user_?id|XboxUserId)["\s:=,]+[0-9]{15,16}'
+    confidence: high
+    severity: medium
+    category: gaming-platform-id
+    cwe: ["CWE-359"]
+    summary: Xbox XUID detected in variable assignment
+    remediation: "Remove hardcoded XUIDs from source code and config."
+
+  - id: epic-account-id-context
+    description: Epic Games Account ID or Product User ID in variable assignment
+    pattern: '(?i)(?:epic_?account_?id|epicAccountId|productUserId|EpicAccountId)["\s:=,]+[0-9a-f]{32}'
+    confidence: high
+    severity: medium
+    category: gaming-platform-id
+    cwe: ["CWE-359"]
+    summary: Epic Games Account ID detected in variable assignment
+    remediation: "Remove hardcoded Epic Account IDs from source code. Epic Account IDs are personal data under GDPR Art. 4(1)."
+
+  - id: epic-oauth-credential-pair
+    description: Epic Games OAuth client_id:client_secret credential pair
+    pattern: '\b[0-9a-f]{32}:[0-9a-f]{32}\b'
+    confidence: high
+    severity: critical
+    category: credentials
+    cwe: ["CWE-798", "CWE-321"]
+    summary: Epic Games OAuth client_id:client_secret pair detected
+    remediation: "Rotate Epic Games OAuth credentials immediately at dev.epicgames.com. Store client credentials in AWS Secrets Manager and inject via environment variables. Never commit OAuth credentials."
+
+  - id: psn-online-id-context
+    description: PlayStation Network Online ID in variable assignment
+    pattern: '(?i)(?:psn_?(?:online_?)?id|onlineId|psn_?user(?:name)?)["\s:=,]+"[A-Za-z][A-Za-z0-9_-]{2,15}"'
+    confidence: high
+    severity: medium
+    category: gaming-platform-id
+    cwe: ["CWE-359"]
+    summary: PSN Online ID detected in variable assignment
+    remediation: "Remove hardcoded PSN Online IDs from source code. PSN Online IDs are personal data under GDPR Art. 4(1)."
+
+  - id: nintendo-account-id-context
+    description: Nintendo Account ID (na_id / nsa_id) in variable assignment
+    pattern: '(?i)(?:na_?id|nsa_?id|nintendo_?account_?id)["\s:=,]+[0-9a-f]{16}'
+    confidence: high
+    severity: medium
+    category: gaming-platform-id
+    cwe: ["CWE-359"]
+    summary: Nintendo Account ID detected in variable assignment
+    remediation: "Remove hardcoded Nintendo Account IDs from source code."
+
+  - id: apple-game-center-player-id
+    description: Apple Game Center legacy playerID (G:XXXXXXXXX)
+    pattern: '\bG:[0-9]{8,12}\b'
+    confidence: high
+    severity: medium
+    category: gaming-platform-id
+    cwe: ["CWE-359"]
+    summary: Apple Game Center legacy playerID detected
+    remediation: "Remove hardcoded Game Center playerIDs from source code. Game Center player identifiers are personal data under GDPR Art. 4(1)."
+
+  - id: apple-game-center-team-id
+    description: Apple Game Center teamPlayerID (T:_XXXXXXXX...)
+    pattern: '\bT:_[0-9a-f]{32}\b'
+    confidence: high
+    severity: medium
+    category: gaming-platform-id
+    cwe: ["CWE-359"]
+    summary: Apple Game Center teamPlayerID detected
+    remediation: "Remove hardcoded Game Center teamPlayerIDs from source code."
+
+  # ── Cross-platform / competitive gaming identifiers ───────────────────────────
+
+  - id: riot-id-context
+    description: Riot Games PUUID or Riot ID in variable assignment
+    pattern: '(?i)(?:riot_?(?:id|account|puuid)|puuid)["\s:=,]+["\x27]?[A-Za-z0-9_-]{20,78}["\x27]?'
+    confidence: high
+    severity: medium
+    category: gaming-platform-id
+    cwe: ["CWE-359"]
+    summary: Riot Games PUUID / Riot ID detected in variable assignment
+    remediation: "Remove hardcoded Riot IDs or PUUIDs from source code. Riot account identifiers are personal data under GDPR Art. 4(1)."
+
+  - id: battletag-context
+    description: Battle.net BattleTag in variable assignment (Name#NNNN)
+    pattern: '(?i)(?:battletag|battle_?tag|bnet_?(?:tag|id))["\s:=,]+"[A-Za-z][A-Za-z0-9]{2,11}#[0-9]{4,5}"'
+    confidence: high
+    severity: medium
+    category: gaming-platform-id
+    cwe: ["CWE-359"]
+    summary: Battle.net BattleTag detected in variable assignment
+    remediation: "Remove hardcoded BattleTags from source code. BattleTags are personal data under GDPR Art. 4(1)."
+
+  - id: discord-snowflake-context
+    description: Discord User / Guild / Channel Snowflake ID in variable assignment
+    pattern: '(?i)(?:discord_?(?:user_?)?id|discord_?guild_?id|discord_?channel_?id)["\s:=,]+["\x27]?[0-9]{17,19}["\x27]?'
+    confidence: high
+    severity: medium
+    category: gaming-platform-id
+    cwe: ["CWE-359"]
+    summary: Discord Snowflake ID detected in variable assignment
+    remediation: "Remove hardcoded Discord IDs from source code. Discord Snowflake IDs are personal data under GDPR Art. 4(1) / Recital 30."
+
+  # ── Advertising identifiers ───────────────────────────────────────────────────
+  # GDPR Recital 30: advertising identifiers are online identifiers = personal
+  # data. ePrivacy Art. 5(3): consent required for reading device identifiers.
+  # CNIL fined Voodoo €3M and Apple €8M (Dec 2022) for IDFV use without
+  # consent. Both IDFA and GAID require ATT/consent before transmission.
+
+  - id: advertising-id-idfa
+    description: Apple IDFA or IDFV advertising identifier in variable assignment
+    pattern: '(?i)(?:idfa|idfv|identifier_?for_?(?:advertising|vendor))["\s:=,]+["\x27]?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}["\x27]?'
+    confidence: high
+    severity: high
+    category: advertising-identifier
+    cwe: ["CWE-359"]
+    summary: Apple IDFA/IDFV advertising identifier hardcoded in source
+    remediation: "Remove hardcoded IDFA/IDFV values from source. These are personal data under GDPR Recital 30. Retrieve at runtime via ASIdentifierManager / UIDevice APIs only after ATT consent (iOS 14.5+). Transmitting without ATT consent violates Apple policy and ePrivacy. CNIL fined Voodoo €3M for IDFV misuse (December 2022)."
+
+  - id: advertising-id-gaid
+    description: Google Advertising ID (GAID / Android Advertising ID) in variable assignment
+    pattern: '(?i)(?:gaid|adid|google_?ad(?:vertising)?_?id|android_?ad(?:vertising)?_?id)["\s:=,]+["\x27]?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}["\x27]?'
+    confidence: high
+    severity: high
+    category: advertising-identifier
+    cwe: ["CWE-359"]
+    summary: Google Advertising ID (GAID) hardcoded in source
+    remediation: "Remove hardcoded GAID values from source. GAID is personal data under GDPR Recital 30. Requires user consent before use for advertising purposes. Retrieve at runtime via AdvertisingIdClient. Google is transitioning GAID to Privacy Sandbox APIs."
+
+  # ── Financial PII ─────────────────────────────────────────────────────────────
+
+  - id: iban
+    description: International Bank Account Number (IBAN)
+    pattern: '(?i)(?:iban|bank_?account)["\s:=,]+["\x27]?[A-Z]{2}[0-9]{2}[A-Z0-9]{4}[0-9]{7}(?:[A-Z0-9]{0,16})["\x27]?'
+    confidence: high
+    severity: high
+    category: financial
+    cwe: ["CWE-359", "CWE-312"]
+    summary: IBAN bank account number detected
+    remediation: "Remove bank account numbers from source code. Store financial identifiers in a secrets manager or encrypted database. Never include in static assets or config files."
+
+  - id: us-routing-number
+    description: US Bank Routing Number (ABA) in variable context
+    pattern: '(?i)(?:routing_?(?:number|no|num)|aba_?(?:number|routing)|transit_?(?:number|no))["\s:=,]+["\x27]?[0-9]{9}["\x27]?'
+    confidence: high
+    severity: high
+    category: financial
+    cwe: ["CWE-359", "CWE-312"]
+    summary: US bank routing number detected in variable context
+    remediation: "Remove bank routing numbers from source code. Store financial identifiers in a secrets manager."
+
+  - id: us-ein
+    description: US Employer Identification Number (EIN / Federal Tax ID)
+    pattern: '(?i)(?:ein|employer_?(?:identification|id)_?(?:number|no)?|federal_?tax_?(?:id|number)|tax_?id_?(?:number|no)?)["\s:=,]+["\x27]?\d{2}-\d{7}["\x27]?'
+    confidence: high
+    severity: high
+    category: pii
+    cwe: ["CWE-359"]
+    summary: US Employer Identification Number (EIN) detected
+    remediation: "Remove EINs from source code. Federal tax identifiers are personal data under CCPA and sensitive data under GDPR."
+
+  - id: us-itin
+    description: US Individual Taxpayer Identification Number (ITIN) in variable context
+    pattern: '(?i)(?:itin|individual_?taxpayer|tax_?id)["\s:=,]+["\x27]?9\d{2}-\d{2}-\d{4}["\x27]?'
+    confidence: high
+    severity: high
+    category: pii
+    cwe: ["CWE-359"]
+    summary: US ITIN (Individual Taxpayer Identification Number) detected
+    remediation: "Remove ITINs from source code. ITINs identify undocumented residents and carry heightened sensitivity."
+
+  # ── Government identifiers ────────────────────────────────────────────────────
+
+  - id: us-passport-number
+    description: US Passport Number in variable context
+    pattern: '(?i)(?:passport_?(?:number|no|num)?)["\s:=,]+["\x27]?[A-Z][0-9]{8}["\x27]?'
+    confidence: high
+    severity: high
+    category: pii
+    cwe: ["CWE-359"]
+    summary: US passport number detected
+    remediation: "Remove passport numbers from source code. Passport numbers are government-issued identifiers and sensitive personal data under GDPR Art. 4(1) and CCPA."
+
+  - id: uk-national-insurance
+    description: UK National Insurance Number
+    pattern: '\b[A-CEGHJ-PR-TW-Z][A-CEGHJ-NPR-TW-Z][0-9]{6}[A-D]\b'
+    confidence: high
+    severity: high
+    category: pii
+    cwe: ["CWE-359"]
+    summary: UK National Insurance Number detected
+    remediation: "Remove National Insurance Numbers from source code. NINOs are government-issued personal identifiers under UK GDPR Art. 4(1)."
+
+  - id: date-of-birth
+    description: Date of birth in variable context
+    pattern: '(?i)(?:dob|date_?of_?birth|birth_?date|birthdate)["\s:=,]+["\x27]?\d{4}[-/]\d{2}[-/]\d{2}["\x27]?'
+    confidence: high
+    severity: high
+    category: pii
+    cwe: ["CWE-359"]
+    summary: Date of birth detected in variable context
+    remediation: "Remove dates of birth from source code and config. DOB is personal data under GDPR Art. 4(1) and a primary age verification data point. Especially sensitive for minor users under COPPA/Art. 8."
+
+  # ── Network and device identifiers ───────────────────────────────────────────
+
+  - id: ipv4-user-context
+    description: IPv4 address in user-tracking variable context
+    pattern: '(?i)(?:user_?ip|client_?ip|remote_?addr|x_?forwarded_?for|ip_?addr(?:ess)?|source_?ip|requester?_?ip|origin_?ip)["\s:=,]+["\x27]?(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)["\x27]?'
+    confidence: high
+    severity: medium
+    category: pii
+    cwe: ["CWE-359"]
+    summary: IPv4 address detected in user-tracking variable context
+    remediation: "Avoid hardcoding user IP addresses in source code or config. IP addresses are personal data under GDPR Art. 4(1) / Recital 30 (CJEU Breyer ruling). Do not log or persist user IPs beyond operational necessity."
+
+  - id: ipv6-user-context
+    description: IPv6 address in user-tracking variable context
+    pattern: '(?i)(?:user_?ip|client_?ip|ip_?addr(?:ess)?)["\s:=,]+["\x27]?(?:[0-9a-fA-F]{0,4}:){2,7}[0-9a-fA-F]{0,4}["\x27]?'
+    confidence: high
+    severity: medium
+    category: pii
+    cwe: ["CWE-359"]
+    summary: IPv6 address detected in user-tracking variable context
+    remediation: "IPv6 addresses are personal data under GDPR Art. 4(1). Remove hardcoded user IPv6 addresses from source."
+
+  - id: mac-address-context
+    description: MAC / hardware address in device-identifier variable context
+    pattern: '(?i)(?:mac_?addr(?:ess)?|hardware_?addr(?:ess)?|device_?mac|hwaddr|physical_?addr(?:ess)?)["\s:=,]+["\x27]?(?:[0-9A-Fa-f]{2}[:\-]){5}[0-9A-Fa-f]{2}["\x27]?'
+    confidence: high
+    severity: medium
+    category: pii
+    cwe: ["CWE-359"]
+    summary: MAC address detected in device-identifier variable context
+    remediation: "MAC addresses are online identifiers and personal data under GDPR Recital 30. Avoid hardcoding device MAC addresses in source code."
+  - id: ipv4
+    description: IPv4 address
+    pattern: '(?<![\w.])(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(?![\w]|\.\d)'
+    confidence: medium
+    severity: low
+    category: pii
+    cwe: ["CWE-359"]
+    summary: IPv4 address detected
+    remediation: "Avoid hardcoding public IP addresses in source code."
+
+  - id: ipv6
+    description: IPv6 address
+    pattern: '(?<![\w:.])(?=[0-9A-Fa-f:]*:[0-9A-Fa-f:]*:)[0-9A-Fa-f:]{3,39}(?![\w:.])'
+    confidence: medium
+    severity: low
+    category: pii
+    cwe: ["CWE-359"]
+    summary: IPv6 address detected
+    remediation: "Avoid hardcoding public IPv6 addresses in source code."
+
+  - id: mac-address
+    description: MAC address
+    pattern: '\b(?:[0-9A-Fa-f]{2}[:-]){5}[0-9A-Fa-f]{2}\b'
+    confidence: medium
+    severity: low
+    category: pii
+    cwe: ["CWE-359"]
+    summary: MAC address detected
+    remediation: "Avoid hardcoding MAC addresses in source code."
+
+
+  - id: gps-latitude
+    description: GPS latitude coordinate in geolocation variable context
+    pattern: '(?i)(?:lat(?:itude)?)["\s:=,]+[-+]?(?:[0-8]?\d(?:\.\d{4,})|90(?:\.0+)?)\b'
+    confidence: high
+    severity: medium
+    category: pii
+    cwe: ["CWE-359"]
+    summary: GPS latitude coordinate detected
+    remediation: "GPS coordinates are personal data under GDPR Art. 4(1) and Sensitive Personal Information under CPRA. ICO Children's Code Standard 10 requires geolocation to be off by default for child-likely services. Avoid hardcoding real coordinates."
+
+  - id: gps-longitude
+    description: GPS longitude coordinate in geolocation variable context
+    pattern: '(?i)(?:lon(?:gitude)?|lng)["\s:=,]+[-+]?(?:1[0-7]\d(?:\.\d{4,})?|\d{1,2}(?:\.\d{4,})?|180(?:\.0+)?)\b'
+    confidence: high
+    severity: medium
+    category: pii
+    cwe: ["CWE-359"]
+    summary: GPS longitude coordinate detected
+    remediation: "GPS coordinates are personal data under GDPR Art. 4(1) and SPI under CPRA. Avoid hardcoding real coordinates in source code."
+
+  # ── Additional credential types ───────────────────────────────────────────────
+
+  - id: jwt-token
+    description: JSON Web Token (JWT) — three-part base64url structure
+    pattern: 'eyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}'
+    confidence: high
+    severity: critical
+    category: credentials
+    cwe: ["CWE-798", "CWE-321"]
+    summary: JSON Web Token (JWT) detected — may contain embedded identity claims
+    remediation: "Remove hardcoded JWTs from source code. JWTs often contain user identity claims (sub, email, roles) and act as bearer credentials. Rotate immediately if the token is still valid."
+
+  - id: stripe-live-api-key
+    description: Stripe live-mode secret API key (sk_live_...)
+    pattern: '\bsk_live_[A-Za-z0-9]{24,}\b'
+    confidence: high
+    severity: critical
+    category: credentials
+    cwe: ["CWE-798"]
+    summary: Stripe live-mode secret API key detected
+    remediation: "Rotate the Stripe key immediately at dashboard.stripe.com/apikeys. Store in AWS Secrets Manager. A live secret key grants full account access including charges and refunds."
+
+  - id: stripe-restricted-key
+    description: Stripe restricted live-mode API key (rk_live_...)
+    pattern: '\brk_live_[A-Za-z0-9]{24,}\b'
+    confidence: high
+    severity: critical
+    category: credentials
+    cwe: ["CWE-798"]
+    summary: Stripe restricted live-mode API key detected
+    remediation: "Rotate at dashboard.stripe.com/apikeys. Store in AWS Secrets Manager."
+
+  - id: stripe-webhook-secret
+    description: Stripe webhook signing secret (whsec_...)
+    pattern: '\bwhsec_[A-Za-z0-9]{32,}\b'
+    confidence: high
+    severity: critical
+    category: credentials
+    cwe: ["CWE-798"]
+    summary: Stripe webhook signing secret detected
+    remediation: "Rotate the webhook secret at dashboard.stripe.com/webhooks. This secret allows forging Stripe event payloads."
+
+  - id: sendgrid-api-key
+    description: SendGrid API key (SG....)
+    pattern: '\bSG\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{40,}\b'
+    confidence: high
+    severity: critical
+    category: credentials
+    cwe: ["CWE-798"]
+    summary: SendGrid API key detected
+    remediation: "Rotate at app.sendgrid.com/settings/api_keys. Store in AWS Secrets Manager."
+
+  - id: twilio-account-sid
+    description: Twilio Account SID (ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx)
+    pattern: '\bAC[a-z0-9]{32}\b'
+    confidence: high
+    severity: high
+    category: credentials
+    cwe: ["CWE-359"]
+    summary: Twilio Account SID detected
+    remediation: "Twilio Account SIDs identify the account and should be treated as sensitive. Rotate auth token at console.twilio.com. Store credentials in AWS Secrets Manager."
+
+  - id: firebase-api-key
+    description: Firebase / Google API key (AIza...)
+    pattern: '\bAIza[0-9A-Za-z_-]{35}\b'
+    confidence: high
+    severity: critical
+    category: credentials
+    cwe: ["CWE-798"]
+    summary: Firebase / Google API key detected
+    remediation: "Restrict the key in the Google Cloud Console and rotate. Firebase API keys embedded in source grant access to Firebase services and can be used to enumerate project data."
+
+  - id: npm-auth-token
+    description: npm authentication token (npm_...)
+    pattern: '\bnpm_[A-Za-z0-9]{32,}\b'
+    confidence: high
+    severity: critical
+    category: credentials
+    cwe: ["CWE-798"]
+    summary: npm authentication token detected
+    remediation: "Revoke at npmjs.com/settings/tokens. npm tokens grant package publish rights. Store in AWS Secrets Manager or GitHub Actions secrets."
+
+  - id: pypi-api-token
+    description: PyPI API token (pypi-...)
+    pattern: '\bpypi-[A-Za-z0-9_-]{32,}\b'
+    confidence: high
+    severity: critical
+    category: credentials
+    cwe: ["CWE-798"]
+    summary: PyPI API token detected
+    remediation: "Revoke at pypi.org/manage/account/token. Store in AWS Secrets Manager or CI secrets."
+
+  - id: gcp-service-account-key
+    description: GCP service account key JSON block
+    pattern: '"type"\s*:\s*"service_account"'
+    confidence: high
+    severity: critical
+    category: credentials
+    cwe: ["CWE-798", "CWE-321"]
+    summary: GCP service account key JSON detected
+    remediation: "Delete the service account key in the GCP Console and generate a new one. Use Workload Identity Federation instead of key files. Never commit service account JSON to source control."
+
+  - id: oauth-refresh-token
+    description: OAuth refresh token in variable context
+    pattern: '(?i)(?:refresh_?token|oauth_?refresh)["\s:=,]+["\x27][A-Za-z0-9._\-/+=]{20,}["\x27]'
+    confidence: high
+    severity: critical
+    category: credentials
+    cwe: ["CWE-798"]
+    summary: OAuth refresh token detected in variable context
+    remediation: "Revoke the refresh token via the OAuth provider. Refresh tokens grant long-lived access. Store in a secrets manager, never in source code."
+
+  # ── Gaming personalization ────────────────────────────────────────────────────
+  # Data categories collected for matchmaking, anti-cheat, and personalization
+  # engines. Personal data under GDPR Art. 4(1) / CCPA when linked to an account.
+  # Art. 22 may apply if used for automated decisions (bans, matchmaking gates).
+
+  - id: hwid-context
+    description: Hardware fingerprint / HWID in anti-cheat or device-tracking context
+    pattern: '(?i)(?:hwid|hardware_?(?:id|fingerprint|hash|ban)|machine_?id|device_?fingerprint|bios_?(?:id|serial)|disk_?(?:serial|uuid))["\s:=,]+["\x27]?[A-Za-z0-9_\-]{16,}["\x27]?'
+    confidence: high
+    severity: high
+    category: gaming-personalization
+    cwe: ["CWE-359"]
+    summary: Hardware fingerprint / HWID detected in source or config
+    remediation: "Do not hardcode hardware identifiers in source. HWIDs collected by anti-cheat systems are personal data under GDPR Recital 30 and EDPB Guidelines 01/2025. HWID ban records likely trigger GDPR Art. 22 (automated decision with significant effect)."
+
+  - id: session-token-context
+    description: Session token or session ID in variable context
+    pattern: '(?i)(?:session_?(?:id|token|key|hash)|sessionid|session_?secret)["\s:=,]+["\x27][A-Za-z0-9_\-]{16,}["\x27]'
+    confidence: high
+    severity: high
+    category: gaming-personalization
+    cwe: ["CWE-798"]
+    summary: Session token or ID detected in variable context
+    remediation: "Remove hardcoded session tokens from source. Session tokens are bearer credentials granting access to the user's session. Rotate immediately."
+
+  - id: matchmaking-rating
+    description: Player matchmaking rating / ELO / skill score in variable context
+    pattern: '(?i)(?:mmr|elo|skill_?rating|matchmaking_?rating|rank_?score|trueskill|mu_?sigma|conserv(?:ative)?_?rating)["\s:=,]+[0-9]{1,6}(?:\.[0-9]+)?'
+    confidence: medium
+    severity: low
+    category: gaming-personalization
+    cwe: ["CWE-359"]
+    summary: Player matchmaking rating / ELO detected in variable context
+    remediation: "Skill ratings are personal data under GDPR Art. 4(1) (CJEU Nowak). Do not expose raw MMR/ELO values in client-accessible code or static assets. Art. 22 may apply if matchmaking ratings drive automated access decisions."
+
+  - id: in-game-currency-balance
+    description: In-game currency balance in variable context
+    pattern: '(?i)(?:v_?bucks?|vbucks?|gems?_?(?:balance|amount|count)|credits?_?(?:balance|amount)|coins?_?(?:balance|amount)|gold_?(?:balance|amount)|in_?game_?currency)["\s:=,]+[0-9]{1,8}'
+    confidence: medium
+    severity: low
+    category: gaming-personalization
+    cwe: ["CWE-359"]
+    summary: In-game currency balance detected in variable context
+    remediation: "In-game currency balances linked to an account are personal data under GDPR Art. 4(1) and purchase history under CCPA. Do not hardcode real player balances in source code."
+
+  # ── GDPR Article 9 special categories ────────────────────────────────────────
+  # Special category data under GDPR Art. 9 requires explicit consent (Art. 9(2)(a))
+  # or another specific exception. Processing without a valid Art. 9 basis is
+  # unlawful regardless of any Art. 6 lawful basis. Highest enforcement risk.
+
+  - id: health-data-context
+    description: Health or medical data in variable context (GDPR Art. 9 special category)
+    pattern: '(?i)(?:diagnosis|medical_?condition|health_?(?:status|condition|data|record)|prescription_?(?:data|history|drug)|treatment_?(?:plan|history|record)|disability_?(?:status|type))["\s:=,]+["\x27][^"'']{3,}["\x27]'
+    confidence: medium
+    severity: critical
+    category: pii
+    cwe: ["CWE-359"]
+    summary: Health or medical data detected in variable context (GDPR Art. 9 special category)
+    remediation: "Health data is a GDPR Art. 9 special category requiring explicit consent or a specific Art. 9(2) exception. Remove from source code immediately. Store in an encrypted, access-controlled system with full audit logging."
+
+  - id: biometric-data-context
+    description: Biometric identifier in variable context (GDPR Art. 9 special category)
+    pattern: '(?i)(?:fingerprint_?(?:hash|data|template|scan)|face_?(?:id|template|hash|embedding)|voiceprint|iris_?(?:scan|hash|data)|retinal_?(?:scan|data)|gait_?(?:pattern|data))["\s:=,]+'
+    confidence: high
+    severity: critical
+    category: pii
+    cwe: ["CWE-359"]
+    summary: Biometric identifier detected in variable context (GDPR Art. 9 special category)
+    remediation: "Biometric data is a GDPR Art. 9 special category and CCPA Sensitive Personal Information. Explicit consent required. Remove from source. COPPA 2025 amendments explicitly added biometric identifiers to COPPA personal information."
+
+  - id: gender-identity-context
+    description: Gender identity or sexual orientation in variable context (GDPR Art. 9 special category)
+    pattern: '(?i)(?:gender_?identity|sexual_?orientation|sex_?orientation)["\s:=,]+["\x27][^"'']{2,30}["\x27]'
+    confidence: medium
+    severity: critical
+    category: pii
+    cwe: ["CWE-359"]
+    summary: Gender identity or sexual orientation data detected (GDPR Art. 9 special category)
+    remediation: "Sexual orientation and gender identity are GDPR Art. 9 special categories requiring explicit consent. Remove from source. Exposure of this data carries heightened legal risk and harm potential."
+
+  - id: racial-ethnic-origin-context
+    description: Racial or ethnic origin in variable context (GDPR Art. 9 special category)
+    pattern: '(?i)(?:ethnicity|ethnic_?(?:origin|group|background)|racial_?(?:origin|group|category)|race_?(?:category|group))["\s:=,]+["\x27][^"'']{2,}["\x27]'
+    confidence: medium
+    severity: critical
+    category: pii
+    cwe: ["CWE-359"]
+    summary: Racial or ethnic origin data detected (GDPR Art. 9 special category)
+    remediation: "Racial and ethnic origin is a GDPR Art. 9 special category. Explicit consent or a specific Art. 9(2) exception required. Remove from source code."
+
+  - id: political-religious-belief-context
+    description: Political opinion or religious belief in variable context (GDPR Art. 9 special category)
+    pattern: '(?i)(?:political_?(?:party|affiliation|opinion|belief|view)|religious_?(?:belief|affiliation|view)|religion)["\s:=,]+["\x27][^"'']{2,}["\x27]'
+    confidence: medium
+    severity: critical
+    category: pii
+    cwe: ["CWE-359"]
+    summary: Political opinion or religious belief data detected (GDPR Art. 9 special category)
+    remediation: "Political opinions and religious beliefs are GDPR Art. 9 special categories. Explicit consent required. Remove from source code."

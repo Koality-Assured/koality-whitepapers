@@ -1,0 +1,156 @@
+{
+  "context_metrics": {
+    "deterministic_false_negatives": 0,
+    "deterministic_false_positives": 0,
+    "deterministic_findings_count": 0,
+    "deterministic_json_tokens": 1,
+    "deterministic_sarif_tokens": 9227,
+    "deterministic_true_positives": 0,
+    "expected_findings_count": 0,
+    "false_positive_findings_avoided": 17,
+    "false_positive_reduction_pct": 100.0,
+    "files_tested": 5,
+    "ground_truth_scope": "all-negative; values are reserved, invalid, or documented test values",
+    "naive_false_negatives": 0,
+    "naive_false_positives": 17,
+    "naive_findings_count": 17,
+    "naive_json_tokens": 912,
+    "naive_true_positives": 0,
+    "token_savings_pct": 99.89,
+    "tokens_saved": 911
+  },
+  "det_metrics": {
+    "credit-card": {
+      "f1": 0.5556,
+      "fn": 8,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 0.3846,
+      "specificity": 1.0,
+      "tn": 88,
+      "tp": 5
+    },
+    "email": {
+      "f1": null,
+      "fn": 0,
+      "fp": 0,
+      "precision": null,
+      "recall": null,
+      "specificity": 1.0,
+      "tn": 101,
+      "tp": 0
+    },
+    "ipv4": {
+      "f1": null,
+      "fn": 0,
+      "fp": 0,
+      "precision": null,
+      "recall": null,
+      "specificity": 1.0,
+      "tn": 101,
+      "tp": 0
+    },
+    "ipv6": {
+      "f1": null,
+      "fn": 0,
+      "fp": 0,
+      "precision": null,
+      "recall": null,
+      "specificity": 1.0,
+      "tn": 101,
+      "tp": 0
+    },
+    "mac-address": {
+      "f1": 0.8571,
+      "fn": 0,
+      "fp": 1,
+      "precision": 0.75,
+      "recall": 1.0,
+      "specificity": 0.9898,
+      "tn": 97,
+      "tp": 3
+    },
+    "ssn-us": {
+      "f1": null,
+      "fn": 0,
+      "fp": 0,
+      "precision": null,
+      "recall": null,
+      "specificity": 1.0,
+      "tn": 101,
+      "tp": 0
+    }
+  },
+  "naive_metrics": {
+    "credit-card": {
+      "f1": 0.7222,
+      "fn": 0,
+      "fp": 10,
+      "precision": 0.5652,
+      "recall": 1.0,
+      "specificity": 0.8864,
+      "tn": 78,
+      "tp": 13
+    },
+    "email": {
+      "f1": null,
+      "fn": 0,
+      "fp": 8,
+      "precision": 0.0,
+      "recall": null,
+      "specificity": 0.9208,
+      "tn": 93,
+      "tp": 0
+    },
+    "ipv4": {
+      "f1": null,
+      "fn": 0,
+      "fp": 15,
+      "precision": 0.0,
+      "recall": null,
+      "specificity": 0.8515,
+      "tn": 86,
+      "tp": 0
+    },
+    "ipv6": {
+      "f1": null,
+      "fn": 0,
+      "fp": 2,
+      "precision": 0.0,
+      "recall": null,
+      "specificity": 0.9802,
+      "tn": 99,
+      "tp": 0
+    },
+    "mac-address": {
+      "f1": 0.6667,
+      "fn": 0,
+      "fp": 3,
+      "precision": 0.5,
+      "recall": 1.0,
+      "specificity": 0.9694,
+      "tn": 95,
+      "tp": 3
+    },
+    "ssn-us": {
+      "f1": null,
+      "fn": 0,
+      "fp": 8,
+      "precision": 0.0,
+      "recall": null,
+      "specificity": 0.9208,
+      "tn": 93,
+      "tp": 0
+    }
+  },
+  "perf_metrics": {
+    "bulk_duration_sec": 1.599,
+    "bulk_files_count": 50,
+    "bulk_lines_count": 10000,
+    "limit": "The benchmark does not run an unbounded regex or measure ReDoS behavior.",
+    "normal_file_100_lines_scan_call_ms": 7.48,
+    "overlength_line_24kb_scan_call_ms": 46.656,
+    "overlength_line_skipped": true,
+    "throughput_lines_per_sec": 6253.6
+  }
+}

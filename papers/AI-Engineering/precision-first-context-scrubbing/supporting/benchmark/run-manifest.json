@@ -1,0 +1,22 @@
+{
+  "benchmark": "Precision-First Context Scrubbing Deterministic Benchmark",
+  "context_workload_ground_truth": "all-negative safe test controls",
+  "corpus_cases_count": 101,
+  "evaluated_rules_count": 6,
+  "files_generated": [
+    "metrics/trial-metrics.json",
+    "metrics/summary.json",
+    "run-manifest.json",
+    "sha256-manifest.json"
+  ],
+  "python_version": "3.11.9",
+  "scanner_commit": "514f708e8890add75a963ff771245c1256394323",
+  "scanner_repository": "https://github.com/Koality-Assured/koality-pii-scanner",
+  "scanner_source": "vendored MIT-licensed package snapshot under vendor/koality-pii-scanner/",
+  "scanner_version": "0.2.0",
+  "status": "completed",
+  "tiktoken_version": "0.14.0",
+  "timestamp_utc": "2026-10-27T19:39:55Z",
+  "tokenizer_note": "The tokenizer may download its encoding data on first use if it is not cached.",
+  "zero_live_provider_api_calls": true
+}

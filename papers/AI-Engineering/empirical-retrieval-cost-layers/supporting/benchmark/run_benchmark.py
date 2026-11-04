@@ -1,4 +1,4 @@
-"""Empirical benchmark comparing Arm A (Shell Grep + Full File Dump) vs Arm B (Layered QMD BM25 + AST-Grep + Line-Bounded Multi-Get).
+"""Empirical benchmark comparing Arm A (Shell Grep + Full File Dump) vs Arm B (Ranked QMD BM25 + Line-Bounded Multi-Get).
 
 tags: [benchmarks, cost-layers, qmd, ast-grep, context-tax, whitepaper-empirical]
 routing_hints: [eval-retrieval-cost-layers, context-tax, arm-a-vs-arm-b]
@@ -146,7 +146,7 @@ def run_benchmark(root: Path) -> dict[str, Any]:
         arm_a_latency = grep_latency + read_latency
 
         # -------------------------------------------------------------
-        # ARM B: Layered QMD BM25 + AST / Multi-Get Bounded Snippets
+        # ARM B: Ranked QMD BM25 + Line-Bounded Multi-Get
         # -------------------------------------------------------------
         b_t0 = time.perf_counter()
         qmd_out = ""

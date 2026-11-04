@@ -252,14 +252,16 @@ def check_empirical_retrieval_cost_layers_metrics() -> list[str]:
         errors.append(f"Unexpected net_cumulative_tokens_saved: {summary.get('net_cumulative_tokens_saved')}")
 
     pricing = data.get("pricing", {})
-    claude_savings = pricing.get("claude-3-5-sonnet", {}).get("net_savings_pct")
-    if claude_savings != 92.48:
-        errors.append(f"Unexpected claude-3-5-sonnet savings: {claude_savings}")
+    if pricing:
+        errors.append("Unexpected provider pricing data: provider billing is outside this benchmark")
 
     paper_text = paper_path.read_text(encoding="utf-8")
-    for cited in ["60.40%", "29,662", "11,746", "179,160", "92.48%"]:
+    for cited in ["60.40%", "29,662", "11,746", "179,160", "provider API cache hits", "billed monetary savings"]:
         if cited not in paper_text:
             errors.append(f"PAPER.md does not cite expected result: {cited}")
+    for removed in ["92.48%", "87.15%", "claude-3-5-sonnet", "Gemini 3.8 Flash"]:
+        if removed in paper_text:
+            errors.append(f"PAPER.md still contains removed provider-cost claim: {removed}")
 
     return errors
 

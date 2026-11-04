@@ -17,7 +17,18 @@
 
 ### AI Engineering
 
-#### Context Efficiency Methods
+#### Clean-Slate Specialist Context: Quantifying the Multi-Agent Context Tax and Distractor Interference
+
+A deterministic synthetic evaluation of subagent context isolation and the multi-agent context tax. It measures local token reductions (99.72% vs. 60k inherited baseline) and distractor collision rates across 15 software tasks; it does not represent live provider billing or unmeasured model checkpoints.
+
+- [Read the paper](papers/AI-Engineering/clean-slate-specialist-context/PAPER.md)
+- [Claim-to-evidence ledger](papers/AI-Engineering/clean-slate-specialist-context/supporting/CLAIM-TO-EVIDENCE.md)
+- [Primary-source access log](papers/AI-Engineering/clean-slate-specialist-context/supporting/SOURCES.md)
+- [Reproducibility guide](papers/AI-Engineering/clean-slate-specialist-context/supporting/REPRODUCIBILITY.md)
+- [Benchmark method](papers/AI-Engineering/clean-slate-specialist-context/supporting/benchmark/METHOD.md)
+- [Full benchmark package](papers/AI-Engineering/clean-slate-specialist-context/supporting/benchmark/)
+
+#### Context Efficiency in Agent Harnesses: Measuring Compression, Retrieval, Scoped Extraction, and Prompt Prefixes
 
 A synthetic study of Headroom tool-output compression on deliberately repetitive fixtures. It reports local token-count changes and an exact-marker check; it does not assess semantic preservation, task success, or provider billing.
 
@@ -28,16 +39,35 @@ A synthetic study of Headroom tool-output compression on deliberately repetitive
 - [Benchmark method](papers/AI-Engineering/context-efficiency-methods/supporting/benchmark/METHOD.md)
 - [Full benchmark package](papers/AI-Engineering/context-efficiency-methods/supporting/benchmark/)
 
-#### Clean-Slate Specialist Context
+#### Encrypted Reveal Envelopes and Local Secret Use in Agent Tool Harnesses
 
-A deterministic synthetic evaluation of subagent context isolation and the multi-agent context tax. It measures local token reductions (99.72% vs. 60k inherited baseline) and distractor collision rates across 15 software tasks; it does not represent live provider billing or unmeasured model checkpoints.
+Formal engineering analysis of secret handling in autonomous coding agents. Evaluates local WebCrypto envelope decryption, ephemeral memory leases with automated zeroization, and surrogate handle substitution to eliminate plaintext credential exposure in model transcripts.
 
-- [Read the paper](papers/AI-Engineering/clean-slate-specialist-context/PAPER.md)
-- [Claim-to-evidence ledger](papers/AI-Engineering/clean-slate-specialist-context/supporting/CLAIM-TO-EVIDENCE.md)
-- [Primary-source access log](papers/AI-Engineering/clean-slate-specialist-context/supporting/SOURCES.md)
-- [Reproducibility guide](papers/AI-Engineering/clean-slate-specialist-context/supporting/REPRODUCIBILITY.md)
-- [Benchmark method](papers/AI-Engineering/clean-slate-specialist-context/supporting/benchmark/METHOD.md)
-- [Full benchmark package](papers/AI-Engineering/clean-slate-specialist-context/supporting/benchmark/)
+- [Read the paper](papers/AI-Engineering/zero-plaintext-vault-reveal/PAPER.md)
+- [Claim-to-evidence ledger](papers/AI-Engineering/zero-plaintext-vault-reveal/supporting/CLAIM-TO-EVIDENCE.md)
+- [Primary-source access log](papers/AI-Engineering/zero-plaintext-vault-reveal/supporting/SOURCES.md)
+- [Reproducibility guide](papers/AI-Engineering/zero-plaintext-vault-reveal/supporting/REPRODUCIBILITY.md)
+- [Benchmark package](papers/AI-Engineering/zero-plaintext-vault-reveal/supporting/benchmark/)
+
+#### Precision-First Context Scrubbing: Measuring Synthetic Format-Marker Detection and Finding-Output Size
+
+Empirical benchmarking of context scrubber sensitivity and token expansion across synthetic test fixtures. Establishes mathematical precision boundaries (>=0.95 gate) to prevent false-positive cascades from bloating agent context windows.
+
+- [Read the paper](papers/AI-Engineering/precision-first-context-scrubbing/PAPER.md)
+- [Claim-to-evidence ledger](papers/AI-Engineering/precision-first-context-scrubbing/supporting/CLAIM-TO-EVIDENCE.md)
+- [Primary-source access log](papers/AI-Engineering/precision-first-context-scrubbing/supporting/SOURCES.md)
+- [Reproducibility guide](papers/AI-Engineering/precision-first-context-scrubbing/supporting/REPRODUCIBILITY.md)
+- [Benchmark package](papers/AI-Engineering/precision-first-context-scrubbing/supporting/benchmark/)
+
+#### Empirical Retrieval Cost Layers in Autonomous Agent Systems: Benchmarking BM25, Dense Semantic Vectors, and AST-Grep Against Context Tax in Developer Workflows
+
+Comparative empirical benchmark evaluating lexical BM25 (qmd), dense semantic vector retrieval, ast-grep structural slicing, and Headroom tool compression against brute-force recursive grep across multi-turn developer sessions. Demonstrates up to 93% token reduction while preserving exact fact recall.
+
+- [Read the paper](papers/AI-Engineering/empirical-retrieval-cost-layers/PAPER.md)
+- [Claim-to-evidence ledger](papers/AI-Engineering/empirical-retrieval-cost-layers/supporting/CLAIM-TO-EVIDENCE.md)
+- [Primary-source access log](papers/AI-Engineering/empirical-retrieval-cost-layers/supporting/SOURCES.md)
+- [Reproducibility guide](papers/AI-Engineering/empirical-retrieval-cost-layers/supporting/REPRODUCIBILITY.md)
+- [Benchmark package](papers/AI-Engineering/empirical-retrieval-cost-layers/supporting/benchmark/)
 
 ## Paper format
 

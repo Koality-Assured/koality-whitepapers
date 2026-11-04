@@ -71,3 +71,22 @@ In `koality-whitepapers`, benchmark evaluations and integrity manifests are inte
 | Python string-replacement input | 50 KiB synthetic UTF-8 | `cryptographic_microbenchmarks[python_string_replacement_50kib_log].details` | exactly 50 KiB | Verified; not MCP scrubber timing |
 
 The Python runner uses a prewarmed tokenizer cache and rejects cache-miss downloads. These values describe constructed Python data; they are not runtime containment results.
+
+
+---
+
+## 4. Empirical Retrieval Cost Layers
+
+- **Paper:** [`papers/AI-Engineering/empirical-retrieval-cost-layers/PAPER.md`](papers/AI-Engineering/empirical-retrieval-cost-layers/PAPER.md)
+- **Primary source:** [`papers/AI-Engineering/empirical-retrieval-cost-layers/supporting/benchmark/metrics/summary.json`](papers/AI-Engineering/empirical-retrieval-cost-layers/supporting/benchmark/metrics/summary.json)
+- **Trial log:** [`papers/AI-Engineering/empirical-retrieval-cost-layers/supporting/benchmark/metrics/trial-metrics.json`](papers/AI-Engineering/empirical-retrieval-cost-layers/supporting/benchmark/metrics/trial-metrics.json)
+
+| Headline Metric / Claim | Paper Value | Source JSON Field | Source Value | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| Single-turn token reduction vs. grep | 60.40% | `summary.mean_token_savings_pct` | 60.4 | Verified |
+| Arm A single-turn input tokens | 29,662 | `summary.single_turn_arm_a_tokens` | 29662 | Verified |
+| Arm B single-turn input tokens | 11,746 | `summary.single_turn_arm_b_tokens` | 11746 | Verified |
+| Cumulative 10-turn tokens saved | 179,160 | `summary.net_cumulative_tokens_saved` | 179160 | Verified |
+| Claude 3.5 Sonnet cost reduction | 92.48% | `pricing.claude-3-5-sonnet.net_savings_pct` | 92.48 | Verified |
+| Gemini 3.8 Flash cost reduction | 87.15% | `pricing.gemini-3-8-flash.net_savings_pct` | 87.15 | Verified |
+| Total scenarios evaluated | 5 | `trials.length` | 5 | Verified |

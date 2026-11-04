@@ -220,6 +220,49 @@ def check_zero_plaintext_vault_reveal_metrics() -> list[str]:
     return errors
 
 
+
+
+def check_empirical_retrieval_cost_layers_metrics() -> list[str]:
+    errors: list[str] = []
+    base_dir = REPO_ROOT / "papers/AI-Engineering/empirical-retrieval-cost-layers"
+    summary_path = base_dir / "supporting/benchmark/metrics/summary.json"
+    paper_path = base_dir / "PAPER.md"
+    runner_path = base_dir / "supporting/benchmark/run_benchmark.py"
+
+    if not summary_path.is_file():
+        return [f"Missing metric summary file: {summary_path}"]
+    if not paper_path.is_file():
+        return [f"Missing paper file: {paper_path}"]
+    if not runner_path.is_file():
+        return [f"Missing benchmark runner: {runner_path}"]
+
+    try:
+        data = json.loads(summary_path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        return [f"Could not parse {summary_path}: {exc}"]
+
+    summary = data.get("summary", {})
+    if summary.get("single_turn_arm_a_tokens") != 29662:
+        errors.append(f"Unexpected single_turn_arm_a_tokens: {summary.get('single_turn_arm_a_tokens')}")
+    if summary.get("single_turn_arm_b_tokens") != 11746:
+        errors.append(f"Unexpected single_turn_arm_b_tokens: {summary.get('single_turn_arm_b_tokens')}")
+    if summary.get("mean_token_savings_pct") != 60.4:
+        errors.append(f"Unexpected mean_token_savings_pct: {summary.get('mean_token_savings_pct')}")
+    if summary.get("net_cumulative_tokens_saved") != 179160:
+        errors.append(f"Unexpected net_cumulative_tokens_saved: {summary.get('net_cumulative_tokens_saved')}")
+
+    pricing = data.get("pricing", {})
+    claude_savings = pricing.get("claude-3-5-sonnet", {}).get("net_savings_pct")
+    if claude_savings != 92.48:
+        errors.append(f"Unexpected claude-3-5-sonnet savings: {claude_savings}")
+
+    paper_text = paper_path.read_text(encoding="utf-8")
+    for cited in ["60.40%", "29,662", "11,746", "179,160", "92.48%"]:
+        if cited not in paper_text:
+            errors.append(f"PAPER.md does not cite expected result: {cited}")
+
+    return errors
+
 def main() -> int:
     total_errors: list[str] = []
 
@@ -243,6 +286,13 @@ def main() -> int:
         total_errors.extend(errs3)
     else:
         print("  OK: zero-plaintext-vault-reveal metrics fully verified.")
+
+    print("Checking empirical-retrieval-cost-layers metrics traceability...")
+    errs4 = check_empirical_retrieval_cost_layers_metrics()
+    if errs4:
+        total_errors.extend(errs4)
+    else:
+        print("  OK: empirical-retrieval-cost-layers metrics fully verified.")
 
     if total_errors:
         print(f"\nTraceability verification failed with {len(total_errors)} errors:", file=sys.stderr)

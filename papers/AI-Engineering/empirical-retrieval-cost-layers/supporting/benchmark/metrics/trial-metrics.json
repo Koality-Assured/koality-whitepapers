@@ -1,0 +1,257 @@
+[
+  {
+    "scenario_id": "scenario_1_worktree_isolation",
+    "title": "Worktree Isolation & Spawning Policy",
+    "arm_a_grep": {
+      "grep_matches": 126,
+      "files_read": 3,
+      "raw_chars": 61243,
+      "single_turn_tokens": 16118,
+      "cumulative_10turn_tokens": 161180,
+      "latency_seconds": 0.0681
+    },
+    "arm_b_layered": {
+      "qmd_hits": 5,
+      "bounded_chars": 8947,
+      "single_turn_tokens": 2356,
+      "cumulative_10turn_tokens": 23560,
+      "latency_seconds": 0.3937
+    },
+    "comparison": {
+      "single_turn_savings_tokens": 13762,
+      "single_turn_savings_pct": 85.38,
+      "cumulative_10turn_savings_tokens": 137620,
+      "speedup_factor": 0.17
+    },
+    "cost_models": {
+      "gemini-3-8-flash": {
+        "arm_a_usd": 0.02418,
+        "arm_b_usd": 0.00115,
+        "savings_usd": 0.02303,
+        "savings_pct": 95.25
+      },
+      "claude-3-5-sonnet": {
+        "arm_a_usd": 0.48354,
+        "arm_b_usd": 0.01343,
+        "savings_usd": 0.47011,
+        "savings_pct": 97.22
+      },
+      "claude-5-5-sonnet": {
+        "arm_a_usd": 0.24177,
+        "arm_b_usd": 0.00671,
+        "savings_usd": 0.23506,
+        "savings_pct": 97.22
+      },
+      "gpt-4o": {
+        "arm_a_usd": 0.40295,
+        "arm_b_usd": 0.0324,
+        "savings_usd": 0.37055,
+        "savings_pct": 91.96
+      }
+    }
+  },
+  {
+    "scenario_id": "scenario_2_ast_grep_patterns",
+    "title": "AST-Grep Pattern Extraction & Structural Rules",
+    "arm_a_grep": {
+      "grep_matches": 36,
+      "files_read": 2,
+      "raw_chars": 14452,
+      "single_turn_tokens": 3804,
+      "cumulative_10turn_tokens": 38040,
+      "latency_seconds": 0.049
+    },
+    "arm_b_layered": {
+      "qmd_hits": 5,
+      "bounded_chars": 11166,
+      "single_turn_tokens": 2940,
+      "cumulative_10turn_tokens": 29400,
+      "latency_seconds": 0.386
+    },
+    "comparison": {
+      "single_turn_savings_tokens": 864,
+      "single_turn_savings_pct": 22.71,
+      "cumulative_10turn_savings_tokens": 8640,
+      "speedup_factor": 0.13
+    },
+    "cost_models": {
+      "gemini-3-8-flash": {
+        "arm_a_usd": 0.00571,
+        "arm_b_usd": 0.00143,
+        "savings_usd": 0.00427,
+        "savings_pct": 74.88
+      },
+      "claude-3-5-sonnet": {
+        "arm_a_usd": 0.11412,
+        "arm_b_usd": 0.01676,
+        "savings_usd": 0.09736,
+        "savings_pct": 85.32
+      },
+      "claude-5-5-sonnet": {
+        "arm_a_usd": 0.05706,
+        "arm_b_usd": 0.00838,
+        "savings_usd": 0.04868,
+        "savings_pct": 85.32
+      },
+      "gpt-4o": {
+        "arm_a_usd": 0.0951,
+        "arm_b_usd": 0.04043,
+        "savings_usd": 0.05467,
+        "savings_pct": 57.49
+      }
+    }
+  },
+  {
+    "scenario_id": "scenario_3_threat_model_assessment",
+    "title": "STRIDE Threat Modeling Architecture",
+    "arm_a_grep": {
+      "grep_matches": 34,
+      "files_read": 2,
+      "raw_chars": 17028,
+      "single_turn_tokens": 4482,
+      "cumulative_10turn_tokens": 44820,
+      "latency_seconds": 0.0433
+    },
+    "arm_b_layered": {
+      "qmd_hits": 5,
+      "bounded_chars": 7394,
+      "single_turn_tokens": 1946,
+      "cumulative_10turn_tokens": 19460,
+      "latency_seconds": 0.3702
+    },
+    "comparison": {
+      "single_turn_savings_tokens": 2536,
+      "single_turn_savings_pct": 56.58,
+      "cumulative_10turn_savings_tokens": 25360,
+      "speedup_factor": 0.12
+    },
+    "cost_models": {
+      "gemini-3-8-flash": {
+        "arm_a_usd": 0.00672,
+        "arm_b_usd": 0.00095,
+        "savings_usd": 0.00577,
+        "savings_pct": 85.89
+      },
+      "claude-3-5-sonnet": {
+        "arm_a_usd": 0.13446,
+        "arm_b_usd": 0.01109,
+        "savings_usd": 0.12337,
+        "savings_pct": 91.75
+      },
+      "claude-5-5-sonnet": {
+        "arm_a_usd": 0.06723,
+        "arm_b_usd": 0.00555,
+        "savings_usd": 0.06168,
+        "savings_pct": 91.75
+      },
+      "gpt-4o": {
+        "arm_a_usd": 0.11205,
+        "arm_b_usd": 0.02676,
+        "savings_usd": 0.08529,
+        "savings_pct": 76.12
+      }
+    }
+  },
+  {
+    "scenario_id": "scenario_4_confluence_cql_sync",
+    "title": "Confluence Document Synchronization & CQL",
+    "arm_a_grep": {
+      "grep_matches": 3,
+      "files_read": 2,
+      "raw_chars": 11494,
+      "single_turn_tokens": 3026,
+      "cumulative_10turn_tokens": 30260,
+      "latency_seconds": 0.0412
+    },
+    "arm_b_layered": {
+      "qmd_hits": 5,
+      "bounded_chars": 8678,
+      "single_turn_tokens": 2285,
+      "cumulative_10turn_tokens": 22850,
+      "latency_seconds": 0.3766
+    },
+    "comparison": {
+      "single_turn_savings_tokens": 741,
+      "single_turn_savings_pct": 24.49,
+      "cumulative_10turn_savings_tokens": 7410,
+      "speedup_factor": 0.11
+    },
+    "cost_models": {
+      "gemini-3-8-flash": {
+        "arm_a_usd": 0.00454,
+        "arm_b_usd": 0.00111,
+        "savings_usd": 0.00343,
+        "savings_pct": 75.46
+      },
+      "claude-3-5-sonnet": {
+        "arm_a_usd": 0.09078,
+        "arm_b_usd": 0.01302,
+        "savings_usd": 0.07776,
+        "savings_pct": 85.65
+      },
+      "claude-5-5-sonnet": {
+        "arm_a_usd": 0.04539,
+        "arm_b_usd": 0.00651,
+        "savings_usd": 0.03888,
+        "savings_pct": 85.65
+      },
+      "gpt-4o": {
+        "arm_a_usd": 0.07565,
+        "arm_b_usd": 0.03142,
+        "savings_usd": 0.04423,
+        "savings_pct": 58.47
+      }
+    }
+  },
+  {
+    "scenario_id": "scenario_5_cost_estimation_benchmarks",
+    "title": "Agent Token Cost Estimation & Pricing Tiers",
+    "arm_a_grep": {
+      "grep_matches": 8,
+      "files_read": 2,
+      "raw_chars": 8479,
+      "single_turn_tokens": 2232,
+      "cumulative_10turn_tokens": 22320,
+      "latency_seconds": 0.0424
+    },
+    "arm_b_layered": {
+      "qmd_hits": 5,
+      "bounded_chars": 8430,
+      "single_turn_tokens": 2219,
+      "cumulative_10turn_tokens": 22190,
+      "latency_seconds": 0.3827
+    },
+    "comparison": {
+      "single_turn_savings_tokens": 13,
+      "single_turn_savings_pct": 0.58,
+      "cumulative_10turn_savings_tokens": 130,
+      "speedup_factor": 0.11
+    },
+    "cost_models": {
+      "gemini-3-8-flash": {
+        "arm_a_usd": 0.00335,
+        "arm_b_usd": 0.00108,
+        "savings_usd": 0.00227,
+        "savings_pct": 67.69
+      },
+      "claude-3-5-sonnet": {
+        "arm_a_usd": 0.06696,
+        "arm_b_usd": 0.01265,
+        "savings_usd": 0.05431,
+        "savings_pct": 81.11
+      },
+      "claude-5-5-sonnet": {
+        "arm_a_usd": 0.03348,
+        "arm_b_usd": 0.00632,
+        "savings_usd": 0.02716,
+        "savings_pct": 81.11
+      },
+      "gpt-4o": {
+        "arm_a_usd": 0.0558,
+        "arm_b_usd": 0.03051,
+        "savings_usd": 0.02529,
+        "savings_pct": 45.32
+      }
+    }
+  }
+]

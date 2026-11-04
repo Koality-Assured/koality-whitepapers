@@ -7,31 +7,5 @@
     "cumulative_10turn_arm_b_tokens": 117460,
     "net_cumulative_tokens_saved": 179160
   },
-  "pricing": {
-    "gemini-3-8-flash": {
-      "total_arm_a_usd": 0.0445,
-      "total_arm_b_usd": 0.0057,
-      "net_savings_usd": 0.0388,
-      "net_savings_pct": 87.15
-    },
-    "claude-3-5-sonnet": {
-      "total_arm_a_usd": 0.8899,
-      "total_arm_b_usd": 0.0669,
-      "net_savings_usd": 0.8229,
-      "net_savings_pct": 92.48
-    },
-    "claude-5-5-sonnet": {
-      "total_arm_a_usd": 0.4449,
-      "total_arm_b_usd": 0.0335,
-      "net_savings_usd": 0.4115,
-      "net_savings_pct": 92.48
-    },
-    "gpt-4o": {
-      "total_arm_a_usd": 0.7415,
-      "total_arm_b_usd": 0.1615,
-      "net_savings_usd": 0.58,
-      "net_savings_pct": 78.22
-    }
-  },
-  "timestamp": "2026-11-04T13:11:04.172115+00:00"
+  "timestamp": "2026-11-04T15:14:48.278407+00:00"
 }

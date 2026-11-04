@@ -2,17 +2,17 @@
 
 ## Abstract
 
-Autonomous artificial intelligence agents operating in software engineering environments spend the majority of their token budgets and latency discovering relevant repository context. In typical agent toolchains, exploration relies on standard interactive shell primitives—primarily `git grep`, POSIX `find`, and recursive regular expressions. When applied to multi-turn agent loops, these ungrounded utilities produce severe failure modes: they dump hundreds of unranked lines across dozens of files, forcing agents to read entire source files into context. Because multi-turn agents re-ingest their entire conversational history on every turn, context injected early in a task imposes a compounding financial and latency penalty—the **Multi-Agent Context Tax**—while triggering "Lost in the Middle" attention degradation and thrashing prompt-cache prefixes.
+Autonomous software-engineering agents must discover relevant repository context. This paper studies a local developer-agent workload in which exploration uses standard shell primitives—primarily `git grep`, POSIX `find`, and recursive regular expressions. In the benchmark's naive arm, these utilities return unranked lines and lead to full-file reads, increasing the context retained by a multi-turn loop. In the modeled loop, retained context is re-read on later turns, creating a measurable token-volume penalty—the **Multi-Agent Context Tax**—while stable-prefix cache reuse remains provider- and API-dependent.
 
-This paper evaluates a four-layer empirical retrieval architecture engineered specifically for local developer agent harnesses: (1) microsecond-scale lexical BM25 indexing (`qmd search`) returning scored snippet anchors, (2) on-demand dense semantic vector expansion and cross-encoder reranking (`EmbeddingGemma-300M` and `Qwen3-Reranker-0.6B`) governed by strict latency circuit breakers, (3) consolidated batch document retrieval with line bounding (`qmd multi-get -l 30`), and (4) structural Concrete Syntax Tree (CST) symbol extraction (`ast-grep outline`).
+This paper evaluates a four-layer empirical retrieval architecture engineered specifically for local developer agent harnesses: (1) sub-second lexical BM25 indexing (`qmd search`) returning scored snippet anchors, (2) on-demand dense semantic vector expansion and cross-encoder reranking (`EmbeddingGemma-300M` and `Qwen3-Reranker-0.6B`) governed by strict latency circuit breakers, (3) consolidated batch document retrieval with line bounding (`qmd multi-get -l 30`), and (4) structural Concrete Syntax Tree (CST) symbol extraction (`ast-grep outline`).
 
-Across five canonical developer retrieval scenarios evaluated on a production codebase, the layered architecture reduced single-turn prompt context consumption from 29,662 tokens (raw grep and full-file ingestion) to 11,746 tokens, representing an immediate **60.40% direct token reduction**. Over a standard 10-turn multi-agent horizon, the cumulative context tax dropped from 296,620 token reads to 117,460 token reads, saving **179,160 net tokens**. Consolidated batch retrieval demonstrated an empirical **5.27x latency speedup** (179.32ms vs. 945.17ms) over sequential fetching, while lexical BM25 maintained a Fleet Mean Reciprocal Rank (MRR) of **0.9286** and Precision@1 of **85.7%** at 220.3ms average latency. When structured retrieval outputs preserve prefix prompt-cache invariance, the architecture delivers **87.15% to 92.48% monetary savings** across commercial frontier model pricing schedules.
+Across five canonical developer retrieval scenarios evaluated on a production codebase, the layered architecture reduced single-turn prompt context consumption from 29,662 tokens (raw grep and full-file ingestion) to 11,746 tokens, representing an immediate **60.40% direct token reduction**. Over a standard 10-turn multi-agent horizon, the cumulative context tax dropped from 296,620 token reads to 117,460 token reads, saving **179,160 net tokens**. The public QMD suite report measured batch retrieval at 0.1893 seconds versus 0.4006 seconds for two serial fetches, while the public multi-trial report measured fleet MRR of **0.9062**, Precision@1 of **81.2%**, and a p50 search latency of **187.77 ms**. This paper reports token volume and local retrieval measurements; it does not measure provider API cache hits or billed monetary savings.
 
 ---
 
 ## 1. Thesis, Research Questions, Audience, and Structure
 
-**Thesis.** Treating autonomous coding agents as interactive human bash shells running ungrounded search commands (`git grep`, `find`) creates compounding context bloat that degrades model reasoning and inflates operational costs. Layering local retrieval into high-speed lexical BM25 indexing, line-bounded batch fetching, and structural AST symbol extraction eliminates ungrounded context dumps, delivering over 60% single-turn token savings, a 5.2x retrieval speedup, and over 87% multi-turn cost reductions without sacrificing retrieval recall.
+**Thesis.** Treating autonomous coding agents as interactive human bash shells running ungrounded search commands (`git grep`, `find`) can create compounding context bloat in loops that retain prior turns. Layering local retrieval into lexical BM25 indexing, line-bounded batch fetching, and structural AST symbol extraction reduced measured single-turn context volume by 60.40% in this workload. The paper also reports local retrieval latency and ranking measurements; provider billing, cache-hit rates, and task-level accuracy remain outside scope.
 
 **Research questions.**
 1. What is the mathematical and empirical penalty of the Multi-Agent Context Tax when ungrounded file dumps occur early in multi-turn agent sessions?
@@ -28,7 +28,7 @@ Across five canonical developer retrieval scenarios evaluated on a production co
 
 ### 2.1 The Fallacy of the Human Shell Analogy
 
-Most autonomous coding platforms (such as Claude Code, Cursor, Windsurf, and custom agent harnesses) equip agents with generic bash or terminal execution tools. When tasked with locating code relevant to an issue, the model defaults to standard shell idioms:
+The benchmark models an autonomous coding agent with generic bash or terminal execution tools. When tasked with locating code relevant to an issue, the model defaults to standard shell idioms:
 
 ```bash
 git grep -i "spawn_worktree"
@@ -40,7 +40,7 @@ For a human engineer working in a terminal, `git grep` is efficient: the human e
 For an autonomous LLM agent, however, this pattern is pathological:
 1. **Unranked Output Floods:** `git grep` outputs flat, unranked text lines devoid of relevance scoring. An agent cannot discern which match is central to the architecture and which is an incidental comment or test fixture.
 2. **The Full-File Escalation Trap:** To understand the grep hits, the agent invokes file-reading tools on every matching file. A search that matched four lines across three files frequently causes the agent to ingest 15,000 to 40,000 characters of raw source code into its prompt context.
-3. **Prompt Cache Invalidation:** Flat grep streams often include non-deterministic file sorting, transient workspace paths, or noisy timestamps that mutate prompt prefixes, preventing downstream prompt-cache hits.
+3. **Prefix Stability Risk:** If a tool stream includes changing file order, workspace paths, or timestamps, it can change the prefix that a provider's caching API evaluates, reducing cache reuse.
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -57,22 +57,22 @@ For an autonomous LLM agent, however, this pattern is pathological:
 │ 4. Turn 2..10 Execution:                                               │
 │    - All 29,662 tokens are re-sent on every subsequent turn            │
 │    - Total input load = 296,620 token reads                            │
-│    - Prompt cache prefix invalidated by unstructured tool outputs      │
+│    - Cache reuse depends on provider-specific prefix rules              │
 │    - Critical system rules pushed out of active model attention        │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### 2.2 Mathematical Formalization of the Context Tax
 
-In a stateless API invocation, an input payload is billed once. In an autonomous multi-turn agent loop, conversational history accumulates monotonically. Let $C_0$ be the fixed system prompt and tool definitions, and let $\Delta c_t$ be the net tokens introduced by tool outputs and reasoning at turn $t$. Across an $N$-turn horizon, the cumulative input token volume $T_{\text{total}}$ is given by:
+In the modeled multi-turn agent loop, retained conversation context accumulates across requests. Let $C_0$ be the fixed system prompt and tool definitions, and let $\Delta c_t$ be the net tokens introduced by tool outputs and reasoning at turn $t$. Across an $N$-turn horizon, the cumulative input token volume $T_{\text{total}}$ is given by:
 
 $$T_{\text{total}} = \sum_{t=1}^{N} \left( C_0 + \sum_{i=1}^{t} \Delta c_i \right)$$
 
-If an ungrounded search dump of size $D$ tokens occurs at turn $k \le N$, that dump is re-ingested across all remaining $(N - k + 1)$ turns. The marginal context tax $\tau_{\text{context}}(D, k, N)$ imposed solely by that single discovery action is:
+If an ungrounded search dump of size $D$ tokens occurs at turn $k \le N$, that dump is re-ingested across all remaining $(N - k + 1)$ turns. The marginal retained-context volume $\tau_{\text{context}}(D, k, N)$ imposed solely by that single discovery action is:
 
-$$\tau_{\text{context}}(D, k, N) = D \times (N - k + 1) \times P_{\text{input}}$$
+$$\tau_{\text{context}}(D, k, N) = D \times (N - k + 1)$$
 
-Where $P_{\text{input}}$ is the unit price per input token. For an ungrounded dump of $D = 25,000$ tokens occurring at Turn 2 in a 10-turn task, the model re-ingests $225,000$ redundant tokens. At standard frontier pricing ($3.00 per million tokens), that single careless search costs \$0.675 in redundant token billing, while pushing the model into the degraded attention regime documented by Liu et al. (2024).
+For an ungrounded dump of $D = 25,000$ tokens occurring at Turn 2 in a 10-turn task, the modeled loop re-reads $225,000$ redundant tokens. The dollar impact and any cache discount depend on the provider, model, API mode, cache controls, and observed cache hits; this paper does not estimate them.
 
 ---
 
@@ -109,7 +109,7 @@ Unlike raw `grep`, `qmd search` operates against a pre-indexed SQLite database, 
 
 When an agent searches for conceptual intents without knowing exact identifiers (e.g., searching for "zero-dependency static web documentation portal" when the repository describes a "wiki architecture"), lexical matching fails.
 
-Layer 2 provides dense vector retrieval utilizing an 8-bit quantized `EmbeddingGemma-300M` model paired with a `Qwen3-Reranker-0.6B-Q8_0` cross-encoder. Because local neural inference on CPU introduces significant latency (measured at ~24.25 seconds on AMD64 CPUs without GPU acceleration), Layer 2 is governed by a strict **latency circuit breaker**: agents MUST attempt Layer 1 BM25 first; Layer 2 is invoked only when Layer 1 returns zero candidates with score $\ge 0.60$.
+Layer 2 provides dense vector retrieval utilizing an 8-bit quantized `EmbeddingGemma-300M` model paired with a `Qwen3-Reranker-0.6B-Q8_0` cross-encoder. Because local neural inference on CPU introduced significant latency (10.293 seconds in the cited QMD suite run), Layer 2 is governed by a strict **latency circuit breaker**: agents MUST attempt Layer 1 BM25 first; Layer 2 is invoked only when Layer 1 returns zero candidates with score $\ge 0.60$.
 
 ### 3.3 Layer 3: Batch Consolidation & Line Bounding (`qmd multi-get`)
 
@@ -125,7 +125,7 @@ The `-l 30` parameter strictly enforces a 30-line truncation envelope around mat
 
 When exploring source code, line-based regex cannot distinguish between a class declaration, a method signature, and an internal loop variable.
 
-Layer 4 leverages `ast-grep` and Tree-sitter concrete syntax trees. By invoking `ast-grep outline`, the agent retrieves an indented structural summary of the file:
+Layer 4 uses `ast-grep` and Tree-sitter concrete syntax trees. By invoking `ast-grep outline`, the agent retrieves an indented structural summary of the file:
 ```text
 class WorktreeManager:
   def __init__(self, root: Path) -> None: ...
@@ -184,29 +184,19 @@ Table 2 documents the operational latency of the underlying retrieval primitives
 
 | Primitive | Operation Evaluated | Latency | Output Payload | Operational Characteristics |
 | :--- | :--- | :---: | :---: | :--- |
-| `qmd search` | Lexical BM25 top-5 scored search | 204.0 ms | 2,587 chars | Sub-second latency; structured JSON with exact scored snippets. |
-| `qmd vsearch` | Dense vector embedding + rerank | 24.25 s | 3 chars | High cold-start CPU overhead; unsuitable for primary discovery loops. |
-| `git grep` | Fallback flat text regex | 188.6 ms | 680 chars | Fast raw match, but returns unranked text forcing secondary reads. |
-| Sequential `get` | Serial retrieval of 2 documents | 389.2 ms | 6,530 chars | High subprocess fork overhead. |
-| Batch `multi-get` | Consolidated fetch (`-l 30`) | 185.1 ms | 2,611 chars | **52.4% latency reduction**; strict line bounding. |
-| `benchmark_retrieval` | 5-document batch multi-get | 179.32 ms | 39,325 chars | **5.27x speedup** over sequential retrieval (945.17ms). |
+| `qmd search` | Lexical BM25 top-5 scored search | 202.5 ms | 2,387 chars | Sub-second latency; structured JSON with exact scored snippets. |
+| `qmd vsearch` | Dense vector embedding + rerank | 10.293 s | 2,769 chars | Higher cold-start CPU overhead; unsuitable for primary discovery loops in the cited run. |
+| `git grep` | Fallback flat text regex | 43.1 ms | 295 chars | Fast raw match, but returns unranked text forcing secondary reads. |
+| Sequential `get` | Serial retrieval of 2 documents | 400.6 ms | 6,530 chars | Two separate subprocess calls. |
+| Batch `multi-get` | Consolidated fetch (`-l 30`) | 189.3 ms | 2,611 chars | **52.8% latency reduction**; strict line bounding. |
 
-The empirical results confirm that batch document consolidation via `qmd multi-get` delivers a **5.27x speedup factor** over iterative sequential tool calls while reducing character payload by 60.0%.
+The cited QMD suite measured batch document consolidation at roughly **2.12x faster** than two serial `qmd get` calls while reducing the reported character payload by 60.0%. The comparison is a local workstation measurement, not a general latency guarantee.
 
-### 4.5 Monetary Cost Analysis with Prompt Caching
+### 4.5 Cost accounting and prompt-caching boundary
 
-Modern frontier models (Anthropic Claude 3.5/5.5 Sonnet, Google Gemini 3.8 Flash, OpenAI GPT-4o) incorporate prompt caching with discounts ranging from 75% to 90% for cached token reads. However, prompt caching requires strict prefix invariance. Because Arm A's ungrounded grep outputs include non-deterministic file orderings and transient working paths, they frequently trigger cache misses. In contrast, Arm B's structured document identifiers and scored snippets guarantee stable prompt prefixes.
+The benchmark measures local token volume and retrieval latency. It does not send requests to commercial model APIs, observe cache hits, or measure billed cost. A shorter, more stable prompt may improve cache reuse, but that outcome depends on the provider and API mode. For example, Anthropic documents opt-in `cache_control`, stable-prefix requirements, model-dependent minimum lengths, and cache-read usage fields; Google documents implicit caching with model-specific minimum input counts and cached-token telemetry; OpenAI documents model-dependent cacheable lengths and cached-token usage fields. See the current primary documentation in [SOURCES.md](supporting/SOURCES.md).
 
-Table 3 models total input token cost across the 10-turn horizon across five commercial model tiers:
-
-| Provider / Model | Pricing / M Tokens (Full / Cached) | Arm A Cost ($) | Arm B Cost ($) | Net Savings ($) | Cost Reduction (%) |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| **Anthropic Claude 3.5 Sonnet** | \$3.00 / \$0.30 | \$0.8899 | \$0.0669 | **\$0.8230** | **92.48%** |
-| **Anthropic Claude 5.5 Sonnet** | \$1.50 / \$0.15 | \$0.4449 | \$0.0335 | **\$0.4114** | **92.48%** |
-| **Google Gemini 3.8 Flash** | \$0.15 / \$0.0375 | \$0.0445 | \$0.0057 | **\$0.0388** | **87.15%** |
-| **OpenAI GPT-4o** | \$2.50 / \$1.25 | \$0.7415 | \$0.1615 | **\$0.5800** | **78.22%** |
-
-When paired with prefix prompt caching, Layered Retrieval achieves **87.15% to 92.48% financial savings** compared to raw file ingestion.
+The earlier provider table is therefore intentionally omitted. The **60.40%** and **179,160-token** results are measured context-volume reductions in this workload, not universal dollar-savings estimates. A provider-specific cost study would need a fixed model and API, current prices, cache controls and TTLs, stable-prefix checks, and observed usage data for both arms.
 
 ---
 
@@ -216,7 +206,7 @@ A critical finding during architecture evaluation is that local retrieval indexe
 
 In early implementations, index SQLite files and vector caches resided within the active workspace. This introduced two failure modes:
 1. **Working Tree Contamination:** Routine agent searches updated local SQLite write-ahead logs (`.qmd/index.sqlite-wal`), dirtying `git status` and causing merge conflicts during branch switches.
-2. **Prompt Cache Degradation:** Transient index metadata modified file checksums, breaking prefix invariance and causing commercial prompt caches to miss.
+2. **Prefix Stability Risk:** If changing index metadata is emitted into tool output, it can alter a provider's cacheable prefix; this study did not measure that effect.
 
 To resolve this, the architecture mandates that search indexes execute within a detached Git worktree (`scratch/qmd-main`). The detached worktree fast-forwards directly to `origin/main` without affecting active development branches. Agents query the detached index exclusively, ensuring that local search operations produce zero filesystem side-effects in the active working tree.
 
@@ -224,19 +214,20 @@ To resolve this, the architecture mandates that search indexes execute within a 
 
 ## 6. Threats to Validity & Limitations
 
-1. **Hardware Specificity:** Dense vector search latency (24.25s) was measured on AMD64 CPU without AVX-512 or dedicated GPU acceleration. On machines equipped with Apple Silicon unified memory (Metal) or Nvidia Tensor Cores, dense embedding latency drops below 400ms, which would alter the latency-circuit breaker threshold.
+1. **Hardware Specificity:** Dense vector search latency (10.293s in the cited QMD suite run) was measured on AMD64 CPU without AVX-512 or dedicated GPU acceleration. Other hardware and acceleration paths may produce materially different latency and require separate measurement.
 2. **Token Estimation Bounds:** Token counts were calculated using the standard character-to-token ratio ($1\text{ token} \approx 3.8\text{ characters}$) calibrated against `tiktoken` `o200k_base`. While accurate for English prose and code identifiers, token ratios vary across non-ASCII languages and dense indentation structures.
-3. **AST Grammar Coverage:** Concrete syntax tree extraction via `ast-grep` requires mature Tree-sitter grammars. While Python, TypeScript, Go, Rust, and C++ enjoy first-class grammar support, esoteric or legacy enterprise languages may lack complete CST definitions.
+3. **AST Grammar Coverage:** Concrete syntax tree extraction via `ast-grep` requires mature Tree-sitter grammars. Language coverage and grammar quality vary, so results may not generalize to every repository.
+4. **Provider Cost Boundary:** Provider billing, prompt-cache hit rates, and task-level accuracy were not measured. The reported benchmark does not establish a universal monetary or reasoning improvement.
 
 ---
 
 ## 7. Conclusion & Operator Guidelines
 
-Treating autonomous software engineering agents as interactive bash users running `git grep` and `find` is an anti-pattern that inflates token costs by over 10x while degrading attention reliability. By implementing an empirical, layered retrieval pipeline—high-speed lexical BM25 indexing, line-bounded batch consolidation, and structural CST outline extraction—developer harnesses can achieve sub-second search times, eliminate 60% of discovery token bloat, and unlock over 90% cost savings through prompt-cache invariance.
+Treating autonomous software-engineering agents as interactive bash users running `git grep` and `find` can inflate retained context in multi-turn loops. In this workload, a layered retrieval pipeline—lexical BM25 indexing, line-bounded batch consolidation, and structural CST outline extraction—reduced discovery context by 60.40% and kept the measured retrieval operations in the reported local latency range. Provider cache behavior and monetary impact remain unmeasured.
 
 ### Normative Operator Directives
 1. **Never Give Agents Raw Recursive Grep:** Disallow agents from executing ungrounded shell searches (`grep -r`, `find .`) across repository roots.
 2. **Enforce Snippet Bounds:** Tools that return search results MUST truncate matches to scored snippets ($\le 30$ lines) rather than emitting unbounded file contents.
 3. **Outline First, Read Second:** Agents inspecting code modules MUST inspect symbol outlines (`ast-grep outline`) before requesting line-bounded source ranges.
 4. **Batch Document Retrieval:** Replace sequential document fetch loops with consolidated batch tools (`qmd multi-get`) to minimize subprocess roundtrips.
-5. **Isolate Indexing State:** Maintain search indexes and vector databases in detached worktrees to preserve working tree hygiene and prompt-cache prefix stability.
+5. **Isolate Indexing State:** Maintain search indexes and vector databases in detached worktrees to preserve working tree hygiene. Treat any prompt-cache effect as provider-specific and verify it with usage telemetry.

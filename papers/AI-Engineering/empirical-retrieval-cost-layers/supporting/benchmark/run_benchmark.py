@@ -17,19 +17,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-_LIB = Path(__file__).resolve().parents[1] / "_lib"
-sys.path.insert(0, str(_LIB))
-from paths import REPO_ROOT as ROOT  # noqa: E402
-
-# Standard pricing models ($ per 1M tokens)
-PRICING = {
-    "gemini-3-8-flash": {"input": 0.15, "cached_input": 0.0375, "output": 0.60},
-    "claude-3-5-sonnet": {"input": 3.00, "cached_input": 0.30, "output": 15.00},
-    "claude-5-5-sonnet": {"input": 1.50, "cached_input": 0.15, "output": 6.00},
-    "gpt-4o": {"input": 2.50, "cached_input": 1.25, "output": 10.00},
-}
-
-
 def estimate_tokens(text: str) -> int:
     if not text:
         return 0
@@ -42,11 +29,11 @@ def resolve_qmd_bin() -> str | None:
     return shutil.which("qmd")
 
 
-def resolve_qmd_root() -> Path:
-    qmd_main = ROOT / "scratch" / "qmd-main"
+def resolve_qmd_root(root: Path) -> Path:
+    qmd_main = root / "scratch" / "qmd-main"
     if qmd_main.is_dir() and (qmd_main / ".qmd" / "index.sqlite").exists():
         return qmd_main
-    return ROOT
+    return root
 
 
 BENCHMARK_SCENARIOS = [
@@ -112,9 +99,9 @@ BENCHMARK_SCENARIOS = [
 ]
 
 
-def run_benchmark() -> dict[str, Any]:
+def run_benchmark(root: Path) -> dict[str, Any]:
     qmd_bin = resolve_qmd_bin()
-    qmd_root = resolve_qmd_root()
+    qmd_root = resolve_qmd_root(root)
 
     trials: list[dict[str, Any]] = []
 
@@ -127,7 +114,7 @@ def run_benchmark() -> dict[str, Any]:
         t0 = time.perf_counter()
         grep_res = subprocess.run(
             ["git", "grep", "-i", sc["grep_query"]],
-            cwd=ROOT,
+            cwd=root,
             capture_output=True,
             text=True,
             encoding="utf-8",
@@ -139,7 +126,7 @@ def run_benchmark() -> dict[str, Any]:
         # In naive agent workflows, agent reads full files matching query
         files_to_read = []
         for path_str in sc["sample_files"]:
-            p = ROOT / path_str
+            p = root / path_str
             if p.is_file():
                 files_to_read.append(p)
 
@@ -224,26 +211,6 @@ def run_benchmark() -> dict[str, Any]:
         )
         cum_savings_tokens = arm_a_cumulative_tokens - arm_b_cumulative_tokens
 
-        # Cost calculations ($)
-        costs = {}
-        for model_name, p in PRICING.items():
-            # Arm A: Uncached input (cache churn due to unstructured text)
-            cost_a = (arm_a_cumulative_tokens / 1_000_000) * p["input"]
-            # Arm B: Cached input (structured, prefix-invariant)
-            # Turn 1 is full input, turns 2..10 get cached rate
-            cost_b = ((arm_b_tokens) / 1_000_000) * p["input"] + (
-                (arm_b_tokens * (turns - 1)) / 1_000_000
-            ) * p["cached_input"]
-            dollar_savings = cost_a - cost_b
-            costs[model_name] = {
-                "arm_a_usd": round(cost_a, 5),
-                "arm_b_usd": round(cost_b, 5),
-                "savings_usd": round(dollar_savings, 5),
-                "savings_pct": round((cost_a - cost_b) / cost_a * 100, 2)
-                if cost_a > 0
-                else 0.0,
-            }
-
         trial_data = {
             "scenario_id": sc["id"],
             "title": sc["title"],
@@ -270,7 +237,6 @@ def run_benchmark() -> dict[str, Any]:
                 if arm_b_latency > 0
                 else 1.0,
             },
-            "cost_models": costs,
         }
         trials.append(trial_data)
 
@@ -290,19 +256,6 @@ def run_benchmark() -> dict[str, Any]:
         else 0.0
     )
 
-    aggregate_costs = {}
-    for model_name in PRICING:
-        sum_a = sum(t["cost_models"][model_name]["arm_a_usd"] for t in trials)
-        sum_b = sum(t["cost_models"][model_name]["arm_b_usd"] for t in trials)
-        aggregate_costs[model_name] = {
-            "total_arm_a_usd": round(sum_a, 4),
-            "total_arm_b_usd": round(sum_b, 4),
-            "net_savings_usd": round(sum_a - sum_b, 4),
-            "net_savings_pct": round((sum_a - sum_b) / sum_a * 100, 2)
-            if sum_a > 0
-            else 0.0,
-        }
-
     return {
         "timestamp_utc": datetime.now(timezone.utc).isoformat(),
         "total_scenarios": len(trials),
@@ -314,7 +267,6 @@ def run_benchmark() -> dict[str, Any]:
             "cumulative_10turn_arm_b_tokens": total_cum_b_tokens,
             "net_cumulative_tokens_saved": total_cum_a_tokens - total_cum_b_tokens,
         },
-        "pricing_aggregates": aggregate_costs,
         "trials": trials,
     }
 
@@ -324,21 +276,22 @@ def main() -> int:
         description="Empirical benchmark: Arm A (grep/dump) vs Arm B (QMD BM25/AST layered retrieval)"
     )
     parser.add_argument(
-        "--out",
+        "--source-root",
         type=Path,
-        default=ROOT
-        / "results"
-        / "benchmarks"
-        / "retrieval-cost-layers"
-        / "2026-11-04",
-        help="Output directory",
+        required=True,
+        help="Path to a public Koality-Assured/ai-router checkout containing the benchmark corpus",
     )
+    parser.add_argument("--out", type=Path, help="Output directory")
     parser.add_argument(
         "--dry-run", action="store_true", help="Print summary without writing files"
     )
     args = parser.parse_args()
 
-    results = run_benchmark()
+    source_root = args.source_root.resolve()
+    if not (source_root / "AGENTS.md").is_file():
+        parser.error("--source-root must point to the ai-router repository root")
+
+    results = run_benchmark(source_root)
     summary = results["overall_summary"]
 
     print("\n" + "=" * 60)
@@ -354,16 +307,11 @@ def main() -> int:
     print(
         f"Net Cumulative Savings:   {summary['net_cumulative_tokens_saved']} tokens"
     )
-    print("-" * 60)
-    print("Aggregate Dollar Cost Comparison (10-Turn Horizon across 5 Tasks):")
-    for model, c in results["pricing_aggregates"].items():
-        print(
-            f"  {model:20s}: Arm A = ${c['total_arm_a_usd']:.4f} | Arm B = ${c['total_arm_b_usd']:.4f} | Savings = ${c['net_savings_usd']:.4f} ({c['net_savings_pct']}%)"
-        )
+    print("Provider billing and cache-hit rates are not measured by this benchmark.")
     print("=" * 60)
 
     if not args.dry_run:
-        out_dir = args.out
+        out_dir = args.out or source_root / "results" / "benchmarks" / "retrieval-cost-layers" / "2026-11-04"
         out_dir.mkdir(parents=True, exist_ok=True)
         summary_path = out_dir / "summary.json"
         trials_path = out_dir / "trial-metrics.json"
@@ -371,7 +319,6 @@ def main() -> int:
             json.dumps(
                 {
                     "summary": summary,
-                    "pricing": results["pricing_aggregates"],
                     "timestamp": results["timestamp_utc"],
                 },
                 indent=2,

@@ -48,6 +48,8 @@ Run the evaluation script against a local checkout of the public `Koality-Assure
 python supporting/benchmark/run_benchmark.py --source-root /path/to/ai-router --out /path/to/output
 ```
 
+This runner measures the Arm A versus Arm B payload comparison with `qmd search` and bounded `qmd multi-get`; it does not execute `ast-grep`. The AST fixture measurements cited by the paper are reproduced from the separate public report in Step 3.
+
 Expected output:
 - **Arm A Single-Turn Context:** ~29,662 tokens
 - **Arm B Single-Turn Context:** ~11,746 tokens

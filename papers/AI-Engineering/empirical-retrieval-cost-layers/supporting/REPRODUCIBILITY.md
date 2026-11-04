@@ -15,7 +15,8 @@ The canonical benchmark run was executed on Windows x86_64 under the following p
   - `qmd` 2.8.3 (local SQLite + BM25 + GGUF engine)
   - `ast-grep` 0.45.3
   - `git` 2.47+
-- **Network Access:** Zero external network calls. All retrieval and benchmark tests execute locally against local repository files and SQLite indexes.
+- **Source corpus:** Public `Koality-Assured/ai-router` checkout at the benchmark's source revision; the benchmark does not inspect private repositories.
+- **Network Access:** The benchmark itself makes zero external network calls. Clone or fetch the public source checkout separately, then run the benchmark locally against that checkout and its detached QMD index.
 
 ---
 
@@ -41,10 +42,10 @@ papers/AI-Engineering/empirical-retrieval-cost-layers/
 
 ### Step 1: Run the Comparative Evaluation (Arm A vs. Arm B)
 
-Execute the standalone evaluation script to reproduce single-turn and cumulative 10-turn token metrics across the 5 canonical scenarios:
+Run the evaluation script against a local checkout of the public `Koality-Assured/ai-router` source corpus. The source checkout is explicit because this whitepaper repository does not contain the corpus used by the scenarios:
 
 ```bash
-python supporting/benchmark/run_benchmark.py
+python supporting/benchmark/run_benchmark.py --source-root /path/to/ai-router --out /path/to/output
 ```
 
 Expected output:
@@ -52,30 +53,24 @@ Expected output:
 - **Arm B Single-Turn Context:** ~11,746 tokens
 - **Mean Token Reduction:** ~60.40%
 - **Cumulative 10-Turn Tokens Saved:** ~179,160 tokens
-- **Monetary Savings (Claude 3.5/5.5 Sonnet):** ~92.48%
+- **Provider billing/cache hits:** Not measured; use provider-specific usage telemetry for any cost study.
 
 ### Step 2: Reproduce Retrieval Accuracy & Latency (QMD Suite)
 
-To reproduce the Mean Reciprocal Rank (MRR), Precision@1, and batch speedup factor:
+The paper also cites retained public reports for QMD retrieval quality and latency:
 
 ```bash
-python scripts/benchmarks/benchmark_retrieval.py --mode search --with-multi-get
+https://github.com/Koality-Assured/ai-router/blob/main/results/reports/analysis/qmd-suite-benchmark/2026-10-29/benchmark-report.md
 ```
 
-Expected output:
-- **Mean Reciprocal Rank (MRR):** $\ge 0.90$ (measured: 0.9286)
-- **Precision@1:** $\ge 80.0\%$ (measured: 85.7%)
-- **Average BM25 Search Latency:** $\le 250\text{ ms}$ (measured: 220.3ms)
-- **Batch Multi-Get Speedup:** $\ge 4.0\text{x}$ (measured: 5.27x over serial retrieval)
+The cited QMD suite reports 0.2025s BM25 search, 10.293s dense search, and 0.1893s batch retrieval versus 0.4006s for two serial calls. The cited multi-trial report records Fleet MRR 0.9062, Precision@1 81.2%, and p50 search latency 187.77ms.
 
-### Step 3: Verify AST Symbol Extraction Savings
+### Step 3: Review AST Symbol Extraction Savings
 
-To reproduce the concrete syntax tree token savings using `ast-grep`:
+The AST-grep measurements are retained in the cited public multi-trial report rather than represented as a runnable script in this repository:
 
-```bash
-python scripts/cost-layers/validate_ast_grep.py
+```text
+https://github.com/Koality-Assured/ai-router/blob/main/results/cost-layers/combined/2026-10-08/report.md
 ```
 
-Expected output:
-- Python script symbol extraction savings: $\ge 90.0\%$ (measured: 93.3%)
-- Frontmatter and YAML extraction savings: $\ge 90.0\%$ (measured: 91.5%–94.5%)
+That report records estimated savings of 93.3% for Python scripts, 90.5% for agent-card YAML, and 94.5% for skill frontmatter. Re-running those fixtures requires the public ai-router benchmark scripts and their source corpus.

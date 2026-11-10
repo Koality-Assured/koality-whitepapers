@@ -1,0 +1,186 @@
+{
+  "benchmark_id": "commit-bound-proof-gates-synthetic-v1",
+  "environment": {
+    "os": "Windows",
+    "os_release": "10",
+    "architecture": "AMD64",
+    "python_version": "3.11.9",
+    "git_version": "git version 2.49.0.windows.1",
+    "generated_at_utc": "2026-11-10T15:19:35Z"
+  },
+  "proof_gate_benchmark": {
+    "iterations_per_scenario": 10,
+    "total_scenarios": 31,
+    "positive_scenarios": 3,
+    "negative_scenarios": 28,
+    "total_gate_evaluations_per_arm": 310,
+    "arms": {
+      "naive_status_only": {
+        "total_scenarios": 31,
+        "true_accept_tp": 3,
+        "false_accept_fp": 22,
+        "true_reject_tn": 6,
+        "false_reject_fn": 0,
+        "overall_accuracy_pct": 29.03,
+        "fail_closed_rate_pct": 21.43,
+        "false_accept_rate_pct": 78.57,
+        "false_reject_rate_pct": 0.0,
+        "latency": {
+          "count": 310,
+          "min_ms": 0.0138,
+          "p50_ms": 0.1692,
+          "mean_ms": 0.2348,
+          "p95_ms": 0.8606,
+          "max_ms": 1.8842
+        }
+      },
+      "ancestry_only": {
+        "total_scenarios": 31,
+        "true_accept_tp": 3,
+        "false_accept_fp": 8,
+        "true_reject_tn": 20,
+        "false_reject_fn": 0,
+        "overall_accuracy_pct": 74.19,
+        "fail_closed_rate_pct": 71.43,
+        "false_accept_rate_pct": 28.57,
+        "false_reject_rate_pct": 0.0,
+        "latency": {
+          "count": 310,
+          "min_ms": 0.0139,
+          "p50_ms": 81.6019,
+          "mean_ms": 72.1991,
+          "p95_ms": 91.9437,
+          "max_ms": 197.5442
+        }
+      },
+      "strict_commit_bound": {
+        "total_scenarios": 31,
+        "true_accept_tp": 3,
+        "false_accept_fp": 0,
+        "true_reject_tn": 28,
+        "false_reject_fn": 0,
+        "overall_accuracy_pct": 100.0,
+        "fail_closed_rate_pct": 100.0,
+        "false_accept_rate_pct": 0.0,
+        "false_reject_rate_pct": 0.0,
+        "latency": {
+          "count": 310,
+          "min_ms": 0.0141,
+          "p50_ms": 104.0581,
+          "mean_ms": 93.5301,
+          "p95_ms": 115.5478,
+          "max_ms": 312.6763
+        }
+      }
+    },
+    "by_category": {
+      "amend": {
+        "count": 2,
+        "naive_passed_count": 2,
+        "ancestry_passed_count": 0,
+        "strict_passed_count": 0,
+        "expected_pass_count": 0
+      },
+      "cherry_pick": {
+        "count": 2,
+        "naive_passed_count": 2,
+        "ancestry_passed_count": 0,
+        "strict_passed_count": 0,
+        "expected_pass_count": 0
+      },
+      "clean_commit": {
+        "count": 3,
+        "naive_passed_count": 3,
+        "ancestry_passed_count": 3,
+        "strict_passed_count": 3,
+        "expected_pass_count": 3
+      },
+      "rebase": {
+        "count": 2,
+        "naive_passed_count": 2,
+        "ancestry_passed_count": 0,
+        "strict_passed_count": 0,
+        "expected_pass_count": 0
+      },
+      "reset_and_detached": {
+        "count": 4,
+        "naive_passed_count": 4,
+        "ancestry_passed_count": 2,
+        "strict_passed_count": 0,
+        "expected_pass_count": 0
+      },
+      "tampered_proof": {
+        "count": 15,
+        "naive_passed_count": 9,
+        "ancestry_passed_count": 3,
+        "strict_passed_count": 0,
+        "expected_pass_count": 0
+      },
+      "trailing_commit": {
+        "count": 3,
+        "naive_passed_count": 3,
+        "ancestry_passed_count": 3,
+        "strict_passed_count": 0,
+        "expected_pass_count": 0
+      }
+    }
+  },
+  "negative_routing_summary": {
+    "total_samples": 16,
+    "direct_samples": 8,
+    "full_assurance_samples": 8,
+    "classifiers": {
+      "always_full_assurance": {
+        "total_samples": 16,
+        "correct": 8,
+        "accuracy_pct": 50.0,
+        "over_escalated_count": 8,
+        "over_escalation_rate_pct": 100.0,
+        "under_escalated_count": 0,
+        "under_escalation_rate_pct": 0.0,
+        "latency": {
+          "count": 160,
+          "min_ms": 0.0004,
+          "p50_ms": 0.0005,
+          "mean_ms": 0.0005,
+          "p95_ms": 0.0006,
+          "max_ms": 0.0043
+        }
+      },
+      "naive_file_count": {
+        "total_samples": 16,
+        "correct": 7,
+        "accuracy_pct": 43.75,
+        "over_escalated_count": 4,
+        "over_escalation_rate_pct": 50.0,
+        "under_escalated_count": 5,
+        "under_escalation_rate_pct": 62.5,
+        "latency": {
+          "count": 160,
+          "min_ms": 0.0005,
+          "p50_ms": 0.0006,
+          "mean_ms": 0.0006,
+          "p95_ms": 0.0007,
+          "max_ms": 0.0021
+        }
+      },
+      "deterministic_boundary": {
+        "total_samples": 16,
+        "correct": 16,
+        "accuracy_pct": 100.0,
+        "over_escalated_count": 0,
+        "over_escalation_rate_pct": 0.0,
+        "under_escalated_count": 0,
+        "under_escalation_rate_pct": 0.0,
+        "latency": {
+          "count": 160,
+          "min_ms": 0.0022,
+          "p50_ms": 0.0271,
+          "mean_ms": 0.0262,
+          "p95_ms": 0.0425,
+          "max_ms": 0.2328
+        }
+      }
+    }
+  }
+}

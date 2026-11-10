@@ -1,0 +1,41 @@
+sequenceDiagram
+    accTitle: Post-proof Git mutation invalidation and valid re-proof sequence
+    accDescr: Sequence comparing strict fail-closed rejection across amend, rebase, cherry-pick, trailing unverified commits, and dirty worktree drift against a valid re-proof loop.
+
+    actor Author as Leo or Simone
+    participant Git as Git Repo Branch HEAD
+    participant Kenji as Kenji Verifier
+    participant Proof as proof.json Artifact
+    participant Gate as Simone and Julian Gates
+
+    Author->>Git: Commit fix C1 with X-Factory trailers
+    Kenji->>Git: Run replay or staging suite on C1
+    Kenji->>Proof: Emit PASS bound to target_commit_sha = C1
+
+    alt Case 1 - History rewrite via amend, rebase, or cherry-pick
+        Author->>Git: Execute git commit --amend, git rebase, or git cherry-pick
+        Note over Git: Branch tip moves to C1_rewritten (C1 orphaned)
+        Gate->>Git: Run git merge-base --is-ancestor C1 HEAD
+        Git-->>Gate: Exit 1 (not ancestor) and HEAD != C1
+        Gate-->>Author: Fail closed (reject PR and block merge)
+    else Case 2 - Unverified trailing commit C2 stacked on C1
+        Author->>Git: Commit unverified change C2 on top of C1
+        Gate->>Git: Run git merge-base --is-ancestor C1 C2
+        Git-->>Gate: Exit 0 (ancestry-only baseline false-accepts)
+        Gate->>Git: Check HEAD == target_commit_sha (C2 == C1)
+        Git-->>Gate: Mismatch (C2 != C1)
+        Gate-->>Author: Fail closed (HEAD commit mismatch)
+    else Case 3 - Dirty tracked worktree drift after C1 proof
+        Author->>Git: Edit tracked files without commit (HEAD stays C1)
+        Gate->>Git: Run git status --porcelain --untracked-files=no
+        Git-->>Gate: Non-empty tracked modifications
+        Gate-->>Author: Fail closed (dirty tracked worktree)
+    else Case 4 - Valid re-proof loop for new tip C2
+        Author->>Git: Commit clean fix C2 and leave worktree clean
+        Kenji->>Git: Re-run replay or staging verification on C2
+        Kenji->>Proof: Re-emit PASS with target_commit_sha = C2
+        Note over Gate: Nadia blind adversarial review clears C2
+        Gate->>Git: Check is-ancestor C2 HEAD, HEAD == C2, clean worktree
+        Git-->>Gate: Exit 0, exact SHA match C2, clean worktree
+        Gate-->>Author: Pass (eligible for human squash merge)
+    end

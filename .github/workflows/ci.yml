@@ -46,5 +46,10 @@ jobs:
       - name: Verify Paper #3 benchmark sha256 manifest
         run: python papers/AI-Engineering/zero-plaintext-vault-reveal/supporting/benchmark/verify_sha256_manifest.py
 
+      - name: Verify Paper #6 benchmark sha256 manifest and unit tests
+        run: |
+          python papers/AI-Engineering/commit-bound-proof-gates/supporting/benchmark/verify_sha256_manifest.py
+          python -m unittest discover -s papers/AI-Engineering/commit-bound-proof-gates/supporting/benchmark -p "test_*.py" -v
+
       - name: Verify evidence traceability matrix
         run: python scripts/verify_traceability.py

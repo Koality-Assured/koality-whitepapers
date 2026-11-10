@@ -1,0 +1,164 @@
+{
+  "schema_version": "1.0.0",
+  "experiment_id": "blind-vs-non-blind-seeded-defect-trials-v1",
+  "executed_at_utc": "2026-11-10",
+  "reviewer_configuration": {
+    "agent_role": "trial-reviewer",
+    "context_isolation": "clean-slate",
+    "model_family_and_tier": "Gemini 3.8 Flash (High)",
+    "cross_model_arm_executed": false,
+    "cross_model_note": "Secondary model family comparison remains unexecuted and is quarantined as an unresolved scope boundary."
+  },
+  "summary": {
+    "fixtures_evaluated": 4,
+    "arm_b_blind": {
+      "block_verdicts": 4,
+      "pass_verdicts": 0,
+      "critical_seeded_defect_catch_rate_pct": 100.0,
+      "total_findings": 15,
+      "severity_counts": {
+        "critical": 5,
+        "high": 1,
+        "medium": 7,
+        "low": 2
+      }
+    },
+    "arm_a_non_blind": {
+      "block_verdicts": 4,
+      "pass_verdicts": 0,
+      "critical_seeded_defect_catch_rate_pct": 100.0,
+      "total_findings": 14,
+      "severity_counts": {
+        "critical": 5,
+        "high": 2,
+        "medium": 6,
+        "low": 1
+      }
+    },
+    "binary_block_verdict_delta_pct": 0.0,
+    "finding_count_delta": 1
+  },
+  "trials": {
+    "arm_b_blind": [
+      {
+        "trial_id": "trial_01_race_lease_go",
+        "language": "go",
+        "cwe": "CWE-362",
+        "verdict": "BLOCK",
+        "seeded_defect_caught": true,
+        "finding_count": 4,
+        "severity_counts": {"critical": 1, "high": 1, "medium": 2, "low": 0},
+        "findings": [
+          {"severity": "critical", "summary": "Manager.Acquire TOCTOU race between RLock/RUnlock and exclusive Lock"},
+          {"severity": "high", "summary": "m.hook invoked outside atomic lock window before lease write"},
+          {"severity": "medium", "summary": "Same-owner re-acquisition bypass and missing ttl <= 0 validation"},
+          {"severity": "medium", "summary": "TestSingleOwnerSequential exercises sequential calls only"}
+        ]
+      },
+      {
+        "trial_id": "trial_02_stale_sha_gate_py",
+        "language": "python",
+        "cwe": "CWE-345",
+        "verdict": "BLOCK",
+        "seeded_defect_caught": true,
+        "finding_count": 4,
+        "severity_counts": {"critical": 2, "high": 0, "medium": 1, "low": 1},
+        "findings": [
+          {"severity": "critical", "summary": "verify_promotion_proof uses merge-base --is-ancestor and passes unverified trailing commits"},
+          {"severity": "critical", "summary": "Missing canonical ^[0-9a-f]{40}$ validation allows 'HEAD' symbolic ref and '-' flag injection"},
+          {"severity": "medium", "summary": "Unhandled JSONDecodeError/OSError and False != 0 boolean exit_code confusion"},
+          {"severity": "low", "summary": "Single happy-path unit test"}
+        ]
+      },
+      {
+        "trial_id": "trial_03_path_boundary_js",
+        "language": "javascript",
+        "cwe": "CWE-22",
+        "verdict": "BLOCK",
+        "seeded_defect_caught": true,
+        "finding_count": 4,
+        "severity_counts": {"critical": 1, "high": 0, "medium": 2, "low": 1},
+        "findings": [
+          {"severity": "critical", "summary": "resolveSafeExportPath startsWith(root) lacks trailing separator, allowing sibling-prefix escape ../exports-secrets/..."},
+          {"severity": "medium", "summary": "Permits baseDir self path '.' or ''"},
+          {"severity": "medium", "summary": "readExportArtifact lacks fs.realpathSync symlink containment check"},
+          {"severity": "low", "summary": "Tests omit sibling-prefix escape and readExportArtifact"}
+        ]
+      },
+      {
+        "trial_id": "trial_04_silent_error_swallow_py",
+        "language": "python",
+        "cwe": "CWE-636",
+        "verdict": "BLOCK",
+        "seeded_defect_caught": true,
+        "finding_count": 3,
+        "severity_counts": {"critical": 1, "high": 0, "medium": 2, "low": 0},
+        "findings": [
+          {"severity": "critical", "summary": "verify_artifact_digest catches broad Exception and returns True (fail-open)"},
+          {"severity": "medium", "summary": "Missing dict/str/Path type validation on manifest entries"},
+          {"severity": "medium", "summary": "Happy-path tests omit all fail-closed error conditions"}
+        ]
+      }
+    ],
+    "arm_a_non_blind": [
+      {
+        "trial_id": "trial_01_race_lease_go",
+        "language": "go",
+        "cwe": "CWE-362",
+        "verdict": "BLOCK",
+        "seeded_defect_caught": true,
+        "finding_count": 3,
+        "severity_counts": {"critical": 1, "high": 1, "medium": 1, "low": 0},
+        "findings": [
+          {"severity": "critical", "summary": "TOCTOU race between RLock/RUnlock and exclusive Lock"},
+          {"severity": "high", "summary": "m.hook invoked before exclusive lock"},
+          {"severity": "medium", "summary": "Sequential-only TestSingleOwnerSequential (did not flag same-owner/ttl <= 0 edge case)"}
+        ]
+      },
+      {
+        "trial_id": "trial_02_stale_sha_gate_py",
+        "language": "python",
+        "cwe": "CWE-345",
+        "verdict": "BLOCK",
+        "seeded_defect_caught": true,
+        "finding_count": 4,
+        "severity_counts": {"critical": 2, "high": 0, "medium": 2, "low": 0},
+        "findings": [
+          {"severity": "critical", "summary": "merge-base --is-ancestor passes unverified trailing commits"},
+          {"severity": "critical", "summary": "Missing ^[0-9a-f]{40}$ validation allows 'HEAD' symbolic ref"},
+          {"severity": "medium", "summary": "Unhandled JSON/OSError and False == 0 boolean exit_code edge"},
+          {"severity": "medium", "summary": "Happy-path test coverage only"}
+        ]
+      },
+      {
+        "trial_id": "trial_03_path_boundary_js",
+        "language": "javascript",
+        "cwe": "CWE-22",
+        "verdict": "BLOCK",
+        "seeded_defect_caught": true,
+        "finding_count": 4,
+        "severity_counts": {"critical": 1, "high": 1, "medium": 1, "low": 1},
+        "findings": [
+          {"severity": "critical", "summary": "startsWith(root) missing trailing separator enables sibling-prefix escape"},
+          {"severity": "high", "summary": "readExportArtifact missing realpathSync symlink check"},
+          {"severity": "medium", "summary": "Permits baseDir self '.' or ''"},
+          {"severity": "low", "summary": "Tests omit sibling-prefix and outside-path checks"}
+        ]
+      },
+      {
+        "trial_id": "trial_04_silent_error_swallow_py",
+        "language": "python",
+        "cwe": "CWE-636",
+        "verdict": "BLOCK",
+        "seeded_defect_caught": true,
+        "finding_count": 3,
+        "severity_counts": {"critical": 1, "high": 0, "medium": 2, "low": 0},
+        "findings": [
+          {"severity": "critical", "summary": "except Exception: return True fails open"},
+          {"severity": "medium", "summary": "Missing dict/str/ASCII validation on manifest entries"},
+          {"severity": "medium", "summary": "Happy-path tests omit fail-closed error paths"}
+        ]
+      }
+    ]
+  }
+}

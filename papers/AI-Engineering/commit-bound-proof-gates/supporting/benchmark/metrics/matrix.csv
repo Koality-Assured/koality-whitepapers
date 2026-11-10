@@ -1,0 +1,32 @@
+scenario_id,category,language,expected_pass,naive_passed,ancestry_passed,strict_passed,setup_ms,naive_p50_ms,ancestry_p50_ms,strict_p50_ms,strict_p95_ms,description
+clean_commit_python,clean_commit,python,True,True,True,True,334.0321,0.1774,82.6484,105.7477,109.0056,Clean Python branch tip matching target_commit_sha and full attestations
+clean_commit_go,clean_commit,go,True,True,True,True,350.0651,0.1716,82.883,103.4375,114.3066,Clean Go branch tip matching target_commit_sha and full attestations
+clean_commit_javascript_staging,clean_commit,javascript,True,True,True,True,338.4013,0.1762,82.1101,103.2613,107.2306,Clean JavaScript branch tip with staging mode and declared staging_host
+post_proof_amend_python,amend,python,False,True,False,False,425.0964,0.1843,82.334,102.9179,113.1534,Post-proof git commit --amend alters SHA and invalidates proof
+post_proof_amend_go,amend,go,False,True,False,False,424.4719,0.1763,82.0859,104.0644,106.1504,Post-proof git commit --amend on Go branch alters SHA
+post_proof_rebase_python,rebase,python,False,True,False,False,554.0797,0.1684,82.7337,102.4781,110.3063,Post-proof git rebase onto updated main orphans target_commit_sha
+post_proof_rebase_javascript,rebase,javascript,False,True,False,False,573.5369,0.1829,83.1863,105.1094,107.3161,Post-proof git rebase on JS branch orphans target_commit_sha
+post_proof_cherry_pick_go,cherry_pick,go,False,True,False,False,510.0255,0.1735,82.9028,104.4846,109.5061,Post-proof git cherry-pick onto release/v1 creates new SHA
+post_proof_cherry_pick_python,cherry_pick,python,False,True,False,False,508.383,0.1715,81.329,106.9812,111.4848,Post-proof git cherry-pick onto release/v1 creates new SHA
+unverified_trailing_commit_python,trailing_commit,python,False,True,True,False,426.3159,0.1594,80.9275,105.1553,113.5083,Unverified commit added after proof; target_commit_sha remains ancestor of HEAD
+unverified_trailing_commit_go,trailing_commit,go,False,True,True,False,443.9405,0.1631,83.9019,106.0499,110.0951,Unverified Go commit added after proof; ancestry-only gate passes erroneously
+unverified_trailing_commit_javascript,trailing_commit,javascript,False,True,True,False,446.6574,0.1694,83.867,106.2938,110.8167,Unverified JS commit added after proof; ancestry-only gate passes erroneously
+forced_reset_history_rewrite_python,reset_and_detached,python,False,True,False,False,465.6407,0.1706,83.414,104.5625,196.5211,Forced git reset --hard HEAD~1 and rewritten commit invalidates proof
+detached_head_mismatch_python,reset_and_detached,python,False,True,False,False,378.5104,0.1691,81.5293,104.4231,108.0865,Detached HEAD checked out at base commit diverges from branch proof
+detached_head_same_sha_branch_mismatch,reset_and_detached,go,False,True,True,False,373.2754,0.1634,79.598,103.4235,107.9819,Detached HEAD at target SHA when branch checkout is expected fails strict branch binding
+dirty_worktree_post_proof_javascript,reset_and_detached,javascript,False,True,True,False,337.4787,0.1678,81.8891,103.9871,109.3436,Tracked source file modified after proof emitted without commit
+missing_proof_file,tampered_proof,python,False,False,False,False,342.4004,0.0146,0.0144,0.0146,0.0228,Missing proof.json fails closed
+corrupt_json_proof,tampered_proof,python,False,False,False,False,332.3301,0.0621,0.0605,0.0629,0.1038,Malformed JSON proof.json fails closed
+non_object_json_proof,tampered_proof,python,False,False,False,False,343.8227,0.0555,0.056,0.0536,0.0943,Non-object JSON list fails closed
+malformed_short_sha,tampered_proof,python,False,True,False,False,336.0902,0.176,39.6291,61.9821,66.0296,Abbreviated 7-char SHA rejected
+malformed_symbolic_ref_sha,tampered_proof,python,False,True,False,False,344.6321,0.1656,39.8586,63.0029,67.4337,Symbolic ref 'HEAD' rejected as target_commit_sha
+nonexistent_40hex_sha,tampered_proof,go,False,True,False,False,336.2219,0.1682,59.315,84.8642,93.1355,Syntactically valid 40-hex SHA absent from Git ODB rejected
+nonzero_exit_code_with_pass_status,tampered_proof,python,False,False,False,False,336.2794,0.1729,82.3574,104.141,111.789,Non-zero exit_code fails even when status is forged to PASS
+boolean_exit_code_type_confusion,tampered_proof,python,False,False,False,False,332.2568,0.1673,82.7754,103.6688,109.4304,Boolean exit_code=false rejected despite bool subclassing int in Python
+fail_status_with_zero_exit,tampered_proof,javascript,False,False,False,False,332.8038,0.1722,82.3025,107.9729,111.1447,status='FAIL' with exit_code=0 fails closed
+missing_replay_command,tampered_proof,python,False,True,False,False,338.1922,0.173,80.043,104.6503,110.5421,Empty replay_command fails closed
+invalid_verified_at_timestamp,tampered_proof,python,False,True,False,False,341.7129,0.1812,80.0643,104.4686,111.3674,Invalid or naive verified_at timestamp fails closed
+staging_mode_missing_host,tampered_proof,python,False,True,False,False,346.8012,0.1705,79.4569,110.6813,117.8323,staging proof_mode without staging_host fails closed
+self_signed_author_eq_reviewer,tampered_proof,python,False,True,True,False,363.1677,0.1639,92.9656,114.7769,124.873,Author self-signing proof (author_id == reviewer_id) rejected by strict gate
+same_model_family_violation,tampered_proof,go,False,True,True,False,366.7916,0.1741,91.2393,114.8736,125.395,Author and reviewer sharing model family violates cross-model diversity
+missing_negative_route_check,tampered_proof,javascript,False,True,True,False,355.2194,0.18,86.8308,106.8433,223.5695,negative_route_checked=false rejected by strict gate

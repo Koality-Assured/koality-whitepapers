@@ -1,0 +1,118 @@
+{
+  "hash_algorithm": "SHA-256",
+  "hash_normalization": "CRLF and CR line endings normalized to LF before hashing",
+  "files": [
+    {
+      "path": "proof_gate.py",
+      "sha256": "dae2f54f4488bb4c396828fd613b14a1183cd74ce9f94faffb6ff034fe49f351"
+    },
+    {
+      "path": "synthetic_repos.py",
+      "sha256": "70e3e6174d7308dd9baca91f662386a26cd8aaed716222aecac9cd8c1dece2b2"
+    },
+    {
+      "path": "run_benchmark.py",
+      "sha256": "6f7579fe6fccf18ff8081feffd1d449b9747a01c14f30caf6161769ada09f261"
+    },
+    {
+      "path": "test_proof_gate.py",
+      "sha256": "f393d6b1afe64567bf6ee219458106fa921f9bc7f176883cd30206bb932ea573"
+    },
+    {
+      "path": "metrics/summary.json",
+      "sha256": "34a65eebb5ded57a52a91709b0f4d860d33fd65033ae3643901ce453e512977f"
+    },
+    {
+      "path": "metrics/trial-metrics.json",
+      "sha256": "d38cb30d4f252eb0dcc1859557446df7240a836e2e8e111bc46344b863ed27fd"
+    },
+    {
+      "path": "metrics/routing-metrics.json",
+      "sha256": "50745c28d94860cbb2b442b1a8c682c51f391a5bded72e68e818de8ef67933e9"
+    },
+    {
+      "path": "metrics/blind-trial-results.json",
+      "sha256": "9b660c78f726e99890f46506ae0145abdca5dd5111b4b41b9199ac7ac76a8637"
+    },
+    {
+      "path": "metrics/matrix.csv",
+      "sha256": "4ca4b7d80222d4d33e85115f54a3766468ff3bbe6d79e15fed4d7b07fc010a54"
+    },
+    {
+      "path": "blind-trials/PROTOCOL.md",
+      "sha256": "e6859d4b5313cf8f32835e2aec3d4488a861ece8aeab72c13185a6a82e3bbf39"
+    },
+    {
+      "path": "blind-trials/ground-truth-rubric.json",
+      "sha256": "a06804b5fdcb70c8af3517f48527fc535ba210af0d63610b91d27d765b656569"
+    },
+    {
+      "path": "blind-trials/fixtures/trial_01_race_lease_go/go.mod",
+      "sha256": "aa24c892b358dfca64c2a16afcf2fb37e91d05c53a9ee3b255b3b75fb38d6d5c"
+    },
+    {
+      "path": "blind-trials/fixtures/trial_01_race_lease_go/manager.go",
+      "sha256": "8608059e284295e03fd822735f9067b2348181c572a6808f3a141fa5b8c17792"
+    },
+    {
+      "path": "blind-trials/fixtures/trial_01_race_lease_go/manager_test.go",
+      "sha256": "594e2e3cd8035842f094270e3c24ba749bc178781c3961a4abaff1f0762a27dd"
+    },
+    {
+      "path": "blind-trials/fixtures/trial_02_stale_sha_gate_py/validator.py",
+      "sha256": "eb1c65f46c63f0e2097a2c182043cee60290a28cc6a8d8a70bae57aede487a79"
+    },
+    {
+      "path": "blind-trials/fixtures/trial_02_stale_sha_gate_py/test_repro.py",
+      "sha256": "4da9449c7b3e62e1393c14d0d26553aa4c9ed094f2f7cb921d8cfb189501e475"
+    },
+    {
+      "path": "blind-trials/fixtures/trial_03_path_boundary_js/exporter.mjs",
+      "sha256": "59bddbee3dfd25f65d84afc72c59964afd263fd14f568e0f66ee061262ac5774"
+    },
+    {
+      "path": "blind-trials/fixtures/trial_03_path_boundary_js/exporter.test.mjs",
+      "sha256": "cea2a66a30c4a13ba3ea271407dda897921d0bab020cc268da3598b7ab3f8086"
+    },
+    {
+      "path": "blind-trials/fixtures/trial_04_silent_error_swallow_py/receipt_check.py",
+      "sha256": "6d641319aa159c616feaacc863c799d28603e410bf69a6cfbfd67b45f00ebacc"
+    },
+    {
+      "path": "blind-trials/fixtures/trial_04_silent_error_swallow_py/test_repro.py",
+      "sha256": "eaed44775dfb5d105be0886c99c3b5d7546bb4fc8cd6ccd9dfad2949b1f07da2"
+    },
+    {
+      "path": "blind-trials/packets/blind/trial_01_race_lease_go.md",
+      "sha256": "53067b0fa919551ddf05fb4e8364c148c96ce7adb37f4b6f0840bb6661bfe44d"
+    },
+    {
+      "path": "blind-trials/packets/blind/trial_02_stale_sha_gate_py.md",
+      "sha256": "07a475ca449b06236d1bdfd93f9fcc78de300794cd40862215d0f9c50cdbf5ed"
+    },
+    {
+      "path": "blind-trials/packets/blind/trial_03_path_boundary_js.md",
+      "sha256": "624f288bb7a4fad6e2a77a12518f47bf60a994bb53b7e7e0a4cae2cf5833c5d9"
+    },
+    {
+      "path": "blind-trials/packets/blind/trial_04_silent_error_swallow_py.md",
+      "sha256": "1c2628610a48093a3cea4f22a0d587fc3fa54100b1e3cb17345aef026cac4ab3"
+    },
+    {
+      "path": "blind-trials/packets/non_blind/trial_01_race_lease_go.md",
+      "sha256": "03a8d6b5dd24359b756b0af4dc0d48c991325b6999be4628a32dbadcefbca50f"
+    },
+    {
+      "path": "blind-trials/packets/non_blind/trial_02_stale_sha_gate_py.md",
+      "sha256": "97014270074331a3b90b07106b241fb00fa064cd5a6769657a156064e33c8502"
+    },
+    {
+      "path": "blind-trials/packets/non_blind/trial_03_path_boundary_js.md",
+      "sha256": "26f5c971c762157d4883a3e5e077c1c0338d1a5846d24a9b0c04ed4fdf785ad7"
+    },
+    {
+      "path": "blind-trials/packets/non_blind/trial_04_silent_error_swallow_py.md",
+      "sha256": "c34f790d725487350287219a7ccc273e2df14ed5976bf25bcffc94e817ca8157"
+    }
+  ]
+}

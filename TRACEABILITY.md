@@ -90,3 +90,24 @@ The Python runner uses a prewarmed tokenizer cache and rejects cache-miss downlo
 | Claude 3.5 Sonnet cost reduction | 92.48% | `pricing.claude-3-5-sonnet.net_savings_pct` | 92.48 | Verified |
 | Gemini 3.8 Flash cost reduction | 87.15% | `pricing.gemini-3-8-flash.net_savings_pct` | 87.15 | Verified |
 | Total scenarios evaluated | 5 | `trials.length` | 5 | Verified |
+
+---
+
+## 5. Commit-Bound Proof Gates and Blind Adversarial Review
+
+- **Paper:** [`papers/AI-Engineering/commit-bound-proof-gates/PAPER.md`](papers/AI-Engineering/commit-bound-proof-gates/PAPER.md)
+- **Primary source:** [`papers/AI-Engineering/commit-bound-proof-gates/supporting/benchmark/metrics/summary.json`](papers/AI-Engineering/commit-bound-proof-gates/supporting/benchmark/metrics/summary.json)
+- **Routing source:** [`papers/AI-Engineering/commit-bound-proof-gates/supporting/benchmark/metrics/routing-metrics.json`](papers/AI-Engineering/commit-bound-proof-gates/supporting/benchmark/metrics/routing-metrics.json)
+- **Blind-trial source:** [`papers/AI-Engineering/commit-bound-proof-gates/supporting/benchmark/metrics/blind-trial-results.json`](papers/AI-Engineering/commit-bound-proof-gates/supporting/benchmark/metrics/blind-trial-results.json)
+
+| Headline Metric / Claim | Paper Value | Source JSON File | Source JSON Field | Source Value | Status |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| Proof-gate scenarios evaluated | 31 (10 runs = 310/arm) | `summary.json` | `proof_gate_benchmark.total_scenarios` | 31 | Verified |
+| Strict commit-bound accuracy / fail-closed | 100.00% / 100.00% | `summary.json` | `proof_gate_benchmark.arms.strict_commit_bound.overall_accuracy_pct` / `fail_closed_rate_pct` | 100.0 / 100.0 | Verified |
+| Ancestry-only accuracy / false-accept | 74.19% / 28.57% | `summary.json` | `proof_gate_benchmark.arms.ancestry_only.overall_accuracy_pct` / `false_accept_rate_pct` | 74.19 / 28.57 | Verified |
+| Naive status-only accuracy / false-accept | 29.03% / 78.57% | `summary.json` | `proof_gate_benchmark.arms.naive_status_only.overall_accuracy_pct` / `false_accept_rate_pct` | 29.03 / 78.57 | Verified |
+| Strict gate median latency (p50 / p95) | 104.0581 ms / 115.5478 ms | `summary.json` | `proof_gate_benchmark.arms.strict_commit_bound.latency.p50_ms` / `p95_ms` | 104.0581 / 115.5478 | Verified |
+| Negative-routing classifier accuracy | 100.00% (16/16) | `routing-metrics.json` | `classifiers.deterministic_boundary.accuracy_pct` | 100.0 | Verified |
+| Naive file-count under-escalation rate | 62.50% (5/8) | `routing-metrics.json` | `classifiers.naive_file_count.under_escalation_rate_pct` | 62.5 | Verified |
+| Clean-slate blind vs non-blind block verdicts | 4/4 vs 4/4 (0.0% delta) | `blind-trial-results.json` | `summary.arm_b_blind.block_verdicts` / `binary_block_verdict_delta_pct` | 4 / 0.0 | Verified |
+| Blind vs non-blind total findings | 15 vs 14 | `blind-trial-results.json` | `summary.arm_b_blind.total_findings` / `arm_a_non_blind.total_findings` | 15 / 14 | Verified |

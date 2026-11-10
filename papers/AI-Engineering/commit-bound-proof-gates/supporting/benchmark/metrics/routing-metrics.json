@@ -1,0 +1,639 @@
+{
+  "environment": {
+    "os": "Windows",
+    "os_release": "10",
+    "architecture": "AMD64",
+    "python_version": "3.11.9",
+    "git_version": "git version 2.49.0.windows.1",
+    "generated_at_utc": "2026-11-10T15:19:35Z"
+  },
+  "iterations_per_sample": 10,
+  "total_samples": 16,
+  "direct_samples": 8,
+  "full_assurance_samples": 8,
+  "classifiers": {
+    "always_full_assurance": {
+      "total_samples": 16,
+      "correct": 8,
+      "accuracy_pct": 50.0,
+      "over_escalated_count": 8,
+      "over_escalation_rate_pct": 100.0,
+      "under_escalated_count": 0,
+      "under_escalation_rate_pct": 0.0,
+      "latency": {
+        "count": 160,
+        "min_ms": 0.0004,
+        "p50_ms": 0.0005,
+        "mean_ms": 0.0005,
+        "p95_ms": 0.0006,
+        "max_ms": 0.0043
+      }
+    },
+    "naive_file_count": {
+      "total_samples": 16,
+      "correct": 7,
+      "accuracy_pct": 43.75,
+      "over_escalated_count": 4,
+      "over_escalation_rate_pct": 50.0,
+      "under_escalated_count": 5,
+      "under_escalation_rate_pct": 62.5,
+      "latency": {
+        "count": 160,
+        "min_ms": 0.0005,
+        "p50_ms": 0.0006,
+        "mean_ms": 0.0006,
+        "p95_ms": 0.0007,
+        "max_ms": 0.0021
+      }
+    },
+    "deterministic_boundary": {
+      "total_samples": 16,
+      "correct": 16,
+      "accuracy_pct": 100.0,
+      "over_escalated_count": 0,
+      "over_escalation_rate_pct": 0.0,
+      "under_escalated_count": 0,
+      "under_escalation_rate_pct": 0.0,
+      "latency": {
+        "count": 160,
+        "min_ms": 0.0022,
+        "p50_ms": 0.0271,
+        "mean_ms": 0.0262,
+        "p95_ms": 0.0425,
+        "max_ms": 0.2328
+      }
+    }
+  },
+  "samples": [
+    {
+      "sample_id": "direct_01_py_bugfix_with_test",
+      "language": "python",
+      "expected_tier": "direct",
+      "changed_files": [
+        "src/formatting.py",
+        "tests/test_formatting.py"
+      ],
+      "rationale": "Scoped bugfix in single Python module with regression test",
+      "predictions": {
+        "always_full_assurance": {
+          "tier": "full-assurance",
+          "classifier": "always_full_assurance",
+          "reasons": [
+            "coordinator defaults every change to full-assurance"
+          ],
+          "negative_route_checked": false
+        },
+        "naive_file_count": {
+          "tier": "full-assurance",
+          "classifier": "naive_file_count",
+          "reasons": [
+            "changed_file_count=2"
+          ],
+          "negative_route_checked": false
+        },
+        "deterministic_boundary": {
+          "tier": "direct",
+          "classifier": "deterministic_boundary",
+          "reasons": [
+            "scoped single-module fix backed by regression test"
+          ],
+          "negative_route_checked": true
+        }
+      }
+    },
+    {
+      "sample_id": "direct_02_go_bugfix_with_test",
+      "language": "go",
+      "expected_tier": "direct",
+      "changed_files": [
+        "pkg/strings/trim.go",
+        "pkg/strings/trim_test.go"
+      ],
+      "rationale": "Scoped bugfix in single Go package with unit test",
+      "predictions": {
+        "always_full_assurance": {
+          "tier": "full-assurance",
+          "classifier": "always_full_assurance",
+          "reasons": [
+            "coordinator defaults every change to full-assurance"
+          ],
+          "negative_route_checked": false
+        },
+        "naive_file_count": {
+          "tier": "full-assurance",
+          "classifier": "naive_file_count",
+          "reasons": [
+            "changed_file_count=2"
+          ],
+          "negative_route_checked": false
+        },
+        "deterministic_boundary": {
+          "tier": "direct",
+          "classifier": "deterministic_boundary",
+          "reasons": [
+            "scoped single-module fix backed by regression test"
+          ],
+          "negative_route_checked": true
+        }
+      }
+    },
+    {
+      "sample_id": "direct_03_js_bugfix_with_test",
+      "language": "javascript",
+      "expected_tier": "direct",
+      "changed_files": [
+        "src/formatDate.js",
+        "tests/formatDate.test.js"
+      ],
+      "rationale": "Scoped bugfix in single JS helper with test coverage",
+      "predictions": {
+        "always_full_assurance": {
+          "tier": "full-assurance",
+          "classifier": "always_full_assurance",
+          "reasons": [
+            "coordinator defaults every change to full-assurance"
+          ],
+          "negative_route_checked": false
+        },
+        "naive_file_count": {
+          "tier": "full-assurance",
+          "classifier": "naive_file_count",
+          "reasons": [
+            "changed_file_count=2"
+          ],
+          "negative_route_checked": false
+        },
+        "deterministic_boundary": {
+          "tier": "direct",
+          "classifier": "deterministic_boundary",
+          "reasons": [
+            "scoped single-module fix backed by regression test"
+          ],
+          "negative_route_checked": true
+        }
+      }
+    },
+    {
+      "sample_id": "direct_04_docs_markdown_typo",
+      "language": "markdown",
+      "expected_tier": "direct",
+      "changed_files": [
+        "docs/runbook.md",
+        "docs/onboarding.md"
+      ],
+      "rationale": "Pure markdown typo correction",
+      "predictions": {
+        "always_full_assurance": {
+          "tier": "full-assurance",
+          "classifier": "always_full_assurance",
+          "reasons": [
+            "coordinator defaults every change to full-assurance"
+          ],
+          "negative_route_checked": false
+        },
+        "naive_file_count": {
+          "tier": "full-assurance",
+          "classifier": "naive_file_count",
+          "reasons": [
+            "changed_file_count=2"
+          ],
+          "negative_route_checked": false
+        },
+        "deterministic_boundary": {
+          "tier": "direct",
+          "classifier": "deterministic_boundary",
+          "reasons": [
+            "pure documentation/markdown change touches no runtime or security boundary"
+          ],
+          "negative_route_checked": true
+        }
+      }
+    },
+    {
+      "sample_id": "direct_05_npm_semver_bump",
+      "language": "javascript",
+      "expected_tier": "direct",
+      "changed_files": [
+        "package.json"
+      ],
+      "rationale": "Standard patch dependency bump in package.json",
+      "predictions": {
+        "always_full_assurance": {
+          "tier": "full-assurance",
+          "classifier": "always_full_assurance",
+          "reasons": [
+            "coordinator defaults every change to full-assurance"
+          ],
+          "negative_route_checked": false
+        },
+        "naive_file_count": {
+          "tier": "direct",
+          "classifier": "naive_file_count",
+          "reasons": [
+            "changed_file_count=1"
+          ],
+          "negative_route_checked": false
+        },
+        "deterministic_boundary": {
+          "tier": "direct",
+          "classifier": "deterministic_boundary",
+          "reasons": [
+            "semver-bounded dependency version bump only"
+          ],
+          "negative_route_checked": true
+        }
+      }
+    },
+    {
+      "sample_id": "direct_06_pyproject_semver_bump",
+      "language": "python",
+      "expected_tier": "direct",
+      "changed_files": [
+        "pyproject.toml"
+      ],
+      "rationale": "Standard minor dependency bump in pyproject.toml",
+      "predictions": {
+        "always_full_assurance": {
+          "tier": "full-assurance",
+          "classifier": "always_full_assurance",
+          "reasons": [
+            "coordinator defaults every change to full-assurance"
+          ],
+          "negative_route_checked": false
+        },
+        "naive_file_count": {
+          "tier": "direct",
+          "classifier": "naive_file_count",
+          "reasons": [
+            "changed_file_count=1"
+          ],
+          "negative_route_checked": false
+        },
+        "deterministic_boundary": {
+          "tier": "direct",
+          "classifier": "deterministic_boundary",
+          "reasons": [
+            "semver-bounded dependency version bump only"
+          ],
+          "negative_route_checked": true
+        }
+      }
+    },
+    {
+      "sample_id": "direct_07_py_single_module_refactor",
+      "language": "python",
+      "expected_tier": "direct",
+      "changed_files": [
+        "src/metrics_summary.py"
+      ],
+      "rationale": "Scoped single-worktree calculation cleanup",
+      "predictions": {
+        "always_full_assurance": {
+          "tier": "full-assurance",
+          "classifier": "always_full_assurance",
+          "reasons": [
+            "coordinator defaults every change to full-assurance"
+          ],
+          "negative_route_checked": false
+        },
+        "naive_file_count": {
+          "tier": "direct",
+          "classifier": "naive_file_count",
+          "reasons": [
+            "changed_file_count=1"
+          ],
+          "negative_route_checked": false
+        },
+        "deterministic_boundary": {
+          "tier": "direct",
+          "classifier": "deterministic_boundary",
+          "reasons": [
+            "scoped single-module refactor without public API, auth, or concurrency edges"
+          ],
+          "negative_route_checked": true
+        }
+      }
+    },
+    {
+      "sample_id": "direct_08_docs_txt_notes",
+      "language": "markdown",
+      "expected_tier": "direct",
+      "changed_files": [
+        "docs/CHANGELOG.md"
+      ],
+      "rationale": "Documentation-only changelog entry",
+      "predictions": {
+        "always_full_assurance": {
+          "tier": "full-assurance",
+          "classifier": "always_full_assurance",
+          "reasons": [
+            "coordinator defaults every change to full-assurance"
+          ],
+          "negative_route_checked": false
+        },
+        "naive_file_count": {
+          "tier": "direct",
+          "classifier": "naive_file_count",
+          "reasons": [
+            "changed_file_count=1"
+          ],
+          "negative_route_checked": false
+        },
+        "deterministic_boundary": {
+          "tier": "direct",
+          "classifier": "deterministic_boundary",
+          "reasons": [
+            "pure documentation/markdown change touches no runtime or security boundary"
+          ],
+          "negative_route_checked": true
+        }
+      }
+    },
+    {
+      "sample_id": "full_01_py_auth_token_change",
+      "language": "python",
+      "expected_tier": "full-assurance",
+      "changed_files": [
+        "src/auth/jwt_guard.py"
+      ],
+      "rationale": "Single-file authentication boundary modification requires Nadia security gate",
+      "predictions": {
+        "always_full_assurance": {
+          "tier": "full-assurance",
+          "classifier": "always_full_assurance",
+          "reasons": [
+            "coordinator defaults every change to full-assurance"
+          ],
+          "negative_route_checked": false
+        },
+        "naive_file_count": {
+          "tier": "direct",
+          "classifier": "naive_file_count",
+          "reasons": [
+            "changed_file_count=1"
+          ],
+          "negative_route_checked": false
+        },
+        "deterministic_boundary": {
+          "tier": "full-assurance",
+          "classifier": "deterministic_boundary",
+          "reasons": [
+            "touches authentication, authorization, secret, or proof-verification boundary"
+          ],
+          "negative_route_checked": true
+        }
+      }
+    },
+    {
+      "sample_id": "full_02_go_lease_mutex_change",
+      "language": "go",
+      "expected_tier": "full-assurance",
+      "changed_files": [
+        "pkg/coordinator/lease.go"
+      ],
+      "rationale": "Single-file concurrency/lease lock change requires full-assurance",
+      "predictions": {
+        "always_full_assurance": {
+          "tier": "full-assurance",
+          "classifier": "always_full_assurance",
+          "reasons": [
+            "coordinator defaults every change to full-assurance"
+          ],
+          "negative_route_checked": false
+        },
+        "naive_file_count": {
+          "tier": "direct",
+          "classifier": "naive_file_count",
+          "reasons": [
+            "changed_file_count=1"
+          ],
+          "negative_route_checked": false
+        },
+        "deterministic_boundary": {
+          "tier": "full-assurance",
+          "classifier": "deterministic_boundary",
+          "reasons": [
+            "touches concurrency, lock, lease, or synchronization primitive"
+          ],
+          "negative_route_checked": true
+        }
+      }
+    },
+    {
+      "sample_id": "full_03_js_path_traversal_sanitizer",
+      "language": "javascript",
+      "expected_tier": "full-assurance",
+      "changed_files": [
+        "src/export_sanitize.js"
+      ],
+      "rationale": "Path sanitization & security boundary modification",
+      "predictions": {
+        "always_full_assurance": {
+          "tier": "full-assurance",
+          "classifier": "always_full_assurance",
+          "reasons": [
+            "coordinator defaults every change to full-assurance"
+          ],
+          "negative_route_checked": false
+        },
+        "naive_file_count": {
+          "tier": "direct",
+          "classifier": "naive_file_count",
+          "reasons": [
+            "changed_file_count=1"
+          ],
+          "negative_route_checked": false
+        },
+        "deterministic_boundary": {
+          "tier": "full-assurance",
+          "classifier": "deterministic_boundary",
+          "reasons": [
+            "touches authentication, authorization, secret, or proof-verification boundary",
+            "adds or modifies public API route, signature, or schema contract"
+          ],
+          "negative_route_checked": true
+        }
+      }
+    },
+    {
+      "sample_id": "full_04_py_public_api_endpoint",
+      "language": "python",
+      "expected_tier": "full-assurance",
+      "changed_files": [
+        "src/routes.py"
+      ],
+      "rationale": "Adds new HTTP endpoint & touches token boundary",
+      "predictions": {
+        "always_full_assurance": {
+          "tier": "full-assurance",
+          "classifier": "always_full_assurance",
+          "reasons": [
+            "coordinator defaults every change to full-assurance"
+          ],
+          "negative_route_checked": false
+        },
+        "naive_file_count": {
+          "tier": "direct",
+          "classifier": "naive_file_count",
+          "reasons": [
+            "changed_file_count=1"
+          ],
+          "negative_route_checked": false
+        },
+        "deterministic_boundary": {
+          "tier": "full-assurance",
+          "classifier": "deterministic_boundary",
+          "reasons": [
+            "touches authentication, authorization, secret, or proof-verification boundary",
+            "adds or modifies public API route, signature, or schema contract"
+          ],
+          "negative_route_checked": true
+        }
+      }
+    },
+    {
+      "sample_id": "full_05_cross_module_architecture",
+      "language": "python",
+      "expected_tier": "full-assurance",
+      "changed_files": [
+        "ledger/store.py",
+        "executor/runner.py",
+        "promotion/pr.py"
+      ],
+      "rationale": "Cross-module multi-file architectural change",
+      "predictions": {
+        "always_full_assurance": {
+          "tier": "full-assurance",
+          "classifier": "always_full_assurance",
+          "reasons": [
+            "coordinator defaults every change to full-assurance"
+          ],
+          "negative_route_checked": false
+        },
+        "naive_file_count": {
+          "tier": "full-assurance",
+          "classifier": "naive_file_count",
+          "reasons": [
+            "changed_file_count=3"
+          ],
+          "negative_route_checked": false
+        },
+        "deterministic_boundary": {
+          "tier": "full-assurance",
+          "classifier": "deterministic_boundary",
+          "reasons": [
+            "cross-module or multi-file production refactor requires full-assurance"
+          ],
+          "negative_route_checked": true
+        }
+      }
+    },
+    {
+      "sample_id": "full_06_schema_contract_change",
+      "language": "json",
+      "expected_tier": "full-assurance",
+      "changed_files": [
+        "docs/standards/proof.schema.json"
+      ],
+      "rationale": "Schema contract change affects downstream gates",
+      "predictions": {
+        "always_full_assurance": {
+          "tier": "full-assurance",
+          "classifier": "always_full_assurance",
+          "reasons": [
+            "coordinator defaults every change to full-assurance"
+          ],
+          "negative_route_checked": false
+        },
+        "naive_file_count": {
+          "tier": "direct",
+          "classifier": "naive_file_count",
+          "reasons": [
+            "changed_file_count=1"
+          ],
+          "negative_route_checked": false
+        },
+        "deterministic_boundary": {
+          "tier": "full-assurance",
+          "classifier": "deterministic_boundary",
+          "reasons": [
+            "adds or modifies public API route, signature, or schema contract"
+          ],
+          "negative_route_checked": true
+        }
+      }
+    },
+    {
+      "sample_id": "full_07_go_rbac_middleware",
+      "language": "go",
+      "expected_tier": "full-assurance",
+      "changed_files": [
+        "pkg/http/middleware.go",
+        "pkg/http/middleware_test.go"
+      ],
+      "rationale": "RBAC permission middleware requires Nadia security review",
+      "predictions": {
+        "always_full_assurance": {
+          "tier": "full-assurance",
+          "classifier": "always_full_assurance",
+          "reasons": [
+            "coordinator defaults every change to full-assurance"
+          ],
+          "negative_route_checked": false
+        },
+        "naive_file_count": {
+          "tier": "full-assurance",
+          "classifier": "naive_file_count",
+          "reasons": [
+            "changed_file_count=2"
+          ],
+          "negative_route_checked": false
+        },
+        "deterministic_boundary": {
+          "tier": "full-assurance",
+          "classifier": "deterministic_boundary",
+          "reasons": [
+            "touches authentication, authorization, secret, or proof-verification boundary"
+          ],
+          "negative_route_checked": true
+        }
+      }
+    },
+    {
+      "sample_id": "full_08_py_proof_gate_verifier",
+      "language": "python",
+      "expected_tier": "full-assurance",
+      "changed_files": [
+        "gates/verify_proof.py",
+        "tests/test_verify_proof.py"
+      ],
+      "rationale": "Modifies proof verification gate boundary",
+      "predictions": {
+        "always_full_assurance": {
+          "tier": "full-assurance",
+          "classifier": "always_full_assurance",
+          "reasons": [
+            "coordinator defaults every change to full-assurance"
+          ],
+          "negative_route_checked": false
+        },
+        "naive_file_count": {
+          "tier": "full-assurance",
+          "classifier": "naive_file_count",
+          "reasons": [
+            "changed_file_count=2"
+          ],
+          "negative_route_checked": false
+        },
+        "deterministic_boundary": {
+          "tier": "full-assurance",
+          "classifier": "deterministic_boundary",
+          "reasons": [
+            "touches authentication, authorization, secret, or proof-verification boundary"
+          ],
+          "negative_route_checked": true
+        }
+      }
+    }
+  ]
+}

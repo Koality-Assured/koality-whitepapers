@@ -69,6 +69,16 @@ Comparative empirical benchmark evaluating lexical BM25 (qmd), dense semantic ve
 - [Reproducibility guide](papers/AI-Engineering/empirical-retrieval-cost-layers/supporting/REPRODUCIBILITY.md)
 - [Benchmark package](papers/AI-Engineering/empirical-retrieval-cost-layers/supporting/benchmark/)
 
+#### Commit-Bound Proof Gates and Blind Adversarial Review in Autonomous QA Fleets
+
+Evaluates commit-bound proof verification (`HEAD == target_commit_sha`, Git ancestry, clean tracked worktrees, and independent reviewer attestation), negative-routing tier classification, and paired blind versus author-primed review trials across multi-language synthetic fixtures and public repository promotion contracts.
+
+- [Read the paper](papers/AI-Engineering/commit-bound-proof-gates/PAPER.md)
+- [Claim-to-evidence ledger](papers/AI-Engineering/commit-bound-proof-gates/supporting/CLAIM-TO-EVIDENCE.md)
+- [Primary-source access log](papers/AI-Engineering/commit-bound-proof-gates/supporting/SOURCES.md)
+- [Reproducibility guide](papers/AI-Engineering/commit-bound-proof-gates/supporting/REPRODUCIBILITY.md)
+- [Benchmark package](papers/AI-Engineering/commit-bound-proof-gates/supporting/benchmark/)
+
 ## Paper format
 
 Each catalog entry points to a standalone paper at `PAPER.md`. Evidence ledgers, source logs, and reproduction files live in its `supporting/` directory.

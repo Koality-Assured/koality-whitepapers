@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0.0",
+  "trials": [
+    {
+      "trial_id": "trial_01_race_lease_go",
+      "language": "go",
+      "cwe": "CWE-362",
+      "expected_verdict": "BLOCK",
+      "seeded_defect": "Check-then-act race (TOCTOU): Acquire inspects m.leases[itemID] under RLock, drops RLock before hook/yield, and acquires Lock to overwrite m.leases[itemID] without re-checking whether another goroutine acquired a non-expired lease in the gap.",
+      "required_detection_elements": [
+        "Identifies RLock-to-Lock gap / TOCTOU race across concurrent Acquire calls",
+        "Identifies missing re-check under exclusive Lock (or holding Lock across check-and-insert)"
+      ],
+      "repro_command": "go test ./...",
+      "failing_test_name": "TestReproConcurrentDoubleAcquire"
+    },
+    {
+      "trial_id": "trial_02_stale_sha_gate_py",
+      "language": "python",
+      "cwe": "CWE-345",
+      "expected_verdict": "BLOCK",
+      "seeded_defect": "Proof validator checks git merge-base --is-ancestor target_commit_sha HEAD without verifying HEAD == target_commit_sha or validating canonical 40-char hex SHA format, allowing unverified trailing commits and symbolic ref values like HEAD to pass.",
+      "required_detection_elements": [
+        "Identifies that merge-base --is-ancestor permits unverified trailing commits after target_commit_sha",
+        "Identifies lack of exact HEAD == target_commit_sha or canonical 40-hex SHA validation"
+      ],
+      "repro_command": "python -m unittest test_repro.py",
+      "failing_test_name": "test_repro_trailing_unverified_commit_bypasses_gate"
+    },
+    {
+      "trial_id": "trial_03_path_boundary_js",
+      "language": "javascript",
+      "cwe": "CWE-22",
+      "expected_verdict": "BLOCK",
+      "seeded_defect": "resolveSafeExportPath checks !candidate.startsWith(root) without a trailing path separator or path.relative containment check, allowing sibling-prefix directory escapes such as ../exports-secrets/token.txt when baseDir is /tmp/.../exports.",
+      "required_detection_elements": [
+        "Identifies missing trailing path.sep / path.relative boundary check in startsWith(root)",
+        "Demonstrates sibling-prefix escape (e.g. baseDir + '-secrets')"
+      ],
+      "repro_command": "node --test exporter.test.mjs",
+      "failing_test_name": "repro sibling-prefix directory escape bypasses startsWith check"
+    },
+    {
+      "trial_id": "trial_04_silent_error_swallow_py",
+      "language": "python",
+      "cwe": "CWE-636",
+      "expected_verdict": "BLOCK",
+      "seeded_defect": "verify_artifact_digest wraps manifest parsing and key lookup in except Exception and returns True, causing corrupt JSON, missing manifest files, or missing artifact keys to fail open.",
+      "required_detection_elements": [
+        "Identifies broad except Exception returning True (fail-open verification bypass)",
+        "Recommends returning False or raising explicit verification error on missing/corrupt manifest or missing entry"
+      ],
+      "repro_command": "python -m unittest test_repro.py",
+      "failing_test_name": "test_repro_corrupt_manifest_or_missing_entry_must_fail_closed"
+    }
+  ]
+}

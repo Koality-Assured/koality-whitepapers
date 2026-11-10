@@ -1,0 +1,41 @@
+flowchart LR
+    accTitle: Negative-routing boundary and direct-tier Nadia tension
+    accDescr: Left-to-right routing classifier separating fast-path direct changes from CamelCase and snake_case security, auth, concurrency, public-API, and cross-module triggers that force full-assurance, plus the Nadia gate conflict on direct runs.
+
+    IN["Input: changed_files and diff_text"]
+    EMPTY{"changed_files empty?"}
+    DOCS{"Docs (.md, .txt, .rst) or comment typo?"}
+    SEMVER{"Manifest semver bump only?"}
+    NORM["Normalize identifiers: split CamelCase and snake_case"]
+    SEC{"Security or auth trigger (auth, jwt, rbac, secret, verify_proof)?"}
+    CONC{"Concurrency trigger (mutex, lock, lease, atomic, race)?"}
+    API{"Public API or schema (endpoint, router, openapi, schema)?"}
+    XMOD{"Cross-module (over 2 prod files or multiple top modules)?"}
+    SCOPED{"Scoped single-module fix (0 or 1 prod file)?"}
+
+    DIRECT["Route: direct tier (Leo, Kenji, Simone)"]
+    FULL["Route: full-assurance tier (11-agent fleet)"]
+    NADIA["Nadia blind security-intent gate (required)"]
+    TENSION["Spec Tension: run-spec omits Nadia on direct, while nadia and review-and-pr block PRs lacking Nadia clearance"]
+
+    IN --> EMPTY
+    EMPTY -- "Yes (fail closed)" --> FULL
+    EMPTY -- "No" --> DOCS
+    DOCS -- "Yes" --> DIRECT
+    DOCS -- "No" --> SEMVER
+    SEMVER -- "Yes" --> DIRECT
+    SEMVER -- "No" --> NORM
+    NORM --> SEC
+    SEC -- "Yes" --> FULL
+    SEC -- "No" --> CONC
+    CONC -- "Yes" --> FULL
+    CONC -- "No" --> API
+    API -- "Yes" --> FULL
+    API -- "No" --> XMOD
+    XMOD -- "Yes" --> FULL
+    XMOD -- "No" --> SCOPED
+    SCOPED -- "Yes" --> DIRECT
+    SCOPED -- "No (unclassified multi-file)" --> FULL
+    FULL --> NADIA
+    DIRECT -. "Documented conflict" .-> TENSION
+    NADIA -. "Blocks skip on direct" .-> TENSION

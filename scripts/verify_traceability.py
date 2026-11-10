@@ -265,6 +265,68 @@ def check_empirical_retrieval_cost_layers_metrics() -> list[str]:
 
     return errors
 
+
+def check_commit_bound_proof_gates_metrics() -> list[str]:
+    errors: list[str] = []
+    base_dir = REPO_ROOT / "papers/AI-Engineering/commit-bound-proof-gates"
+    summary_path = base_dir / "supporting/benchmark/metrics/summary.json"
+    routing_path = base_dir / "supporting/benchmark/metrics/routing-metrics.json"
+    blind_path = base_dir / "supporting/benchmark/metrics/blind-trial-results.json"
+    paper_path = base_dir / "PAPER.md"
+
+    for required in (summary_path, routing_path, blind_path, paper_path):
+        if not required.is_file():
+            return [f"Missing required Paper #6 artifact: {required}"]
+
+    try:
+        summary_data = json.loads(summary_path.read_text(encoding="utf-8"))
+        routing_data = json.loads(routing_path.read_text(encoding="utf-8"))
+        blind_data = json.loads(blind_path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        return [f"Could not parse Paper #6 JSON metrics: {exc}"]
+
+    try:
+        pg = summary_data["proof_gate_benchmark"]
+        arms = pg["arms"]
+        naive = arms["naive_status_only"]
+        anc = arms["ancestry_only"]
+        strict = arms["strict_commit_bound"]
+        routing_clf = routing_data["classifiers"]
+        blind_sum = blind_data["summary"]
+    except KeyError as exc:
+        return [f"Missing expected Paper #6 key: {exc}"]
+
+    if pg.get("total_scenarios") != 31 or pg.get("total_gate_evaluations_per_arm") != 310:
+        errors.append(f"Unexpected scenario/evaluation totals: {pg}")
+    if strict.get("overall_accuracy_pct") != 100.0 or strict.get("fail_closed_rate_pct") != 100.0:
+        errors.append(f"Unexpected strict_commit_bound accuracy: {strict}")
+    if anc.get("overall_accuracy_pct") != 74.19 or anc.get("false_accept_rate_pct") != 28.57:
+        errors.append(f"Unexpected ancestry_only metrics: {anc}")
+    if naive.get("overall_accuracy_pct") != 29.03 or naive.get("false_accept_rate_pct") != 78.57:
+        errors.append(f"Unexpected naive_status_only metrics: {naive}")
+    if strict.get("latency", {}).get("p50_ms") != 104.0581:
+        errors.append(f"Unexpected strict p50 latency: {strict.get('latency')}")
+    if routing_clf.get("deterministic_boundary", {}).get("accuracy_pct") != 100.0:
+        errors.append("Unexpected deterministic_boundary routing accuracy")
+    if routing_clf.get("naive_file_count", {}).get("under_escalation_rate_pct") != 62.5:
+        errors.append("Unexpected naive_file_count under_escalation_rate_pct")
+    if (
+        blind_sum.get("arm_b_blind", {}).get("block_verdicts") != 4
+        or blind_sum.get("arm_a_non_blind", {}).get("block_verdicts") != 4
+        or blind_sum.get("binary_block_verdict_delta_pct") != 0.0
+        or blind_sum.get("arm_b_blind", {}).get("total_findings") != 15
+        or blind_sum.get("arm_a_non_blind", {}).get("total_findings") != 14
+    ):
+        errors.append(f"Unexpected blind-trial summary metrics: {blind_sum}")
+
+    paper_text = paper_path.read_text(encoding="utf-8")
+    for cited in ["100.00%", "74.19%", "28.57%", "29.03%", "78.57%", "104.0581 ms", "62.50%", "4/4", "0.0%"]:
+        if cited not in paper_text:
+            errors.append(f"commit-bound-proof-gates PAPER.md missing expected metric: {cited}")
+
+    return errors
+
+
 def main() -> int:
     total_errors: list[str] = []
 
@@ -295,6 +357,13 @@ def main() -> int:
         total_errors.extend(errs4)
     else:
         print("  OK: empirical-retrieval-cost-layers metrics fully verified.")
+
+    print("Checking commit-bound-proof-gates metrics traceability...")
+    errs5 = check_commit_bound_proof_gates_metrics()
+    if errs5:
+        total_errors.extend(errs5)
+    else:
+        print("  OK: commit-bound-proof-gates metrics fully verified.")
 
     if total_errors:
         print(f"\nTraceability verification failed with {len(total_errors)} errors:", file=sys.stderr)

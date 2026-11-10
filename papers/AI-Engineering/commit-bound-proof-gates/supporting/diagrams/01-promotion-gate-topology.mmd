@@ -1,0 +1,41 @@
+flowchart TD
+    accTitle: Multi-stage commit-bound promotion gate topology
+    accDescr: Promotion flow from isolated Leo fix through Kenji target_commit_sha proof, Nadia clean-slate blind review, Simone branch-tip PR guard with re-proof loop, Julian pre-merge exact-tip and ancestry verification, and human squash merge onto main.
+
+    ADRIAN["Adrian (read-only): Hold run-lock, route tier"]
+
+    subgraph S1["Stage 1: Isolated Fix and Commit-Bound Proof"]
+        LEO["Leo (mutate worktree): Commit C1 with X-Factory trailers"]
+        KENJI["Kenji (read-only vs prod): Replay or staging run"]
+        PROOF["proof.json (status PASS, target_commit_sha = C1)"]
+        LEO --> KENJI
+        KENJI --> PROOF
+    end
+
+    subgraph S2["Stage 2: Blind Adversarial Review and PR Guard"]
+        NADIA["Nadia (read-only, clean-slate): Blind diff review, no author rationale"]
+        SIMONE["Simone (mutate review fixes): Adjudicate accepted, rejected, deferred"]
+        FIX_LOOP{"Accepted fixes mutate HEAD?"}
+        PR_GUARD{"Nadia cleared and target_commit_sha == branch_tip?"}
+        PR_OPEN["Simone opens PR toward main (sole PR agent)"]
+        PROOF --> NADIA
+        NADIA --> SIMONE
+        SIMONE --> FIX_LOOP
+        FIX_LOOP -- "Yes (new HEAD invalidates PASS)" --> KENJI
+        FIX_LOOP -- "No (HEAD unchanged)" --> PR_GUARD
+        PR_GUARD -- "Yes" --> PR_OPEN
+    end
+
+    subgraph S3["Stage 3: Pre-Merge Verification and Human Merge"]
+        JULIAN["Julian (read-only): Audit diff and X-Factory trailers"]
+        PRE_MERGE{"HEAD == target_commit_sha, git merge-base --is-ancestor, clean worktree?"}
+        HUMAN["Human Merge: Squash onto main keeping X-Factory-Run and X-Factory-Ledger-ID"]
+        PR_OPEN --> JULIAN
+        JULIAN --> PRE_MERGE
+        PRE_MERGE -- "Pass" --> HUMAN
+    end
+
+    FAIL["Fail Closed: Block promotion until fix and re-proof"]
+    ADRIAN --> LEO
+    PR_GUARD -- "Missing clearance or SHA mismatch" --> FAIL
+    PRE_MERGE -- "Fail" --> FAIL

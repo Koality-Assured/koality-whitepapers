@@ -1,0 +1,645 @@
+{
+  "environment": {
+    "os": "Windows",
+    "os_release": "10",
+    "architecture": "AMD64",
+    "python_version": "3.11.9",
+    "git_version": "git version 2.49.0.windows.1",
+    "generated_at_utc": "2026-11-10T15:19:35Z"
+  },
+  "iterations_per_scenario": 10,
+  "scenarios": [
+    {
+      "scenario_id": "clean_commit_python",
+      "category": "clean_commit",
+      "language": "python",
+      "description": "Clean Python branch tip matching target_commit_sha and full attestations",
+      "expected_pass": true,
+      "naive_passed": true,
+      "ancestry_passed": true,
+      "strict_passed": true,
+      "strict_reasons": [],
+      "ancestry_reasons": [],
+      "setup_ms": 334.0321,
+      "naive_p50_ms": 0.1774,
+      "ancestry_p50_ms": 82.6484,
+      "strict_p50_ms": 105.7477,
+      "strict_p95_ms": 109.0056
+    },
+    {
+      "scenario_id": "clean_commit_go",
+      "category": "clean_commit",
+      "language": "go",
+      "description": "Clean Go branch tip matching target_commit_sha and full attestations",
+      "expected_pass": true,
+      "naive_passed": true,
+      "ancestry_passed": true,
+      "strict_passed": true,
+      "strict_reasons": [],
+      "ancestry_reasons": [],
+      "setup_ms": 350.0651,
+      "naive_p50_ms": 0.1716,
+      "ancestry_p50_ms": 82.883,
+      "strict_p50_ms": 103.4375,
+      "strict_p95_ms": 114.3066
+    },
+    {
+      "scenario_id": "clean_commit_javascript_staging",
+      "category": "clean_commit",
+      "language": "javascript",
+      "description": "Clean JavaScript branch tip with staging mode and declared staging_host",
+      "expected_pass": true,
+      "naive_passed": true,
+      "ancestry_passed": true,
+      "strict_passed": true,
+      "strict_reasons": [],
+      "ancestry_reasons": [],
+      "setup_ms": 338.4013,
+      "naive_p50_ms": 0.1762,
+      "ancestry_p50_ms": 82.1101,
+      "strict_p50_ms": 103.2613,
+      "strict_p95_ms": 107.2306
+    },
+    {
+      "scenario_id": "post_proof_amend_python",
+      "category": "amend",
+      "language": "python",
+      "description": "Post-proof git commit --amend alters SHA and invalidates proof",
+      "expected_pass": false,
+      "naive_passed": true,
+      "ancestry_passed": false,
+      "strict_passed": false,
+      "strict_reasons": [
+        "target_commit_sha f658a633f0e1 is not an ancestor of HEAD 083de9093dcd",
+        "HEAD commit mismatch: proof bound to f658a633f0e1, current HEAD is 083de9093dcd"
+      ],
+      "ancestry_reasons": [
+        "target_commit_sha f658a633f0e1 is not an ancestor of HEAD 083de9093dcd"
+      ],
+      "setup_ms": 425.0964,
+      "naive_p50_ms": 0.1843,
+      "ancestry_p50_ms": 82.334,
+      "strict_p50_ms": 102.9179,
+      "strict_p95_ms": 113.1534
+    },
+    {
+      "scenario_id": "post_proof_amend_go",
+      "category": "amend",
+      "language": "go",
+      "description": "Post-proof git commit --amend on Go branch alters SHA",
+      "expected_pass": false,
+      "naive_passed": true,
+      "ancestry_passed": false,
+      "strict_passed": false,
+      "strict_reasons": [
+        "target_commit_sha 11cf25e31092 is not an ancestor of HEAD 23f131499d9f",
+        "HEAD commit mismatch: proof bound to 11cf25e31092, current HEAD is 23f131499d9f"
+      ],
+      "ancestry_reasons": [
+        "target_commit_sha 11cf25e31092 is not an ancestor of HEAD 23f131499d9f"
+      ],
+      "setup_ms": 424.4719,
+      "naive_p50_ms": 0.1763,
+      "ancestry_p50_ms": 82.0859,
+      "strict_p50_ms": 104.0644,
+      "strict_p95_ms": 106.1504
+    },
+    {
+      "scenario_id": "post_proof_rebase_python",
+      "category": "rebase",
+      "language": "python",
+      "description": "Post-proof git rebase onto updated main orphans target_commit_sha",
+      "expected_pass": false,
+      "naive_passed": true,
+      "ancestry_passed": false,
+      "strict_passed": false,
+      "strict_reasons": [
+        "target_commit_sha f658a633f0e1 is not an ancestor of HEAD b607f7d73f26",
+        "HEAD commit mismatch: proof bound to f658a633f0e1, current HEAD is b607f7d73f26"
+      ],
+      "ancestry_reasons": [
+        "target_commit_sha f658a633f0e1 is not an ancestor of HEAD b607f7d73f26"
+      ],
+      "setup_ms": 554.0797,
+      "naive_p50_ms": 0.1684,
+      "ancestry_p50_ms": 82.7337,
+      "strict_p50_ms": 102.4781,
+      "strict_p95_ms": 110.3063
+    },
+    {
+      "scenario_id": "post_proof_rebase_javascript",
+      "category": "rebase",
+      "language": "javascript",
+      "description": "Post-proof git rebase on JS branch orphans target_commit_sha",
+      "expected_pass": false,
+      "naive_passed": true,
+      "ancestry_passed": false,
+      "strict_passed": false,
+      "strict_reasons": [
+        "target_commit_sha aa3696836b2a is not an ancestor of HEAD 026354659617",
+        "HEAD commit mismatch: proof bound to aa3696836b2a, current HEAD is 026354659617"
+      ],
+      "ancestry_reasons": [
+        "target_commit_sha aa3696836b2a is not an ancestor of HEAD 026354659617"
+      ],
+      "setup_ms": 573.5369,
+      "naive_p50_ms": 0.1829,
+      "ancestry_p50_ms": 83.1863,
+      "strict_p50_ms": 105.1094,
+      "strict_p95_ms": 107.3161
+    },
+    {
+      "scenario_id": "post_proof_cherry_pick_go",
+      "category": "cherry_pick",
+      "language": "go",
+      "description": "Post-proof git cherry-pick onto release/v1 creates new SHA",
+      "expected_pass": false,
+      "naive_passed": true,
+      "ancestry_passed": false,
+      "strict_passed": false,
+      "strict_reasons": [
+        "target_commit_sha 11cf25e31092 is not an ancestor of HEAD 6d4649407529",
+        "HEAD commit mismatch: proof bound to 11cf25e31092, current HEAD is 6d4649407529"
+      ],
+      "ancestry_reasons": [
+        "target_commit_sha 11cf25e31092 is not an ancestor of HEAD 6d4649407529"
+      ],
+      "setup_ms": 510.0255,
+      "naive_p50_ms": 0.1735,
+      "ancestry_p50_ms": 82.9028,
+      "strict_p50_ms": 104.4846,
+      "strict_p95_ms": 109.5061
+    },
+    {
+      "scenario_id": "post_proof_cherry_pick_python",
+      "category": "cherry_pick",
+      "language": "python",
+      "description": "Post-proof git cherry-pick onto release/v1 creates new SHA",
+      "expected_pass": false,
+      "naive_passed": true,
+      "ancestry_passed": false,
+      "strict_passed": false,
+      "strict_reasons": [
+        "target_commit_sha f658a633f0e1 is not an ancestor of HEAD 0ea974a683d9",
+        "HEAD commit mismatch: proof bound to f658a633f0e1, current HEAD is 0ea974a683d9"
+      ],
+      "ancestry_reasons": [
+        "target_commit_sha f658a633f0e1 is not an ancestor of HEAD 0ea974a683d9"
+      ],
+      "setup_ms": 508.383,
+      "naive_p50_ms": 0.1715,
+      "ancestry_p50_ms": 81.329,
+      "strict_p50_ms": 106.9812,
+      "strict_p95_ms": 111.4848
+    },
+    {
+      "scenario_id": "unverified_trailing_commit_python",
+      "category": "trailing_commit",
+      "language": "python",
+      "description": "Unverified commit added after proof; target_commit_sha remains ancestor of HEAD",
+      "expected_pass": false,
+      "naive_passed": true,
+      "ancestry_passed": true,
+      "strict_passed": false,
+      "strict_reasons": [
+        "HEAD commit mismatch: proof bound to f658a633f0e1, current HEAD is 7087d5701ca4"
+      ],
+      "ancestry_reasons": [],
+      "setup_ms": 426.3159,
+      "naive_p50_ms": 0.1594,
+      "ancestry_p50_ms": 80.9275,
+      "strict_p50_ms": 105.1553,
+      "strict_p95_ms": 113.5083
+    },
+    {
+      "scenario_id": "unverified_trailing_commit_go",
+      "category": "trailing_commit",
+      "language": "go",
+      "description": "Unverified Go commit added after proof; ancestry-only gate passes erroneously",
+      "expected_pass": false,
+      "naive_passed": true,
+      "ancestry_passed": true,
+      "strict_passed": false,
+      "strict_reasons": [
+        "HEAD commit mismatch: proof bound to 11cf25e31092, current HEAD is d6b2b7c91cd6"
+      ],
+      "ancestry_reasons": [],
+      "setup_ms": 443.9405,
+      "naive_p50_ms": 0.1631,
+      "ancestry_p50_ms": 83.9019,
+      "strict_p50_ms": 106.0499,
+      "strict_p95_ms": 110.0951
+    },
+    {
+      "scenario_id": "unverified_trailing_commit_javascript",
+      "category": "trailing_commit",
+      "language": "javascript",
+      "description": "Unverified JS commit added after proof; ancestry-only gate passes erroneously",
+      "expected_pass": false,
+      "naive_passed": true,
+      "ancestry_passed": true,
+      "strict_passed": false,
+      "strict_reasons": [
+        "HEAD commit mismatch: proof bound to aa3696836b2a, current HEAD is c5a52186be3a"
+      ],
+      "ancestry_reasons": [],
+      "setup_ms": 446.6574,
+      "naive_p50_ms": 0.1694,
+      "ancestry_p50_ms": 83.867,
+      "strict_p50_ms": 106.2938,
+      "strict_p95_ms": 110.8167
+    },
+    {
+      "scenario_id": "forced_reset_history_rewrite_python",
+      "category": "reset_and_detached",
+      "language": "python",
+      "description": "Forced git reset --hard HEAD~1 and rewritten commit invalidates proof",
+      "expected_pass": false,
+      "naive_passed": true,
+      "ancestry_passed": false,
+      "strict_passed": false,
+      "strict_reasons": [
+        "target_commit_sha f658a633f0e1 is not an ancestor of HEAD 895fef45e78f",
+        "HEAD commit mismatch: proof bound to f658a633f0e1, current HEAD is 895fef45e78f"
+      ],
+      "ancestry_reasons": [
+        "target_commit_sha f658a633f0e1 is not an ancestor of HEAD 895fef45e78f"
+      ],
+      "setup_ms": 465.6407,
+      "naive_p50_ms": 0.1706,
+      "ancestry_p50_ms": 83.414,
+      "strict_p50_ms": 104.5625,
+      "strict_p95_ms": 196.5211
+    },
+    {
+      "scenario_id": "detached_head_mismatch_python",
+      "category": "reset_and_detached",
+      "language": "python",
+      "description": "Detached HEAD checked out at base commit diverges from branch proof",
+      "expected_pass": false,
+      "naive_passed": true,
+      "ancestry_passed": false,
+      "strict_passed": false,
+      "strict_reasons": [
+        "detached HEAD mismatch: expected branch 'feat/bound-fix'",
+        "target_commit_sha f658a633f0e1 is not an ancestor of HEAD 7ee2c40fa0a1",
+        "HEAD commit mismatch: proof bound to f658a633f0e1, current HEAD is 7ee2c40fa0a1"
+      ],
+      "ancestry_reasons": [
+        "target_commit_sha f658a633f0e1 is not an ancestor of HEAD 7ee2c40fa0a1"
+      ],
+      "setup_ms": 378.5104,
+      "naive_p50_ms": 0.1691,
+      "ancestry_p50_ms": 81.5293,
+      "strict_p50_ms": 104.4231,
+      "strict_p95_ms": 108.0865
+    },
+    {
+      "scenario_id": "detached_head_same_sha_branch_mismatch",
+      "category": "reset_and_detached",
+      "language": "go",
+      "description": "Detached HEAD at target SHA when branch checkout is expected fails strict branch binding",
+      "expected_pass": false,
+      "naive_passed": true,
+      "ancestry_passed": true,
+      "strict_passed": false,
+      "strict_reasons": [
+        "detached HEAD mismatch: expected branch 'feat/bound-fix'"
+      ],
+      "ancestry_reasons": [],
+      "setup_ms": 373.2754,
+      "naive_p50_ms": 0.1634,
+      "ancestry_p50_ms": 79.598,
+      "strict_p50_ms": 103.4235,
+      "strict_p95_ms": 107.9819
+    },
+    {
+      "scenario_id": "dirty_worktree_post_proof_javascript",
+      "category": "reset_and_detached",
+      "language": "javascript",
+      "description": "Tracked source file modified after proof emitted without commit",
+      "expected_pass": false,
+      "naive_passed": true,
+      "ancestry_passed": true,
+      "strict_passed": false,
+      "strict_reasons": [
+        "dirty tracked worktree detected after verification"
+      ],
+      "ancestry_reasons": [],
+      "setup_ms": 337.4787,
+      "naive_p50_ms": 0.1678,
+      "ancestry_p50_ms": 81.8891,
+      "strict_p50_ms": 103.9871,
+      "strict_p95_ms": 109.3436
+    },
+    {
+      "scenario_id": "missing_proof_file",
+      "category": "tampered_proof",
+      "language": "python",
+      "description": "Missing proof.json fails closed",
+      "expected_pass": false,
+      "naive_passed": false,
+      "ancestry_passed": false,
+      "strict_passed": false,
+      "strict_reasons": [
+        "missing proof artifact: proof.json"
+      ],
+      "ancestry_reasons": [
+        "missing proof artifact: proof.json"
+      ],
+      "setup_ms": 342.4004,
+      "naive_p50_ms": 0.0146,
+      "ancestry_p50_ms": 0.0144,
+      "strict_p50_ms": 0.0146,
+      "strict_p95_ms": 0.0228
+    },
+    {
+      "scenario_id": "corrupt_json_proof",
+      "category": "tampered_proof",
+      "language": "python",
+      "description": "Malformed JSON proof.json fails closed",
+      "expected_pass": false,
+      "naive_passed": false,
+      "ancestry_passed": false,
+      "strict_passed": false,
+      "strict_reasons": [
+        "corrupt proof artifact: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+      ],
+      "ancestry_reasons": [
+        "corrupt proof artifact: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+      ],
+      "setup_ms": 332.3301,
+      "naive_p50_ms": 0.0621,
+      "ancestry_p50_ms": 0.0605,
+      "strict_p50_ms": 0.0629,
+      "strict_p95_ms": 0.1038
+    },
+    {
+      "scenario_id": "non_object_json_proof",
+      "category": "tampered_proof",
+      "language": "python",
+      "description": "Non-object JSON list fails closed",
+      "expected_pass": false,
+      "naive_passed": false,
+      "ancestry_passed": false,
+      "strict_passed": false,
+      "strict_reasons": [
+        "proof payload must be a JSON object"
+      ],
+      "ancestry_reasons": [
+        "proof payload must be a JSON object"
+      ],
+      "setup_ms": 343.8227,
+      "naive_p50_ms": 0.0555,
+      "ancestry_p50_ms": 0.056,
+      "strict_p50_ms": 0.0536,
+      "strict_p95_ms": 0.0943
+    },
+    {
+      "scenario_id": "malformed_short_sha",
+      "category": "tampered_proof",
+      "language": "python",
+      "description": "Abbreviated 7-char SHA rejected",
+      "expected_pass": false,
+      "naive_passed": true,
+      "ancestry_passed": false,
+      "strict_passed": false,
+      "strict_reasons": [
+        "target_commit_sha must be a canonical 40-char lowercase hex SHA"
+      ],
+      "ancestry_reasons": [
+        "target_commit_sha must be a canonical 40-char lowercase hex SHA"
+      ],
+      "setup_ms": 336.0902,
+      "naive_p50_ms": 0.176,
+      "ancestry_p50_ms": 39.6291,
+      "strict_p50_ms": 61.9821,
+      "strict_p95_ms": 66.0296
+    },
+    {
+      "scenario_id": "malformed_symbolic_ref_sha",
+      "category": "tampered_proof",
+      "language": "python",
+      "description": "Symbolic ref 'HEAD' rejected as target_commit_sha",
+      "expected_pass": false,
+      "naive_passed": true,
+      "ancestry_passed": false,
+      "strict_passed": false,
+      "strict_reasons": [
+        "target_commit_sha must be a canonical 40-char lowercase hex SHA"
+      ],
+      "ancestry_reasons": [
+        "target_commit_sha must be a canonical 40-char lowercase hex SHA"
+      ],
+      "setup_ms": 344.6321,
+      "naive_p50_ms": 0.1656,
+      "ancestry_p50_ms": 39.8586,
+      "strict_p50_ms": 63.0029,
+      "strict_p95_ms": 67.4337
+    },
+    {
+      "scenario_id": "nonexistent_40hex_sha",
+      "category": "tampered_proof",
+      "language": "go",
+      "description": "Syntactically valid 40-hex SHA absent from Git ODB rejected",
+      "expected_pass": false,
+      "naive_passed": true,
+      "ancestry_passed": false,
+      "strict_passed": false,
+      "strict_reasons": [
+        "target_commit_sha 000000000000 is not a commit object in repository"
+      ],
+      "ancestry_reasons": [
+        "target_commit_sha 000000000000 is not a commit object in repository"
+      ],
+      "setup_ms": 336.2219,
+      "naive_p50_ms": 0.1682,
+      "ancestry_p50_ms": 59.315,
+      "strict_p50_ms": 84.8642,
+      "strict_p95_ms": 93.1355
+    },
+    {
+      "scenario_id": "nonzero_exit_code_with_pass_status",
+      "category": "tampered_proof",
+      "language": "python",
+      "description": "Non-zero exit_code fails even when status is forged to PASS",
+      "expected_pass": false,
+      "naive_passed": false,
+      "ancestry_passed": false,
+      "strict_passed": false,
+      "strict_reasons": [
+        "exit_code must be integer 0, got 1"
+      ],
+      "ancestry_reasons": [
+        "exit_code must be integer 0, got 1"
+      ],
+      "setup_ms": 336.2794,
+      "naive_p50_ms": 0.1729,
+      "ancestry_p50_ms": 82.3574,
+      "strict_p50_ms": 104.141,
+      "strict_p95_ms": 111.789
+    },
+    {
+      "scenario_id": "boolean_exit_code_type_confusion",
+      "category": "tampered_proof",
+      "language": "python",
+      "description": "Boolean exit_code=false rejected despite bool subclassing int in Python",
+      "expected_pass": false,
+      "naive_passed": false,
+      "ancestry_passed": false,
+      "strict_passed": false,
+      "strict_reasons": [
+        "exit_code must be integer 0, got False"
+      ],
+      "ancestry_reasons": [
+        "exit_code must be integer 0, got False"
+      ],
+      "setup_ms": 332.2568,
+      "naive_p50_ms": 0.1673,
+      "ancestry_p50_ms": 82.7754,
+      "strict_p50_ms": 103.6688,
+      "strict_p95_ms": 109.4304
+    },
+    {
+      "scenario_id": "fail_status_with_zero_exit",
+      "category": "tampered_proof",
+      "language": "javascript",
+      "description": "status='FAIL' with exit_code=0 fails closed",
+      "expected_pass": false,
+      "naive_passed": false,
+      "ancestry_passed": false,
+      "strict_passed": false,
+      "strict_reasons": [
+        "status must be 'PASS', got 'FAIL'"
+      ],
+      "ancestry_reasons": [
+        "status must be 'PASS', got 'FAIL'"
+      ],
+      "setup_ms": 332.8038,
+      "naive_p50_ms": 0.1722,
+      "ancestry_p50_ms": 82.3025,
+      "strict_p50_ms": 107.9729,
+      "strict_p95_ms": 111.1447
+    },
+    {
+      "scenario_id": "missing_replay_command",
+      "category": "tampered_proof",
+      "language": "python",
+      "description": "Empty replay_command fails closed",
+      "expected_pass": false,
+      "naive_passed": true,
+      "ancestry_passed": false,
+      "strict_passed": false,
+      "strict_reasons": [
+        "replay_command must be a non-empty string"
+      ],
+      "ancestry_reasons": [
+        "replay_command must be a non-empty string"
+      ],
+      "setup_ms": 338.1922,
+      "naive_p50_ms": 0.173,
+      "ancestry_p50_ms": 80.043,
+      "strict_p50_ms": 104.6503,
+      "strict_p95_ms": 110.5421
+    },
+    {
+      "scenario_id": "invalid_verified_at_timestamp",
+      "category": "tampered_proof",
+      "language": "python",
+      "description": "Invalid or naive verified_at timestamp fails closed",
+      "expected_pass": false,
+      "naive_passed": true,
+      "ancestry_passed": false,
+      "strict_passed": false,
+      "strict_reasons": [
+        "verified_at must be a timezone-aware ISO-8601 timestamp"
+      ],
+      "ancestry_reasons": [
+        "verified_at must be a timezone-aware ISO-8601 timestamp"
+      ],
+      "setup_ms": 341.7129,
+      "naive_p50_ms": 0.1812,
+      "ancestry_p50_ms": 80.0643,
+      "strict_p50_ms": 104.4686,
+      "strict_p95_ms": 111.3674
+    },
+    {
+      "scenario_id": "staging_mode_missing_host",
+      "category": "tampered_proof",
+      "language": "python",
+      "description": "staging proof_mode without staging_host fails closed",
+      "expected_pass": false,
+      "naive_passed": true,
+      "ancestry_passed": false,
+      "strict_passed": false,
+      "strict_reasons": [
+        "staging_host is required when proof_mode is 'staging'"
+      ],
+      "ancestry_reasons": [
+        "staging_host is required when proof_mode is 'staging'"
+      ],
+      "setup_ms": 346.8012,
+      "naive_p50_ms": 0.1705,
+      "ancestry_p50_ms": 79.4569,
+      "strict_p50_ms": 110.6813,
+      "strict_p95_ms": 117.8323
+    },
+    {
+      "scenario_id": "self_signed_author_eq_reviewer",
+      "category": "tampered_proof",
+      "language": "python",
+      "description": "Author self-signing proof (author_id == reviewer_id) rejected by strict gate",
+      "expected_pass": false,
+      "naive_passed": true,
+      "ancestry_passed": true,
+      "strict_passed": false,
+      "strict_reasons": [
+        "author_id and reviewer_id must be distinct (self-attestation prohibited)"
+      ],
+      "ancestry_reasons": [],
+      "setup_ms": 363.1677,
+      "naive_p50_ms": 0.1639,
+      "ancestry_p50_ms": 92.9656,
+      "strict_p50_ms": 114.7769,
+      "strict_p95_ms": 124.873
+    },
+    {
+      "scenario_id": "same_model_family_violation",
+      "category": "tampered_proof",
+      "language": "go",
+      "description": "Author and reviewer sharing model family violates cross-model diversity",
+      "expected_pass": false,
+      "naive_passed": true,
+      "ancestry_passed": true,
+      "strict_passed": false,
+      "strict_reasons": [
+        "cross-model diversity violated: author and reviewer share model family"
+      ],
+      "ancestry_reasons": [],
+      "setup_ms": 366.7916,
+      "naive_p50_ms": 0.1741,
+      "ancestry_p50_ms": 91.2393,
+      "strict_p50_ms": 114.8736,
+      "strict_p95_ms": 125.395
+    },
+    {
+      "scenario_id": "missing_negative_route_check",
+      "category": "tampered_proof",
+      "language": "javascript",
+      "description": "negative_route_checked=false rejected by strict gate",
+      "expected_pass": false,
+      "naive_passed": true,
+      "ancestry_passed": true,
+      "strict_passed": false,
+      "strict_reasons": [
+        "negative_route_checked must be boolean true"
+      ],
+      "ancestry_reasons": [],
+      "setup_ms": 355.2194,
+      "naive_p50_ms": 0.18,
+      "ancestry_p50_ms": 86.8308,
+      "strict_p50_ms": 106.8433,
+      "strict_p95_ms": 223.5695
+    }
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Koality-Assured/koality-whitepapers/blob/main/papers/AI-Engineering/commit-bound-proof-gates/supporting/proof.schema.json",
+  "title": "Commit-Bound Proof Receipt (Candidate Schema)",
+  "description": "Candidate formal JSON Schema for Agent Factory promotion proof receipts, extending staging-prove core fields with independent reviewer attestation, cross-model diversity, and negative-routing checks.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "run_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S",
+      "description": "Unique factory run identifier matching X-Factory-Run git trailer."
+    },
+    "target_commit_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$",
+      "description": "Canonical 40-character lowercase hexadecimal Git commit SHA proven at branch tip."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["PASS", "FAIL"],
+      "description": "Verification verdict; promotion gates require PASS."
+    },
+    "proof_mode": {
+      "type": "string",
+      "enum": ["local-replay", "staging"],
+      "description": "Execution mode declared by run-spec.md."
+    },
+    "staging_host": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S",
+      "description": "Explicit staging host URL or identifier when proof_mode is staging."
+    },
+    "replay_command": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S",
+      "description": "Exact deterministic verification or test command executed against target_commit_sha."
+    },
+    "exit_code": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Process exit code; promotion gates require integer 0 (non-boolean)."
+    },
+    "verified_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timezone-aware ISO-8601 verification timestamp."
+    },
+    "author_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S",
+      "description": "Agent or developer identity that authored target_commit_sha."
+    },
+    "reviewer_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S",
+      "description": "Independent adversarial reviewer identity; must differ from author_id."
+    },
+    "author_model_family": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S",
+      "description": "Model family of author_id for cross-model diversity checks."
+    },
+    "reviewer_model_family": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S",
+      "description": "Model family of reviewer_id; cross-model policy requires distinct family from author_model_family."
+    },
+    "tier": {
+      "type": "string",
+      "enum": ["direct", "full-assurance"],
+      "description": "Execution tier selected under run-spec negative-routing rules."
+    },
+    "negative_route_checked": {
+      "type": "boolean",
+      "description": "Explicit flag confirming run-spec negative-routing criteria were evaluated."
+    }
+  },
+  "required": [
+    "run_id",
+    "target_commit_sha",
+    "status",
+    "proof_mode",
+    "replay_command",
+    "exit_code",
+    "verified_at",
+    "author_id",
+    "reviewer_id",
+    "author_model_family",
+    "reviewer_model_family",
+    "tier",
+    "negative_route_checked"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": { "proof_mode": { "const": "staging" } },
+        "required": ["proof_mode"]
+      },
+      "then": {
+        "required": ["staging_host"]
+      }
+    }
+  ]
+}

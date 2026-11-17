@@ -111,3 +111,27 @@ The Python runner uses a prewarmed tokenizer cache and rejects cache-miss downlo
 | Naive file-count under-escalation rate | 62.50% (5/8) | `routing-metrics.json` | `classifiers.naive_file_count.under_escalation_rate_pct` | 62.5 | Verified |
 | Clean-slate blind vs non-blind block verdicts | 4/4 vs 4/4 (0.0% delta) | `blind-trial-results.json` | `summary.arm_b_blind.block_verdicts` / `binary_block_verdict_delta_pct` | 4 / 0.0 | Verified |
 | Blind vs non-blind total findings | 15 vs 14 | `blind-trial-results.json` | `summary.arm_b_blind.total_findings` / `arm_a_non_blind.total_findings` | 15 / 14 | Verified |
+
+---
+
+## 5. STRIDE Threat Modeling for Autonomous Coding Agents
+
+**Paper:** [`papers/AI-Engineering/stride-autonomous-coding-agents/PAPER.md`](papers/AI-Engineering/stride-autonomous-coding-agents/PAPER.md)
+
+**Claim ledger:** [`supporting/CLAIM-TO-EVIDENCE.md`](papers/AI-Engineering/stride-autonomous-coding-agents/supporting/CLAIM-TO-EVIDENCE.md)
+
+**Source log:** [`supporting/SOURCES.md`](papers/AI-Engineering/stride-autonomous-coding-agents/supporting/SOURCES.md)
+
+**Reproducibility:** [`supporting/REPRODUCIBILITY.md`](papers/AI-Engineering/stride-autonomous-coding-agents/supporting/REPRODUCIBILITY.md)
+
+**Boundary record:** [`supporting/PUBLIC-BOUNDARY.md`](papers/AI-Engineering/stride-autonomous-coding-agents/supporting/PUBLIC-BOUNDARY.md)
+
+| Evidence family | Paper location | Supporting evidence | Status |
+| :--- | :--- | :--- | :--- |
+| Framework and catalog identifiers | §§3–4 | Claim ledger CLM-01–CLM-05; source log SRC-01–SRC-10 | Verified against the dated primary-source catalog snapshots |
+| Trust boundaries and threat matrix | §§2–3 | Claim ledger CLM-08 and CLM-18 | Generalized analytical model |
+| Worktree, path, and delegation controls | §§5–6.1 | Claim ledger CLM-06–CLM-09 | Measured controls with disclosed cooperative limits |
+| Web distillation and sanitizer limits | §6.2 and §8 | Claim ledger CLM-10–CLM-13 | Measured synthetic fixtures; live model compliance unresolved |
+| Loopback SSRF and truncation | §6.3 | Claim ledger CLM-14–CLM-15 | Measured synthetic probes |
+| Public redaction and structural gates | §6.4 | Claim ledger CLM-16–CLM-17 | Measured validation controls |
+| Unmeasured boundaries | §8; companion post §6 | Claim ledger CLM-20–CLM-21 | Explicitly unresolved and excluded from quantitative conclusions |

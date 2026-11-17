@@ -1,4 +1,4 @@
-# Systematic STRIDE Threat Modeling for Autonomous Software Engineering Agents: Formal Trust Boundaries, Attack Vectors, and Defensive Invariants
+# STRIDE Threat Modeling for Autonomous Coding Agents
 
 > **Author:** Koality-Assured
 > **Companion post:** Read the practitioner walkthrough on [ketron.dev/blog/stride-autonomous-coding-agents](https://ketron.dev/blog/stride-autonomous-coding-agents) or inspect the [blog source on GitHub](https://github.com/Koality-Assured/koality-blog/blob/main/posts/AI-Engineering/stride-autonomous-coding-agents/POST.md).
